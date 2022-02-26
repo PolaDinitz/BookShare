@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import {IsEmail, IsDate, IsPhoneNumber} from "class-validator";
 import { Gender } from 'src/enums/gender.enum';
 import { Role } from 'src/enums/role.enum';
+import { Transform, Type } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -35,8 +36,9 @@ export class User {
   @IsPhoneNumber()
   phoneNumber: string
 
-  @Column()
   @IsDate()
+  @Type(() => Date)
+  @Column()
   dateOfBirth: Date
 
   @Column()

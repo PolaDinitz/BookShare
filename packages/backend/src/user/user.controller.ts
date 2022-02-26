@@ -22,7 +22,7 @@ export class UsersController {
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getUser(@Request() req: any, @Param('id') id: string) {
-      if (req.role != Role.ADMIN || req.userId != id){
+      if (req.user.role != Role.ADMIN && req.user.userId != id){
           throw new UnauthorizedException;
       }
       return this.usersService.getUserById(id);

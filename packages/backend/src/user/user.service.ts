@@ -38,7 +38,7 @@ export class UsersService {
     if (updateUserDto.password) {
         pass = await this.hashPassword(updateUserDto.password);
     }
-    await this.usersRepository.update(id, {
+    return await this.usersRepository.update(id, {
         email: updateUserDto.email || oldUser.email,
         firstName: updateUserDto.firstName || oldUser.firstName,
         lastName: updateUserDto.lastName || oldUser.lastName,
@@ -60,6 +60,7 @@ export class UsersService {
         address: createUserDto.address,
         dateOfBirth: createUserDto.dateOfBirth,
         phoneNumber: createUserDto.phoneNumber,
+        gender: createUserDto.gender,
         role: Role.USER
     });
     return await this.usersRepository.save(newUser);
