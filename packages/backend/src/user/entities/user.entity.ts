@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import {IsEmail, IsDate, IsPhoneNumber} from "class-validator";
 import { Gender } from 'src/enums/gender.enum';
+import { Role } from 'src/enums/role.enum';
 
 @Entity()
 export class User {
@@ -23,6 +24,13 @@ export class User {
   })
   gender: Gender
 
+  
+  @Column({
+    type: "enum",
+    enum: Role
+  })
+  role: Role
+
   @Column()
   @IsPhoneNumber()
   phoneNumber: string
@@ -34,7 +42,7 @@ export class User {
   @Column()
   address: string
 
-  @Column({ select : false })
+  @Column()
   password: string
 
   //TODO: ADD my books and landed books relations 
