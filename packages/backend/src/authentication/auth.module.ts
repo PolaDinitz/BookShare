@@ -11,10 +11,7 @@ import {JwtStrategy} from './jwt/jwt.strategy'
   imports: [
     UsersModule,
     PassportModule,
-    JwtModule.register({
-      secret: "needToMakeThisEnvVar",
-      signOptions: { expiresIn: '1000s' },
-    }),
+    JwtModule.register({}),
   ],
   providers: [
     AuthService,

@@ -49,6 +49,12 @@ export class UsersService {
         role: oldUser.role
     });
   }
+
+  public async updateRefreshToken(id : string, refresh_token : string) {
+    return await this.usersRepository.update(id, {
+      refreshToken: await bcrypt.hash(refresh_token, 10)
+    })
+  }
   
   public async register(createUserDto: CreateUserDto) :Promise<User>{
     const password = await this.hashPassword(createUserDto.password)
