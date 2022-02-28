@@ -5,6 +5,7 @@ import { UsersModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import {JwtStrategy} from './jwt/jwt.strategy'
+import { RefreshStrategy } from './jwt/refresh.strategy';
 
 
 @Module({
@@ -16,7 +17,8 @@ import {JwtStrategy} from './jwt/jwt.strategy'
   providers: [
     AuthService,
     LocalStrategy,
-    JwtStrategy,],
+    JwtStrategy,
+    RefreshStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}
