@@ -6,8 +6,8 @@ import { Transform, Type } from 'class-transformer';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   firstName: string;
@@ -47,7 +47,5 @@ export class User {
   @Column()
   password: string
 
-  @Column({ nullable: true })
-  refreshToken: string
   //TODO: ADD my books and landed books relations 
 }

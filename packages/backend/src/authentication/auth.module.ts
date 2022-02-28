@@ -12,7 +12,10 @@ import { RefreshStrategy } from './jwt/refresh.strategy';
   imports: [
     UsersModule,
     PassportModule,
-    JwtModule.register({}),
+    JwtModule.register({
+      secret: "needToMakeThisEnvVar",
+      signOptions: { expiresIn: '1000s' },
+    }),
   ],
   providers: [
     AuthService,
