@@ -1,13 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import {IsEmail, IsDate, IsPhoneNumber} from "class-validator";
-import { Gender } from 'src/enums/gender.enum';
-import { Role } from 'src/enums/role.enum';
-import { Transform, Type } from 'class-transformer';
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { IsDate, IsEmail, IsPhoneNumber } from "class-validator";
+import { Gender } from "src/enums/gender.enum";
+import { Role } from "src/enums/role.enum";
+import { Type } from "class-transformer";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   firstName: string;
