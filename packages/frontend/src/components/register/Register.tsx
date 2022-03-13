@@ -8,7 +8,7 @@ import {
   Box,
 } from "@mui/material";
 
-const SignUp = (props: SignUpProps) => {
+const Register = (props: SignUpProps) => {
   const { open, handleClose } = props;
 
   return (
@@ -48,4 +48,4 @@ const SignUp = (props: SignUpProps) => {
   );
 };
 
-export default SignUp;
+export default Register;

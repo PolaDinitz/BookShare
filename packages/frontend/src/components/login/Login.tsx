@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import SignUp from "../SignUp/SignUp";
+import Register from "../register/Register";
 
 const theme = createTheme();
 
@@ -44,7 +44,7 @@ const Login = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
+      {/*<Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
           item
@@ -126,13 +126,13 @@ const Login = () => {
                   <Link variant="body2" onClick={handleOpen}>
                     {"Don't have an account? Sign Up"}
                   </Link>
-                  <SignUp open={open} handleClose={handleClose} />
+                  <Register open={open} handleClose={handleClose} />
                 </Grid>
               </Grid>
             </Box>
           </Box>
         </Grid>
-      </Grid>
+      </Grid>*/}
     </ThemeProvider>
   );
 };
