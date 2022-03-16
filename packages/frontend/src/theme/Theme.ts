@@ -21,8 +21,8 @@ const theme = createTheme({
                 root: {
                     borderRadius: "16px",
                     backgroundColor: "#FAFAFA",
-                    width: "50vh",
-                    padding: "20px",
+                    width: "60vh",
+                    paddingBottom: "10px",
                     margin: "auto"
                 }
             }

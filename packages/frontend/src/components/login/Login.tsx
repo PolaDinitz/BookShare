@@ -22,7 +22,7 @@ const Login = () => {
   };
 
   return (
-      <CustomPaper>
+      <CustomPaper img="login-header-image.jpg">
         <div>
           dsfs
         </div>
