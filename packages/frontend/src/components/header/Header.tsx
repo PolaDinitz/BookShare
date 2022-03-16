@@ -1,4 +1,3 @@
-import './Header.css';
 import {Avatar, Box, Grid, Typography} from "@mui/material";
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import InboxIcon from '@mui/icons-material/Inbox';
