@@ -15,19 +15,44 @@ declare module '@mui/material/styles' {
 }
 
 const theme = createTheme({
+    palette: {
+      primary: {
+          main: "#2FAC90",
+          contrastText: "white"
+      }
+    },
     components: {
         MuiPaper: {
             styleOverrides: {
                 root: {
                     borderRadius: "16px",
                     backgroundColor: "#FAFAFA",
-                    width: "60vh",
+                    width: "50vh",
                     paddingBottom: "10px",
                     margin: "auto"
+                }
+            }
+        },
+        MuiFilledInput: {
+            defaultProps: {
+              disableUnderline: true
+            },
+            styleOverrides: {
+                root: {
+                    borderRadius: 0,
+                    borderBottom: "none"
+                }
+            }
+        },
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    borderRadius: 0,
                 }
             }
         }
     }
 });
+
 
 export default theme;
