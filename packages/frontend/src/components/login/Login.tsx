@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useState} from "react";
 import CustomPaper from "../custom-paper/CustomPaper";
-import {Box, Button, Checkbox, Link, Stack, TextField, Typography} from "@mui/material";
+import {Box, Button, Link, Stack, TextField, Typography} from "@mui/material";
 
 const Login = () => {
 

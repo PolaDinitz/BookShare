@@ -1,6 +1,5 @@
 import React from "react";
-import {Box, Paper, ThemeProvider,} from "@mui/material";
-import theme from "../../theme/Theme";
+import {Box, Paper,} from "@mui/material";
 
 type CustomPaperProps = {
     children?: React.ReactNode;
