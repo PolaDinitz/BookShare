@@ -4,11 +4,11 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {ThemeProvider} from "@mui/material";
-import theme from "./theme/Theme";
+import mainTheme from "./theme/Theme";
 
 ReactDOM.render(
   <React.StrictMode>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={mainTheme}>
         <App />
       </ThemeProvider>
   </React.StrictMode>,

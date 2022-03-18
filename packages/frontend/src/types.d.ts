@@ -1,4 +1,4 @@
 type SignUpProps = {
-    open: boolean;
-    handleClose: () => void;
+    open?: boolean;
+    handleClose?: () => void;
 }

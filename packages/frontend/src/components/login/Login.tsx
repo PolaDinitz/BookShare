@@ -1,6 +1,7 @@
 import React, {ChangeEvent, useState} from "react";
 import CustomPaper from "../custom-paper/CustomPaper";
-import {Box, Button, Link, Stack, TextField, Typography} from "@mui/material";
+import {Box, Button, Stack, TextField, Typography} from "@mui/material";
+import {Link} from "react-router-dom";
 
 const Login = () => {
 
@@ -55,17 +56,13 @@ const Login = () => {
             </Stack>
             <Box sx={{ flex: "1" }}>
               <Button
-                  type="submit"
                   fullWidth
                   sx={{ height: "100%", marginLeft: "5px" }}
                   variant="contained"
                   disableElevation
                   onClick={handleSubmit}
               >
-                <Typography
-                    variant="subtitle1"
-                    fontWeight="bold"
-                >
+                <Typography variant="subtitle1" fontWeight="bold">
                   Login
                 </Typography>
               </Button>
@@ -78,18 +75,21 @@ const Login = () => {
               justifyContent: "flex-end"
             }}
           >
-            <Link href="#" underline="none" color="inherit">
-              <Typography
-                  variant="subtitle2"
-                  color="gray"
-              >
+            <Link to="#">
+              <Typography variant="subtitle2" color="gray">
                 Forgot password?
               </Typography>
             </Link>
           </Box>
-          <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
-            <Link href="#" underline="none" color="inherit">
-              <Typography variant="subtitle1">
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "center"
+            }}
+          >
+            <Link to="/register">
+              <Typography variant="subtitle1" color="black">
                 Not a member? Register today!
               </Typography>
             </Link>
@@ -99,7 +99,7 @@ const Login = () => {
   );
 };
 
-const useFormInput = (initialValue: String) => {
+const useFormInput = (initialValue: string) => {
   const [value, setValue] = useState(initialValue);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {

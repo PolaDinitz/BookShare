@@ -16,7 +16,11 @@ const CustomPaper = (props: CustomPaperProps) => {
                 margin: "30px auto",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center"
+                alignItems: "center",
+                borderRadius: "16px",
+                backgroundColor: "#FAFAFA",
+                paddingBottom: "10px",
+                width: "30%"
             }}
         >
             <Box
@@ -34,7 +38,7 @@ const CustomPaper = (props: CustomPaperProps) => {
             <Box
                 sx={{
                     minHeight: "50px",
-                    width: "60%",
+                    width: "80%",
                 }}
             >
                 {props.children}

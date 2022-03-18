@@ -14,7 +14,7 @@ declare module '@mui/material/styles' {
     }
 }
 
-const theme = createTheme({
+const mainTheme = createTheme({
     palette: {
       primary: {
           main: "#2FAC90",
@@ -22,17 +22,6 @@ const theme = createTheme({
       }
     },
     components: {
-        MuiPaper: {
-            styleOverrides: {
-                root: {
-                    borderRadius: "16px",
-                    backgroundColor: "#FAFAFA",
-                    width: "50vh",
-                    paddingBottom: "10px",
-                    margin: "auto"
-                }
-            }
-        },
         MuiFilledInput: {
             defaultProps: {
               disableUnderline: true
@@ -55,4 +44,4 @@ const theme = createTheme({
 });
 
 
-export default theme;
+export default mainTheme;
