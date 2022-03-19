@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from "react";
+import React from "react";
 import CustomPaper from "../custom-paper/CustomPaper";
 import {Box, Button, Stack, TextField, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
@@ -96,18 +96,5 @@ const Login = () => {
         </CustomPaper>
     );
 };
-
-const useFormInput = (initialValue: string) => {
-    const [value, setValue] = useState(initialValue);
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value);
-    }
-
-    return {
-        value,
-        onChange: handleChange
-    }
-}
 
 export default Login;
