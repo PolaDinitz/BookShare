@@ -2,18 +2,18 @@ import React, {ChangeEvent, useState} from "react";
 import CustomPaper from "../custom-paper/CustomPaper";
 import {Box, Button, Stack, TextField, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
+import {LoginFormInputs, loginSchema} from "../../utils/forms/LoginSchema";
+import {useForm} from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 
 const Login = () => {
 
-    const email = useFormInput('');
-    const password = useFormInput('');
+    const {register, handleSubmit, formState: {errors}} = useForm<LoginFormInputs>({
+        resolver: yupResolver(loginSchema)
+    });
 
-    const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        console.log({
-            email: email,
-            password: password,
-        });
+    const onSubmit = (data: LoginFormInputs) => {
+        console.log(data);
     };
 
     return (
@@ -30,28 +30,26 @@ const Login = () => {
                 >
                     Login
                 </Typography>
-                <Box sx={{display: "flex", width: "100%"}}>
+                <Box sx={{display: "flex", width: "100%"}} component="form" onSubmit={handleSubmit(onSubmit)}>
                     <Stack
                         spacing={1}
                         sx={{flex: "4"}}
                     >
                         <TextField
-                            {...email}
-                            id="email"
+                            {...register('email')}
                             label="Email"
-                            fullWidth
                             variant="filled"
                             type="email"
-                            required
+                            error={!!errors.email}
+                            fullWidth
                         />
                         <TextField
-                            {...password}
-                            id="password"
+                            {...register('password')}
                             label="Password"
-                            fullWidth
                             variant="filled"
                             type="password"
-                            required
+                            error={!!errors.password}
+                            fullWidth
                         />
                     </Stack>
                     <Box sx={{flex: "1"}}>
@@ -60,7 +58,7 @@ const Login = () => {
                             sx={{height: "100%", marginLeft: "5px"}}
                             variant="contained"
                             disableElevation
-                            onClick={handleSubmit}
+                            type="submit"
                         >
                             <Typography variant="subtitle1" fontWeight="bold">
                                 Login

@@ -3,11 +3,11 @@ import {
     Box,
     Button,
     FormControl,
+    FormHelperText,
     Grid,
     InputLabel,
     MenuItem,
     Select,
-    SelectChangeEvent,
     Stack,
     TextField,
     Typography
@@ -16,25 +16,27 @@ import {Link} from "react-router-dom";
 import CustomPaper from "../custom-paper/CustomPaper";
 import * as React from 'react';
 import {DatePicker} from "@mui/lab";
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {RegisterFormInputs, registerSchema} from "../../utils/forms/RegisterSchema";
 
 const Register = () => {
 
-    const [date, setDate] = React.useState<Date | null>(null);
-    const [gender, setGender] = React.useState('');
     const [profileImage, setProfileImage] = React.useState('Profile_avatar_placeholder_large.png');
-
     const onProfileImageChange = (event: any) => {
-        setProfileImage(URL.createObjectURL(event.target.files[0]));
+        let imageFile: File = event?.target?.files[0];
+        if (imageFile) {
+            setProfileImage(URL.createObjectURL(imageFile));
+        }
     }
 
-    const {
-        register,
-        handleSubmit,
-        formState: {errors},
-    } = useForm();
+    const {control, register, handleSubmit, formState: {errors}} = useForm<RegisterFormInputs>({
+        resolver: yupResolver(registerSchema)
+    });
 
-    const onSubmit = (data: any) => console.log(data);
+    const onSubmit = (data: RegisterFormInputs) => {
+        console.log(data);
+    };
 
     return (
         <CustomPaper img="./page-headers/register-header-image.jpg" contentWidth="80%">
@@ -51,10 +53,11 @@ const Register = () => {
                     Register
                 </Typography>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <Box>
+                    <Box mb={2} sx={{display: "flex", justifyContent: "center"}}>
                         <label htmlFor="uploadProfileImage">
-                            <input hidden accept="image/*" id="uploadProfileImage" type="file"
-                                   onChange={onProfileImageChange}/>
+                            <input {...register('profileImage')} name="profileImage" hidden accept="image/*"
+                                   id="uploadProfileImage" type="file" onChangeCapture={onProfileImageChange}
+                                   />
                             <Avatar
                                 alt="Profile Avatar"
                                 src={profileImage}
@@ -65,96 +68,110 @@ const Register = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={4}>
                             <TextField
-                                id="firstName"
+                                {...register('firstName')}
                                 label="First Name"
                                 variant="filled"
+                                error={!!errors.firstName}
+                                helperText={errors.firstName?.message}
                                 fullWidth
-                                required
                             />
                         </Grid>
                         <Grid item xs={4}>
                             <TextField
-                                id="secondName"
-                                label="Second Name"
+                                {...register('lastName')}
+                                label="Last Name"
                                 variant="filled"
+                                error={!!errors.lastName}
+                                helperText={errors.lastName?.message}
                                 fullWidth
-                                required
                             />
                         </Grid>
                         <Grid item xs={4}>
                             <FormControl variant="filled" sx={{width: "100%"}}>
-                                <InputLabel id="genderInputLabel">Gender</InputLabel>
-                                <Select
-                                    labelId="genderInputLabel"
-                                    id="genderSelect"
-                                    value={gender}
-                                    onChange={(event: SelectChangeEvent) => setGender(event.target.value)}
-                                >
+                                <InputLabel error={!!errors.gender}>Gender</InputLabel>
+                                <Select {...register('gender')} defaultValue="">
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
                                     <MenuItem value="Male">Male</MenuItem>
                                     <MenuItem value="Female">Female</MenuItem>
                                     <MenuItem value="Other">Other</MenuItem>
                                 </Select>
+                                <FormHelperText error>{errors.gender?.message}</FormHelperText>
                             </FormControl>
                         </Grid>
                         <Grid item xs={8}>
                             <TextField
-                                id="email"
+                                {...register('email')}
                                 label="Email"
                                 variant="filled"
+                                error={!!errors.email}
+                                helperText={errors.email?.message}
                                 fullWidth
-                                required
                             />
                         </Grid>
                         <Grid item xs={4}>
                             <TextField
-                                id="phone"
+                                {...register('phone')}
                                 label="Phone"
                                 variant="filled"
+                                error={!!errors.phone}
+                                helperText={errors.phone?.message}
                                 fullWidth
-                                required
                             />
                         </Grid>
                         <Grid item xs={6}>
-                            <DatePicker
-                                label="Date of Birth"
-                                value={date}
-                                onChange={(newDate) => {
-                                    setDate(newDate);
-                                }}
-                                renderInput={(params) => <TextField required fullWidth variant="filled" {...params} />}
+                            <Controller
+                                control={control}
+                                name="dateOfBirth"
+                                defaultValue={null}
+                                render={({field}) => (
+                                    <DatePicker
+                                        label="Date of Birth"
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        renderInput={(params) => <TextField {...params} error={!!errors.dateOfBirth}
+                                                                            helperText={errors.dateOfBirth?.message}
+                                                                            fullWidth variant="filled"/>}
+                                    />
+                                )}
                             />
                         </Grid>
                         <Grid item xs={6}>
                             <TextField
-                                id="address"
+                                {...register('address')}
                                 label="Address"
                                 variant="filled"
+                                error={!!errors.address}
+                                helperText={errors.address?.message}
                                 fullWidth
-                                required
                             />
                         </Grid>
                         <Grid item xs={6}>
                             <TextField
-                                id="password"
+                                {...register('password')}
                                 label="Password"
                                 variant="filled"
                                 type="password"
+                                error={!!errors.password}
+                                helperText={errors.password?.message}
                                 fullWidth
-                                required
                             />
                         </Grid>
                         <Grid item xs={6}>
                             <TextField
-                                id="confirmPassword"
+                                {...register('confirmPassword')}
                                 label="Confirm Password"
                                 variant="filled"
                                 type="password"
+                                error={!!errors.confirmPassword}
+                                helperText={errors.confirmPassword?.message}
                                 fullWidth
-                                required
                             />
                         </Grid>
                         <Grid item xs>
                             <Button
+                                type="submit"
                                 sx={{height: "100%"}}
                                 variant="contained"
                                 disableElevation
