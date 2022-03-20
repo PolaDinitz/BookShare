@@ -169,7 +169,7 @@ const Register = () => {
                                 fullWidth
                             />
                         </Grid>
-                        <Grid item xs>
+                        <Grid item xs sx={{display: "flex", justifyContent: "center"}}>
                             <Button
                                 type="submit"
                                 sx={{height: "100%"}}
