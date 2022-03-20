@@ -3,3 +3,4 @@
 /**/dist/
 .vscode
 .env
+packages/frontend/.idea/

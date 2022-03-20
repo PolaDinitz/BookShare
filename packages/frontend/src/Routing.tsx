@@ -1,14 +1,19 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import SignUp from "./components/SignUp/SignUp";
-import Login from "./components/Login/Login";
+import Login from "./components/login/Login";
+import Header from "./components/header/Header";
+import Home from "./components/home/Home";
+import Register from "./components/register/Register";
 
 const Routing = () => {
   return (
     <Router>
       <>
+        <Header/>
         <Routes>
-          <Route path="/" element={<Login />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
         </Routes>
       </>
     </Router>

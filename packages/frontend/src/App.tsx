@@ -1,12 +1,14 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Login from './components/Login/Login';
 import Routing from './Routing';
+import DateAdapter from '@mui/lab/AdapterMoment';
+import LocalizationProvider from '@mui/lab/LocalizationProvider/LocalizationProvider';
 
 function App() {
   return (
-    <Routing/>
+      <LocalizationProvider dateAdapter={DateAdapter}>
+        <Routing/>
+      </LocalizationProvider>
   );
 }
 
