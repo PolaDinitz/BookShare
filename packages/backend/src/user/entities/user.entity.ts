@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { IsDate, IsEmail, IsPhoneNumber, IsMobilePhone } from "class-validator";
+import { IsDate, IsEmail, IsPhoneNumber } from "class-validator";
 import { Gender } from "src/enums/gender.enum";
 import { Role } from "src/enums/role.enum";
 import { Type } from "class-transformer";
@@ -33,7 +33,7 @@ export class User {
   role: Role
 
   @Column()
-  @IsMobilePhone("IL")
+  @IsPhoneNumber("IL")
   phoneNumber: string
 
   @IsDate()
