@@ -2,9 +2,13 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {config} from "../config/config";
 import {RegisterFormInputs} from "../utils/forms/RegisterSchema";
 import {LoginFormInputs} from "../utils/forms/LoginSchema";
+import header from "../components/header/Header";
+import createFormData from "../utils/form-data-creator";
 
 const register = (registerFormInputs: RegisterFormInputs) => {
-    return axios.put(`${config.apiUrl}/user`, registerFormInputs)
+    const formData = createFormData(registerFormInputs);
+    formData.set("profileImage", registerFormInputs.profileImage[0])
+    return axios.put(`${config.apiUrl}/user`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
         .then((response: AxiosResponse) => {
             return response.data;
         })

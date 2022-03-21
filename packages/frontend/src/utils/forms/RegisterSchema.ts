@@ -3,7 +3,7 @@ import GenderEnum from "../../enums/GenderEnum";
 import InputErrorMessagesEnum from "../../enums/InputErrorMessagesEnum";
 
 export interface RegisterFormInputs {
-    profileImage: File;
+    profileImage: FileList;
     firstName: string;
     lastName: string;
     gender: GenderEnum;

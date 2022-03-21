@@ -3,6 +3,7 @@ import AuthService from "../../services/auth.service";
 import {toast} from "react-toastify";
 import {LoginFormInputs} from "../../utils/forms/LoginSchema";
 import {RegisterFormInputs} from "../../utils/forms/RegisterSchema";
+import createFormData from "../../utils/form-data-creator";
 
 const user = localStorage.getItem("user");
 

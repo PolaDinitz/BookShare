@@ -5,15 +5,18 @@ import {Link} from "react-router-dom";
 import {LoginFormInputs, loginSchema} from "../../utils/forms/LoginSchema";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
+import {useDispatch} from "react-redux";
+import {AppDispatch} from "../../types/types";
+import {loginThunk} from "../../features/auth/auth.slice";
 
 const Login = () => {
-
+    const dispatch = useDispatch<AppDispatch>()
     const {register, handleSubmit, formState: {errors}} = useForm<LoginFormInputs>({
         resolver: yupResolver(loginSchema)
     });
 
     const onSubmit = (data: LoginFormInputs) => {
-        console.log(data);
+        dispatch(loginThunk(data));
     };
 
     return (

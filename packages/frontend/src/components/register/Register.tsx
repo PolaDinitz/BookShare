@@ -21,11 +21,11 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {RegisterFormInputs, registerSchema} from "../../utils/forms/RegisterSchema";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../types/types";
-import {loginThunk, registerThunk} from "../../features/auth/auth.slice";
+import {registerThunk} from "../../features/auth/auth.slice";
 
 const Register = () => {
-
     const dispatch = useDispatch<AppDispatch>()
+
     const [profileImage, setProfileImage] = React.useState('Profile_avatar_placeholder_large.png');
     const onProfileImageChange = (event: any) => {
         let imageFile: File = event?.target?.files[0];
@@ -61,7 +61,7 @@ const Register = () => {
                         <label htmlFor="uploadProfileImage">
                             <input {...register('profileImage')} name="profileImage" hidden accept="image/*"
                                    id="uploadProfileImage" type="file" onChangeCapture={onProfileImageChange}
-                                   />
+                            />
                             <Avatar
                                 alt="Profile Avatar"
                                 src={profileImage}
