@@ -16,7 +16,7 @@ export class CreateUserDto {
     @IsEnum(Gender)
     @IsNotEmpty()
     gender: Gender
-    @IsPhoneNumber()
+    @IsPhoneNumber("IL")
     phoneNumber: string
     
     @IsDate()
