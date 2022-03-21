@@ -33,7 +33,7 @@ export class User {
   role: Role
 
   @Column()
-  @IsPhoneNumber()
+  @IsPhoneNumber("IL")
   phoneNumber: string
 
   @IsDate()
