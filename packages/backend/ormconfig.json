@@ -1,0 +1,10 @@
+{
+    "type": "postgres",
+    "host": "140.238.71.84",
+    "port": 5432,
+    "username": "postgres",
+    "password": "postgres",
+    "database": "bookshare",
+    "entities": ["dist/**/*.entity{.ts,.js}"],
+    "synchronize": true
+}
