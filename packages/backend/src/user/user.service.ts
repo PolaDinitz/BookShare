@@ -6,6 +6,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { IMAGES_ASSETS_PATH } from "../consts/images.consts";
+import { unlinkSync } from 'fs';
 
 
 @Injectable()
@@ -31,13 +33,18 @@ export class UsersService {
     });
   }
 
-  public async updateUser(id : string , updateUserDto: UpdateUserDto) {
+  public async updateUser(id : string , updateUserDto: UpdateUserDto, imageName : string | null) {
     const oldUser = await this.getUserById(id);
 
     let pass = oldUser.password;
     if (updateUserDto.password) {
         pass = await this.hashPassword(updateUserDto.password);
     }
+ 
+    if (imageName != null && imageName != oldUser.imageUrl) {
+      unlinkSync(IMAGES_ASSETS_PATH + oldUser.imageUrl);
+    }
+
     return await this.usersRepository.update(id, {
         email: updateUserDto.email || oldUser.email,
         firstName: updateUserDto.firstName || oldUser.firstName,
@@ -46,11 +53,12 @@ export class UsersService {
         address: updateUserDto.address || oldUser.address,
         dateOfBirth: updateUserDto.dateOfBirth || oldUser.dateOfBirth,
         phoneNumber: updateUserDto.phoneNumber || oldUser.phoneNumber,
-        role: oldUser.role
+        role: oldUser.role,
+        imageUrl : imageName == null ? oldUser.imageUrl : imageName
     });
   }
   
-  public async register(createUserDto: CreateUserDto) :Promise<User>{
+  public async register(createUserDto: CreateUserDto, imageName: string|null) :Promise<User>{
     const password = await this.hashPassword(createUserDto.password)
     const newUser = this.usersRepository.create({
         email: createUserDto.email,
@@ -61,8 +69,12 @@ export class UsersService {
         dateOfBirth: createUserDto.dateOfBirth,
         phoneNumber: createUserDto.phoneNumber,
         gender: createUserDto.gender,
-        role: Role.USER
+        role: Role.USER,
     });
+
+    if (imageName != null) {
+      newUser.imageUrl = imageName;
+    }
     return await this.usersRepository.save(newUser);
   }
 
