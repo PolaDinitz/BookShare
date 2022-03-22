@@ -57,7 +57,7 @@ export class UsersController {
 
   @Put()
   @UseInterceptors(FileInterceptor('profileImage'))
-  async register(@Body() createUserDto: CreateUserDto, @UploadedFile() profileImage: Express.Multer.File) {
+  async register(@UploadedFile() profileImage: Express.Multer.File, @Body() createUserDto: CreateUserDto) {
       const user = await this.usersService.getUserByEmail(createUserDto.email);
       if (user){
           throw new HttpException('email already exists', HttpStatus.BAD_REQUEST);

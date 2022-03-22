@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
+import { randomUUID } from "crypto";
 
 export const imageFileFilter = (req, file, callback) => {
   if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
@@ -8,11 +9,7 @@ export const imageFileFilter = (req, file, callback) => {
 };
 
 export const editFileName = (req, file, callback) => {
-  const name = file.originalname.split('.')[0];
   const fileExtName = file.originalname.split('.').pop();
-  const randomName = Array(4)
-    .fill(null)
-    .map(() => Math.round(Math.random() * 16).toString(16))
-    .join('');
-  callback(null, `${name}-${randomName}.${fileExtName}`);
+  const uuid = randomUUID(); 
+  callback(null, `${uuid}.${fileExtName}`);
 };
