@@ -44,13 +44,12 @@ const Register = () => {
         resolver: yupResolver(registerSchema)
     });
 
-    const onSubmit = async (data: RegisterFormInputs) => {
-        try {
-            await dispatch(registerThunk(data)).unwrap();
+    const onSubmit = (data: RegisterFormInputs) => {
+        dispatch(registerThunk(data)).unwrap().then(() => {
             navigate('/');
-        } catch (error: any) {
-            toast.error(error?.message);
-        }
+        }).catch((errorMessage: string) => {
+            toast.error(errorMessage);
+        });
     };
 
     return (
@@ -143,6 +142,8 @@ const Register = () => {
                                     defaultValue={null}
                                     render={({field}) => (
                                         <DatePicker
+                                            openTo="year"
+                                            views={['year', 'month', 'day']}
                                             inputFormat="DD/MM/YYYY"
                                             label="Date of Birth"
                                             value={field.value}

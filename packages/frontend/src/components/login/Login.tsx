@@ -21,13 +21,12 @@ const Login = () => {
         resolver: yupResolver(loginSchema)
     });
 
-    const onSubmit = async (data: LoginFormInputs) => {
-        try {
-            await dispatch(loginThunk(data)).unwrap();
+    const onSubmit = (data: LoginFormInputs) => {
+        dispatch(loginThunk(data)).unwrap().then(() => {
             navigate('/');
-        } catch (error: any) {
-            toast.error(error?.message);
-        }
+        }).catch((errorMessage: any) => {
+            toast.error(errorMessage);
+        });
     };
 
     return (
