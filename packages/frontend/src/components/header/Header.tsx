@@ -4,8 +4,13 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import PersonIcon from '@mui/icons-material/Person';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import LogoutIcon from '@mui/icons-material/Logout';
+import {useSelector} from "react-redux";
+import {RootState} from "../../types/types";
 
 const Header = () => {
+
+    const loggedUser = useSelector((state: RootState) => state.auth.user);
+
     return (
         <Grid
             container
@@ -23,7 +28,7 @@ const Header = () => {
                     <Box>
                         <Avatar
                             alt="Profile Avatar"
-                            src="Profile_avatar_placeholder_large.png"
+                            src="/Profile_avatar_placeholder_large.png"
                             sx={{width: 64, height: 64, boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.4)"}}
                         />
                     </Box>
@@ -39,7 +44,7 @@ const Header = () => {
             </Grid>
             <Grid item xs={4}>
                 <Box sx={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
-                    <img src="BookShareLogoV2.png" alt="BookShare"/>
+                    <img src="/BookShareLogoV2.png" alt="BookShare"/>
                 </Box>
             </Grid>
             <Grid item xs={4}>

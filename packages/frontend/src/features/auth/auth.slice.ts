@@ -1,22 +1,18 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import AuthService from "../../services/auth.service";
-import {toast} from "react-toastify";
 import {LoginFormInputs} from "../../utils/forms/LoginSchema";
 import {RegisterFormInputs} from "../../utils/forms/RegisterSchema";
-import createFormData from "../../utils/form-data-creator";
+import {User} from "../../models/user.model";
 
 const user = localStorage.getItem("user");
 
-export const loginThunk = createAsyncThunk<any, LoginFormInputs>(
+export const loginThunk = createAsyncThunk<{user: User}, LoginFormInputs>(
     'auth/login',
     async (payload: LoginFormInputs, thunkApi) => {
         try {
             const user = await AuthService.login(payload);
             return {user};
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                toast.error(error.message);
-            }
+        } catch (error: any) {
             return thunkApi.rejectWithValue(error);
         }
     }
@@ -28,22 +24,24 @@ export const registerThunk = createAsyncThunk<any, RegisterFormInputs>(
         try {
             return await AuthService.register(payload);
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                toast.error(error.message);
-            }
             return thunkApi.rejectWithValue(error);
         }
     }
 );
 
-const logout = createAsyncThunk(
+export const logoutThunk = createAsyncThunk(
     "auth/logout",
     async () => {
         await AuthService.logout();
     }
 );
 
-const initialState = user
+interface AuthState {
+    user: User | null;
+    isLoggedIn: boolean;
+}
+
+const initialState: AuthState = user
     ? {isLoggedIn: true, user: JSON.parse(user)}
     : {isLoggedIn: false, user: null};
 
@@ -60,7 +58,7 @@ const authSlice = createSlice({
                 state.isLoggedIn = true;
                 state.user = action.payload.user;
             })
-            .addCase(logout.fulfilled, (state, action) => {
+            .addCase(logoutThunk.fulfilled, (state, action) => {
                 state.isLoggedIn = false;
                 state.user = null;
             })
