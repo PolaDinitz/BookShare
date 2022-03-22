@@ -1,3 +1,3 @@
 
-export const IMAGES_ASSETS_PATH = "./images/"
-export const DEFAULT_IMAGE_FILE_NAME = "Profile_avatar_placeholder_large.png";
+export const IMAGES_USER_ASSETS_PATH = "./images/user/"
+export const DEFAULT_USER_IMAGE_FILE_NAME = "Profile_avatar_placeholder_large.png";

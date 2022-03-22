@@ -23,7 +23,7 @@ export class UsersController {
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getUser(@Request() req: any, @Param('id') id: string) {
-      if (req.user.role != Role.ADMIN && req.user.userId != id){
+      if (req.user.role !== Role.ADMIN && req.user.userId !== id){
           throw new UnauthorizedException;
       }
       return this.usersService.getUserById(id);
@@ -34,10 +34,10 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @UseInterceptors(FileInterceptor('profileImage'))
   async updateUser(@Request() req: any, @Param('id') id: string, @Body() updateUserDto : UpdateUserDto, @UploadedFile() profileImage: Express.Multer.File) {
-      if (req.user.role != Role.ADMIN && req.user.userId != id){
+      if (req.user.role !== Role.ADMIN && req.user.userId !== id){
         throw new UnauthorizedException;
       }
-      if (updateUserDto.password && updateUserDto.confirmPassword && updateUserDto.password != updateUserDto.confirmPassword){
+      if (updateUserDto.password && updateUserDto.confirmPassword && updateUserDto.password !== updateUserDto.confirmPassword){
           throw new HttpException('password and confirm does not match', HttpStatus.BAD_REQUEST);
       }
       if ((updateUserDto.password && !updateUserDto.confirmPassword) || (!updateUserDto.password) && (updateUserDto.confirmPassword)){
@@ -50,12 +50,12 @@ export class UsersController {
       if (updateUserDto.email) {
         const user = await this.usersService.getUserByEmail(updateUserDto.email);
         if (user) {
-            if (oldUser.email != user.email) {
+            if (oldUser.email !== user.email) {
                 throw new HttpException('email already exists', HttpStatus.BAD_REQUEST);
             }
         }  
       }
-      var imageName : string|null = null;
+      let imageName : String = null;
       if (profileImage) {
           imageName = profileImage.filename;
       }
@@ -76,11 +76,11 @@ export class UsersController {
       if (user){
           throw new HttpException('email already exists', HttpStatus.BAD_REQUEST);
       }
-      if (createUserDto.password != createUserDto.confirmPassword) {
+      if (createUserDto.password !== createUserDto.confirmPassword) {
           throw new HttpException('password and confirm does not match', HttpStatus.BAD_REQUEST);
       }
 
-      var imageName : string|null = null;
+      let imageName : String = null;
       if (profileImage) {
           imageName = profileImage.filename;
       }
