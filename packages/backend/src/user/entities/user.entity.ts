@@ -3,6 +3,7 @@ import { IsDate, IsEmail, IsPhoneNumber } from "class-validator";
 import { Gender } from "src/enums/gender.enum";
 import { Role } from "src/enums/role.enum";
 import { Type } from "class-transformer";
+import { DEFAULT_USER_IMAGE_FILE_NAME } from "src/consts/images.consts";
 
 @Entity()
 export class User {
@@ -24,7 +25,6 @@ export class User {
     enum: Gender
   })
   gender: Gender
-
   
   @Column({
     type: "enum",
@@ -46,6 +46,9 @@ export class User {
 
   @Column()
   password: string
+
+  @Column({default: DEFAULT_USER_IMAGE_FILE_NAME})
+  imageUrl: string
 
   //TODO: ADD my books and landed books relations 
 }
