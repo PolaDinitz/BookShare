@@ -12,7 +12,7 @@ import { IMAGES_PUBLIC_ASSETS_PATH, IMAGES_USER_ASSETS_PATH } from 'src/consts/i
   imports: [TypeOrmModule.forFeature([User]),
   MulterModule.register({
     storage: diskStorage({
-      destination: `${IMAGES_PUBLIC_ASSETS_PATH}${IMAGES_USER_ASSETS_PATH}`,
+      destination: `${IMAGES_PUBLIC_ASSETS_PATH}/${IMAGES_USER_ASSETS_PATH}`,
       filename: editFileName,
     }),
     fileFilter: imageFileFilter

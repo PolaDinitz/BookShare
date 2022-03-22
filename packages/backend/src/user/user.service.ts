@@ -42,7 +42,7 @@ export class UsersService {
     }
  
     if (imageName !== null && imageName !== oldUser.imageUrl && oldUser.imageUrl !== DEFAULT_USER_IMAGE_FILE_NAME) {
-      unlinkSync(`${IMAGES_PUBLIC_ASSETS_PATH}${IMAGES_USER_ASSETS_PATH}${oldUser.imageUrl}`);
+      unlinkSync(`${IMAGES_PUBLIC_ASSETS_PATH}/${IMAGES_USER_ASSETS_PATH}/${oldUser.imageUrl}`);
     }
 
     return await this.usersRepository.update(id, {
@@ -54,7 +54,7 @@ export class UsersService {
         dateOfBirth: updateUserDto.dateOfBirth || oldUser.dateOfBirth,
         phoneNumber: updateUserDto.phoneNumber || oldUser.phoneNumber,
         role: oldUser.role,
-        imageUrl: imageName === null ? oldUser.imageUrl : `${IMAGES_USER_ASSETS_PATH}${imageName.toString()}`
+        imageUrl: imageName === null ? oldUser.imageUrl : `${IMAGES_USER_ASSETS_PATH}/${imageName.toString()}`
     });
   }
   
@@ -73,7 +73,7 @@ export class UsersService {
     });
 
     if (imageName !== null) {
-      newUser.imageUrl = `${IMAGES_USER_ASSETS_PATH}${imageName.toString()}`;
+      newUser.imageUrl = `${IMAGES_USER_ASSETS_PATH}/${imageName.toString()}`;
     }
     return await this.usersRepository.save(newUser);
   }
