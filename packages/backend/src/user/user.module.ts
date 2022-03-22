@@ -6,13 +6,13 @@ import { User } from './entities/user.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/utils/upload-files';
-import { IMAGES_USER_ASSETS_PATH } from 'src/consts/images.consts';
+import { IMAGES_PUBLIC_ASSETS_PATH, IMAGES_USER_ASSETS_PATH } from 'src/consts/images.consts';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]),
   MulterModule.register({
     storage: diskStorage({
-      destination: IMAGES_USER_ASSETS_PATH,
+      destination: `${IMAGES_PUBLIC_ASSETS_PATH}/${IMAGES_USER_ASSETS_PATH}`,
       filename: editFileName,
     }),
     fileFilter: imageFileFilter
