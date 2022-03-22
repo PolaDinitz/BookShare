@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request, UnauthorizedException, HttpException, HttpStatus, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request, UnauthorizedException, HttpException, HttpStatus, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Roles } from 'src/authorization/roles.decorator';
@@ -6,6 +6,7 @@ import { Role } from 'src/enums/role.enum';
 import { JwtAuthGuard } from 'src/authentication/jwt/jwt-auth.guard';
 import { RolesGuard } from 'src/authorization/roles.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 export class UsersController {
@@ -22,22 +23,43 @@ export class UsersController {
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getUser(@Request() req: any, @Param('id') id: string) {
-      if (req.user.role != Role.ADMIN && req.user.userId != id){
+      if (req.user.role !== Role.ADMIN && req.user.userId !== id){
           throw new UnauthorizedException;
       }
       return this.usersService.getUserById(id);
   }
 
-  @Post(':id')
-  @Roles(Role.ADMIN)
+  @Put(':id')
+  @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async updateUser(@Request() req: any, @Param('id') id: string, @Body() updateUserDto : UpdateUserDto) {
-      if (updateUserDto.password && updateUserDto.confirmPassword && updateUserDto.password != updateUserDto.confirmPassword){
+  @UseInterceptors(FileInterceptor('profileImage'))
+  async updateUser(@Request() req: any, @Param('id') id: string, @Body() updateUserDto : UpdateUserDto, @UploadedFile() profileImage: Express.Multer.File) {
+      if (req.user.role !== Role.ADMIN && req.user.userId !== id){
+        throw new UnauthorizedException;
+      }
+      if (updateUserDto.password && updateUserDto.confirmPassword && updateUserDto.password !== updateUserDto.confirmPassword){
           throw new HttpException('password and confirm does not match', HttpStatus.BAD_REQUEST);
       }
       if ((updateUserDto.password && !updateUserDto.confirmPassword) || (!updateUserDto.password) && (updateUserDto.confirmPassword)){
-          throw new HttpException('password and confirm does not match', HttpStatus.BAD_REQUEST);        }
-      return this.usersService.updateUser(id, updateUserDto);
+          throw new HttpException('password and confirm does not match', HttpStatus.BAD_REQUEST);        
+      }
+      const oldUser = await this.usersService.getUserById(id);
+      if (!oldUser) {
+          throw new HttpException('user does not exists', HttpStatus.BAD_REQUEST);
+      }
+      if (updateUserDto.email) {
+        const user = await this.usersService.getUserByEmail(updateUserDto.email);
+        if (user) {
+            if (oldUser.email !== user.email) {
+                throw new HttpException('email already exists', HttpStatus.BAD_REQUEST);
+            }
+        }  
+      }
+      let imageName : String = null;
+      if (profileImage) {
+          imageName = profileImage.filename;
+      }
+      return this.usersService.updateUser(id, updateUserDto, imageName);
   }
 
   @Delete(':id')
@@ -47,15 +69,21 @@ export class UsersController {
       return this.usersService.deleteUser(id);
   }
 
-  @Put()
-  async register(@Body() createUserDto: CreateUserDto) {
+  @Post()
+  @UseInterceptors(FileInterceptor('profileImage'))
+  async register(@UploadedFile() profileImage: Express.Multer.File, @Body() createUserDto: CreateUserDto) {
       const user = await this.usersService.getUserByEmail(createUserDto.email);
       if (user){
           throw new HttpException('email already exists', HttpStatus.BAD_REQUEST);
       }
-      if (createUserDto.password != createUserDto.confirmPassword) {
+      if (createUserDto.password !== createUserDto.confirmPassword) {
           throw new HttpException('password and confirm does not match', HttpStatus.BAD_REQUEST);
       }
-      return this.usersService.register(createUserDto);
+
+      let imageName : String = null;
+      if (profileImage) {
+          imageName = profileImage.filename;
+      }
+      return this.usersService.register(createUserDto, imageName);
   }
 }
