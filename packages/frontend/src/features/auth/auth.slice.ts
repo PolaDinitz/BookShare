@@ -2,11 +2,11 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import AuthService from "../../services/auth.service";
 import {LoginFormInputs} from "../../utils/forms/LoginSchema";
 import {RegisterFormInputs} from "../../utils/forms/RegisterSchema";
-import {User} from "../../models/user.model";
+import {Auth, AuthState} from "./auth.model";
 
 const user = localStorage.getItem("user");
 
-export const loginThunk = createAsyncThunk<{user: User}, LoginFormInputs>(
+export const loginThunk = createAsyncThunk<{ user: Auth }, LoginFormInputs>(
     'auth/login',
     async (payload: LoginFormInputs, thunkApi) => {
         try {
@@ -35,11 +35,6 @@ export const logoutThunk = createAsyncThunk(
         await AuthService.logout();
     }
 );
-
-interface AuthState {
-    user: User | null;
-    isLoggedIn: boolean;
-}
 
 const initialState: AuthState = user
     ? {isLoggedIn: true, user: JSON.parse(user)}

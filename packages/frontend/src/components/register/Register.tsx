@@ -24,6 +24,7 @@ import {AppDispatch, RootState} from "../../types/types";
 import {registerThunk} from "../../features/auth/auth.slice";
 import {toast} from "react-toastify";
 import Logout from "../logout/Logout";
+import {config} from "../../config/config";
 
 const Register = () => {
     const dispatch = useDispatch<AppDispatch>()
@@ -31,7 +32,7 @@ const Register = () => {
 
     const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
-    const [profileImage, setProfileImage] = React.useState('/Profile_avatar_placeholder_large.png');
+    const [profileImage, setProfileImage] = React.useState(`${config.apiUrl}/${config.defaultUserImageName}`);
     const onProfileImageChange = (event: any) => {
         let imageFile: File = event?.target?.files[0];
         if (imageFile) {
