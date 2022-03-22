@@ -29,7 +29,7 @@ export class UsersController {
       return this.usersService.getUserById(id);
   }
 
-  @Post(':id')
+  @Put(':id')
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @UseInterceptors(FileInterceptor('profileImage'))
@@ -69,7 +69,7 @@ export class UsersController {
       return this.usersService.deleteUser(id);
   }
 
-  @Put()
+  @Post()
   @UseInterceptors(FileInterceptor('profileImage'))
   async register(@UploadedFile() profileImage: Express.Multer.File, @Body() createUserDto: CreateUserDto) {
       const user = await this.usersService.getUserByEmail(createUserDto.email);
