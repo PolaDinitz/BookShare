@@ -30,17 +30,31 @@ export class UsersController {
   }
 
   @Post(':id')
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @UseInterceptors(FileInterceptor('profileImage'))
   async updateUser(@Request() req: any, @Param('id') id: string, @Body() updateUserDto : UpdateUserDto, @UploadedFile() profileImage: Express.Multer.File) {
+      if (req.user.role != Role.ADMIN && req.user.userId != id){
+        throw new UnauthorizedException;
+      }
       if (updateUserDto.password && updateUserDto.confirmPassword && updateUserDto.password != updateUserDto.confirmPassword){
           throw new HttpException('password and confirm does not match', HttpStatus.BAD_REQUEST);
       }
       if ((updateUserDto.password && !updateUserDto.confirmPassword) || (!updateUserDto.password) && (updateUserDto.confirmPassword)){
           throw new HttpException('password and confirm does not match', HttpStatus.BAD_REQUEST);        
       }
-      
+      const oldUser = await this.usersService.getUserById(id);
+      if (!oldUser) {
+          throw new HttpException('user does not exists', HttpStatus.BAD_REQUEST);
+      }
+      if (updateUserDto.email) {
+        const user = await this.usersService.getUserByEmail(updateUserDto.email);
+        if (user) {
+            if (oldUser.email != user.email) {
+                throw new HttpException('email already exists', HttpStatus.BAD_REQUEST);
+            }
+        }  
+      }
       var imageName : string|null = null;
       if (profileImage) {
           imageName = profileImage.filename;

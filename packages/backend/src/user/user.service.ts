@@ -6,7 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { IMAGES_ASSETS_PATH } from "../consts/images.consts";
+import { DEFAULT_IMAGE_FILE_NAME, IMAGES_ASSETS_PATH } from "../consts/images.consts";
 import { unlinkSync } from 'fs';
 
 
@@ -41,7 +41,7 @@ export class UsersService {
         pass = await this.hashPassword(updateUserDto.password);
     }
  
-    if (imageName != null && imageName != oldUser.imageUrl) {
+    if (imageName !== null && imageName !== oldUser.imageUrl && oldUser.imageUrl !== DEFAULT_IMAGE_FILE_NAME) {
       unlinkSync(IMAGES_ASSETS_PATH + oldUser.imageUrl);
     }
 
