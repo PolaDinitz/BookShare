@@ -3,12 +3,12 @@ import GenderEnum from "../../enums/GenderEnum";
 import InputErrorMessagesEnum from "../../enums/InputErrorMessagesEnum";
 
 export interface RegisterFormInputs {
-    profileImage: File;
+    profileImage: FileList;
     firstName: string;
     lastName: string;
     gender: GenderEnum;
     email: string;
-    phone: string;
+    phoneNumber: string;
     dateOfBirth: Date | null;
     address: string;
     password: string;
@@ -27,7 +27,7 @@ export const registerSchema = yup.object({
     email: yup.string()
         .required(InputErrorMessagesEnum.EMPTY_INPUT_ERROR)
         .email(InputErrorMessagesEnum.EMAIL_INPUT_ERROR),
-    phone: yup.string()
+    phoneNumber: yup.string()
         .required(InputErrorMessagesEnum.EMPTY_INPUT_ERROR),
     dateOfBirth: yup.mixed()
         .required(InputErrorMessagesEnum.EMPTY_INPUT_ERROR),

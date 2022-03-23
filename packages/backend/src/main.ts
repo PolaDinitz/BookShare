@@ -8,6 +8,6 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true });
   app.useGlobalPipes(new ValidationPipe());
   app.useStaticAssets(join(__dirname, '..', 'images'));
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();
