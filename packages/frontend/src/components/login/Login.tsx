@@ -24,7 +24,7 @@ const Login = () => {
     const onSubmit = (data: LoginFormInputs) => {
         dispatch(loginThunk(data)).unwrap().then(() => {
             navigate('/');
-        }).catch((errorMessage: any) => {
+        }).catch((errorMessage: string) => {
             toast.error(errorMessage);
         });
     };

@@ -13,7 +13,7 @@ export const loginThunk = createAsyncThunk<{ user: Auth }, LoginFormInputs>(
             const user = await AuthService.login(payload);
             return {user};
         } catch (error: any) {
-            return thunkApi.rejectWithValue(error?.message);
+            return thunkApi.rejectWithValue(error.message);
         }
     }
 );
@@ -24,7 +24,7 @@ export const registerThunk = createAsyncThunk<any, RegisterFormInputs>(
         try {
             return await AuthService.register(payload);
         } catch (error: any) {
-            return thunkApi.rejectWithValue(error?.message);
+            return thunkApi.rejectWithValue(error.message);
         }
     }
 );
