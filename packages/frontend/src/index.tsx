@@ -5,14 +5,21 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {ThemeProvider} from "@mui/material";
 import mainTheme from "./theme/Theme";
+import "react-toastify/dist/ReactToastify.min.css";
+import store from "./features/store";
+import {Provider} from 'react-redux';
+import {ToastContainer} from "react-toastify";
 
 ReactDOM.render(
-  <React.StrictMode>
-      <ThemeProvider theme={mainTheme}>
-        <App />
-      </ThemeProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <Provider store={store}>
+            <ThemeProvider theme={mainTheme}>
+                <App/>
+                <ToastContainer autoClose={3000} theme='colored' position="bottom-right"/>
+            </ThemeProvider>
+        </Provider>
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

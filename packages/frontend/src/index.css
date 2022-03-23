@@ -1,12 +1,12 @@
 @font-face {
   font-family: 'Poppins';
-  src: local('Poppins'), url('./fonts/poppins/Poppins-Regular.ttf') format('truetype');
+  src: local('Poppins'), url('utils/fonts/poppins/Poppins-Regular.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Poppins';
   font-weight: bold;
-  src: local('Poppins'), url('./fonts/poppins/Poppins-Bold.ttf') format('truetype');
+  src: local('Poppins'), url('utils/fonts/poppins/Poppins-Bold.ttf') format('truetype');
 }
 
 body {
