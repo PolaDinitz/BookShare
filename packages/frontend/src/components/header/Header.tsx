@@ -53,9 +53,9 @@ const Header = () => {
             </Grid>
             <Grid item xs={4}>
                 <Box sx={{display: "flex", flexDirection: "row", justifyContent: "center", columnGap: 1}}>
-                    {headerPagesToDisplay.map((page: HeaderPage) => {
+                    {headerPagesToDisplay.map((page: HeaderPage, index: number) => {
                         return (
-                            <Link to={page.path}>
+                            <Link key={index} to={page.path}>
                                 <Avatar sx={{backgroundColor: "#12263A"}}>
                                     {page.icon}
                                 </Avatar>
