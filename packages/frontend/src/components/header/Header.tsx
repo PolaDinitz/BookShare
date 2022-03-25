@@ -1,17 +1,17 @@
-import {Avatar, Box, Grid, Menu, Typography} from "@mui/material";
-import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
-import InboxIcon from '@mui/icons-material/Inbox';
-import PersonIcon from '@mui/icons-material/Person';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import LogoutIcon from '@mui/icons-material/Logout';
+import {Avatar, Box, Grid, Typography} from "@mui/material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../types/types";
 import {config} from "../../config/config";
 import {Link} from "react-router-dom";
+import React from "react";
+import HeaderPage, {guestHeaderPages, userHeaderPages} from "./HeaderPage";
 
 const Header = () => {
 
+    const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
     const loggedInUser = useSelector((state: RootState) => state.auth.user);
+
+    const headerPagesToDisplay: HeaderPage[] = isLoggedIn ? userHeaderPages : guestHeaderPages;
 
     return (
         <Grid
@@ -53,23 +53,15 @@ const Header = () => {
             </Grid>
             <Grid item xs={4}>
                 <Box sx={{display: "flex", flexDirection: "row", justifyContent: "center", columnGap: 1}}>
-                    <Avatar sx={{backgroundColor: "#12263A"}}>
-                        <LocalLibraryIcon/>
-                    </Avatar>
-                    <Avatar sx={{backgroundColor: "#12263A"}}>
-                        <InboxIcon/>
-                    </Avatar>
-                    <Avatar sx={{backgroundColor: "#12263A"}}>
-                        <PersonIcon/>
-                    </Avatar>
-                    <Avatar sx={{backgroundColor: "#12263A"}}>
-                        <MoreHorizIcon/>
-                    </Avatar>
-                    <Link to="/login">
-                        <Avatar sx={{backgroundColor: "#12263A"}}>
-                            <LogoutIcon/>
-                        </Avatar>
-                    </Link>
+                    {headerPagesToDisplay.map((page: HeaderPage, index: number) => {
+                        return (
+                            <Link key={index} to={page.path}>
+                                <Avatar sx={{backgroundColor: "#12263A"}}>
+                                    {page.icon}
+                                </Avatar>
+                            </Link>
+                        )
+                    })}
                 </Box>
             </Grid>
         </Grid>
