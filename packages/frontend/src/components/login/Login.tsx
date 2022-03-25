@@ -10,6 +10,7 @@ import {AppDispatch, RootState} from "../../types/types";
 import {loginThunk} from "../../features/auth/auth.slice";
 import {toast} from "react-toastify";
 import Logout from "../logout/Logout";
+import {config} from "../../config/config";
 
 const Login = () => {
     const dispatch = useDispatch<AppDispatch>()
@@ -30,7 +31,8 @@ const Login = () => {
     };
 
     return (
-        <CustomPaper img="/page-headers/login-header-image.jpg" contentWidth="50%">
+        <CustomPaper size="small" img="/page-headers/login-header-image.jpg"
+                     avatarImg={`${config.apiUrl}/${config.defaultUserImageName}`} contentWidth="50%">
             {!isLoggedIn ?
                 <Stack
                     spacing={3}

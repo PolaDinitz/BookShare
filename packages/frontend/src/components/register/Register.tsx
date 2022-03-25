@@ -53,7 +53,7 @@ const Register = () => {
     };
 
     return (
-        <CustomPaper img="/page-headers/register-header-image.jpg" contentWidth="80%">
+        <CustomPaper size="small" img="/page-headers/register-header-image.jpg" contentWidth="80%">
             {!isLoggedIn ?
                 <Stack
                     spacing={3}
