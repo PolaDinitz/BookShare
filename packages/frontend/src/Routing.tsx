@@ -5,6 +5,7 @@ import Header from "./components/header/Header";
 import Home from "./components/home/Home";
 import Register from "./components/register/Register";
 import PrivateRoute from "./utils/PrivateRouter";
+import Inbox from "./components/inbox/Inbox";
 
 const Routing = () => {
     return (
@@ -16,6 +17,9 @@ const Routing = () => {
                     <Route path="/register" element={<Register/>}/>
                     <Route path='/' element={<PrivateRoute/>}>
                         <Route path='/' element={<Home/>}/>
+                    </Route>
+                    <Route path='/inbox' element={<PrivateRoute/>}>
+                        <Route path='/inbox' element={<Inbox/>}/>
                     </Route>
                 </Routes>
             </>
