@@ -1,5 +1,5 @@
 import React from "react";
-import {Avatar, Box, Paper} from "@mui/material";
+import { Avatar, Box, Paper } from "@mui/material";
 
 type Size = 'small' | 'large';
 
@@ -54,8 +54,8 @@ const customPaperStyleMap = new Map<Size, CustomPaperStyle>([
 ])
 
 type CustomPaperProps = {
-    children?: React.ReactNode;
     size: Size,
+    children?: React.ReactNode;
     img?: string;
     avatarImg?: string;
     contentWidth?: string

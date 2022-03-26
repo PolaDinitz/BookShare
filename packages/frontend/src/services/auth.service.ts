@@ -1,7 +1,7 @@
-import axios, {AxiosError, AxiosResponse} from "axios";
-import {config} from "../config/config";
-import {RegisterFormInputs} from "../utils/forms/RegisterSchema";
-import {LoginFormInputs} from "../utils/forms/LoginSchema";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { config } from "../config/config";
+import { RegisterFormInputs } from "../utils/forms/RegisterSchema";
+import { LoginFormInputs } from "../utils/forms/LoginSchema";
 import createFormData from "../utils/FormDataCreator";
 
 const register = (registerFormInputs: RegisterFormInputs) => {
