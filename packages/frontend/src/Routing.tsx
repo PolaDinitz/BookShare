@@ -6,6 +6,7 @@ import Home from "./components/home/Home";
 import Register from "./components/register/Register";
 import PrivateRoute from "./utils/PrivateRouter";
 import Logout from "./components/logout/Logout";
+import Library from "./components/library/Library";
 
 const Routing = () => {
     return (
@@ -17,6 +18,9 @@ const Routing = () => {
                     <Route path="/register" element={<Register/>}/>
                     <Route path='/' element={<PrivateRoute/>}>
                         <Route path='/' element={<Home/>}/>
+                    </Route>
+                    <Route path='/library' element={<PrivateRoute/>}>
+                        <Route path='/library' element={<Library/>}/>
                     </Route>
                     <Route path='/logout' element={<PrivateRoute/>}>
                         <Route path="/logout" element={<Logout/>}/>
