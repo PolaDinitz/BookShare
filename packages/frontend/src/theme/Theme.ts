@@ -1,4 +1,4 @@
-import {createTheme} from "@mui/material";
+import { createTheme } from "@mui/material";
 
 declare module '@mui/material/styles' {
     interface Theme {
@@ -6,6 +6,7 @@ declare module '@mui/material/styles' {
             danger: string;
         };
     }
+
     // allow configuration using `createTheme`
     interface ThemeOptions {
         status?: {
@@ -16,15 +17,15 @@ declare module '@mui/material/styles' {
 
 const mainTheme = createTheme({
     palette: {
-      primary: {
-          main: "#2FAC90",
-          contrastText: "white"
-      }
+        primary: {
+            main: "#2FAC90",
+            contrastText: "white"
+        }
     },
     components: {
         MuiFilledInput: {
             defaultProps: {
-              disableUnderline: true
+                disableUnderline: true
             },
             styleOverrides: {
                 root: {

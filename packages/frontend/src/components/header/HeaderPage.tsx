@@ -1,6 +1,6 @@
 import React from "react";
-import {SvgIconProps} from "@mui/material";
-import {AppRegistration, Logout} from "@mui/icons-material";
+import { SvgIconProps } from "@mui/material";
+import { AppRegistration, Logout } from "@mui/icons-material";
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
 interface HeaderPage {

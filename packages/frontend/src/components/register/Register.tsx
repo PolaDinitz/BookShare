@@ -12,19 +12,19 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import {Link, useNavigate} from "react-router-dom";
-import CustomPaper from "../custom-paper/CustomPaper";
+import { Link, useNavigate } from "react-router-dom";
 import * as React from 'react';
-import {DatePicker} from "@mui/lab";
-import {Controller, useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
-import {RegisterFormInputs, registerSchema} from "../../utils/forms/RegisterSchema";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "../../types/types";
-import {registerThunk} from "../../features/auth/auth.slice";
-import {toast} from "react-toastify";
+import { DatePicker } from "@mui/lab";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../types/types";
+import { registerThunk } from "../../features/auth/auth.slice";
 import Logout from "../logout/Logout";
-import {config} from "../../config/config";
+import { config } from "../../config/config";
+import CustomPaper from "../custom-paper/CustomPaper";
+import { RegisterFormInputs, registerSchema } from "../../utils/forms/RegisterSchema";
 
 const Register = () => {
     const dispatch = useDispatch<AppDispatch>()
@@ -55,7 +55,7 @@ const Register = () => {
     return (
         <>
             {!isLoggedIn ?
-                <CustomPaper img="/page-headers/register-header-image.jpg" contentWidth="80%">
+                <CustomPaper size="small" img="/page-headers/register-header-image.jpg" contentWidth="80%">
                     <Stack
                         spacing={3}
                         alignItems="center"

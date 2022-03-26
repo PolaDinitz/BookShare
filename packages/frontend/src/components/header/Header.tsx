@@ -1,10 +1,10 @@
-import {Avatar, Box, Grid, Typography} from "@mui/material";
-import {useSelector} from "react-redux";
-import {RootState} from "../../types/types";
-import {config} from "../../config/config";
-import {Link} from "react-router-dom";
 import React from "react";
-import HeaderPage, {guestHeaderPages, userHeaderPages} from "./HeaderPage";
+import { Link } from "react-router-dom";
+import { Avatar, Box, Grid, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
+import { RootState } from "../../types/types";
+import { config } from "../../config/config";
+import HeaderPage, { guestHeaderPages, userHeaderPages } from "./HeaderPage";
 
 const Header = () => {
 
