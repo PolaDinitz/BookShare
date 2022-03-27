@@ -33,6 +33,17 @@ export class UsersService {
     });
   }
 
+  public async updateRefreshToken(id : string, refresh_token : string) {
+    if (refresh_token !== null) {
+      return await this.usersRepository.update(id, {
+        refreshToken: await bcrypt.hash(refresh_token, 10)
+      });
+    }
+    return await this.usersRepository.update(id, {
+      refreshToken : null
+    });
+  }
+
   public async updateUser(id : string , updateUserDto: UpdateUserDto, imageName : String) {
     const oldUser = await this.getUserById(id);
 

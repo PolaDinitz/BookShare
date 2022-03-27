@@ -50,5 +50,8 @@ export class User {
   @Column({default: `${IMAGES_USER_ASSETS_PATH}/${DEFAULT_USER_IMAGE_FILE_NAME}`})
   imageUrl: string
 
+  @Column({ nullable: true })
+  refreshToken: string
+
   //TODO: ADD my books and landed books relations 
 }
