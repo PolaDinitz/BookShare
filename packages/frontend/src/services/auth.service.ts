@@ -1,7 +1,7 @@
-import axios, {AxiosError, AxiosResponse} from "axios";
-import {config} from "../config/config";
-import {RegisterFormInputs} from "../utils/forms/RegisterSchema";
-import {LoginFormInputs} from "../utils/forms/LoginSchema";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { config } from "../config/config";
+import { RegisterFormInputs } from "../utils/forms/RegisterSchema";
+import { LoginFormInputs } from "../utils/forms/LoginSchema";
 import createFormData from "../utils/FormDataCreator";
 import { refreshTokenAuthHeader } from "../utils/AuthHeader";
 import { axiosInstance } from "../utils/AxiosInstance";
@@ -9,18 +9,20 @@ import { axiosInstance } from "../utils/AxiosInstance";
 const register = (registerFormInputs: RegisterFormInputs) => {
     const formData = createFormData(registerFormInputs);
     formData.set("profileImage", registerFormInputs.profileImage[0])
-    return axios.post(`${config.apiUrl}/user`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
-        .then((response: AxiosResponse) => {
-            return response.data;
-        })
-        .catch((error: AxiosError) => {
-            throw new Error(`Something went wrong while trying to register, ${(error.response ? error.response?.data?.message : error.message)}`);
-        })
+    return axios.post(`${config.apiUrl}/user`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then((response: AxiosResponse) => {
+        return response.data;
+    }).catch((error: AxiosError) => {
+        throw new Error(`Something went wrong while trying to register, ${(error.response ? error.response?.data?.message : error.message)}`);
+    })
 }
 
 const refreshToken = () => {
     return axios.post(`${config.apiUrl}/auth/refresh`, {}, {
-        headers : {
+        headers: {
             ...refreshTokenAuthHeader()
         }
     }).then((response: AxiosResponse) => {
@@ -44,13 +46,13 @@ const login = (loginFormInputs: LoginFormInputs) => {
 
 const logout = () => {
     return axiosInstance.post(`${config.apiUrl}/auth/logout`)
-    .then((response : AxiosResponse) => {
-        localStorage.removeItem('user');
-        return response.data
-    })
-    .catch((error: AxiosError) => {
-        throw new Error(`Something went wrong while tring to logout, ${(error.response ? error.response?.data?.message : error.message)}`)
-    });
+        .then((response: AxiosResponse) => {
+            localStorage.removeItem('user');
+            return response.data
+        })
+        .catch((error: AxiosError) => {
+            throw new Error(`Something went wrong while tring to logout, ${(error.response ? error.response?.data?.message : error.message)}`)
+        });
 }
 
 const authService = {

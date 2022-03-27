@@ -1,6 +1,6 @@
 import { AxiosRequestHeaders } from "axios";
 
-export const authHeader = () : AxiosRequestHeaders => {
+export const accessTokenAuthHeader = () : AxiosRequestHeaders => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (user !== '{}' && user && user.access_token) {
         return { Authorization: 'Bearer ' + user.access_token };
@@ -9,7 +9,7 @@ export const authHeader = () : AxiosRequestHeaders => {
     }
 }
 
-export const refreshTokenAuthHeader = () : AxiosRequestHeaders => {
+export const refreshTokenAuthHeader = (): AxiosRequestHeaders => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (user !== '{}' && user && user.refresh_token) {
         return { Authorization: 'Bearer ' + user.refresh_token };
