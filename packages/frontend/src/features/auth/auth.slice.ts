@@ -1,8 +1,8 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import AuthService from "../../services/auth.service";
-import {LoginFormInputs} from "../../utils/forms/LoginSchema";
-import {RegisterFormInputs} from "../../utils/forms/RegisterSchema";
-import {Auth, AuthState} from "./auth.model";
+import { LoginFormInputs } from "../../utils/forms/LoginSchema";
+import { RegisterFormInputs } from "../../utils/forms/RegisterSchema";
+import { Auth, AuthState } from "./auth.model";
 
 const user = localStorage.getItem("user");
 

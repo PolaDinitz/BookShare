@@ -1,5 +1,6 @@
 export interface Auth {
     access_token: string;
+    refresh_token: string;
     firstName: string;
     lastName: string;
     email: string;

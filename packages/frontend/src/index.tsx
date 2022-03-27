@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { ThemeProvider } from "@mui/material";
+import "react-toastify/dist/ReactToastify.min.css";
+import { Provider } from 'react-redux';
+import { ToastContainer } from "react-toastify";
+import store from "./features/store";
+import mainTheme from "./theme/Theme";
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {ThemeProvider} from "@mui/material";
-import mainTheme from "./theme/Theme";
-import "react-toastify/dist/ReactToastify.min.css";
-import store from "./features/store";
-import {Provider} from 'react-redux';
-import {ToastContainer} from "react-toastify";
 
 ReactDOM.render(
     <React.StrictMode>
