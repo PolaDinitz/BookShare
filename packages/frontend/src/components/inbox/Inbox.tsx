@@ -1,11 +1,27 @@
-import { Box, Typography } from "@mui/material";
+import {
+    Avatar,
+    Box,
+    InputAdornment,
+    List,
+    ListItem, ListItemAvatar, ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Paper,
+    TextField,
+    Typography
+} from "@mui/material";
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/types";
 import { config } from "../../config/config";
 import CustomPaper from "../custom-paper/CustomPaper";
+import { Search } from "@mui/icons-material";
 
 const Inbox = () => {
+
+    const paperStyle = {
+        backgroundColor: "#F5F5F5"
+    }
 
     const loggedInUser = useSelector((state: RootState) => state.auth.user);
 
@@ -20,6 +36,39 @@ const Inbox = () => {
                 >
                     {loggedInUser?.firstName + ' ' + loggedInUser?.lastName + '\'s Inbox'}
                 </Typography>
+            </Box>
+            <Box sx={{display: "flex"}}>
+                <Box sx={{flex: "1"}} m={1} component={Paper} style={paperStyle} square elevation={0}>
+                    <TextField
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search/>
+                                </InputAdornment>
+                            ),
+                        }}
+                        placeholder="Search"
+                        variant="filled"
+                        fullWidth/>
+                    <List>
+                        <ListItemButton key="1">
+                            <ListItemAvatar>
+                                <Avatar  sx={{ width: 70, height: 70 }} alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg"/>
+                            </ListItemAvatar>
+                            <ListItemText primary="Ran Biderman" secondary="The Witcher"/>
+                            <ListItemText primary="Ran Biderman" secondary="The Witcher"/>
+                        </ListItemButton>
+                        <ListItemButton key="2">
+                            <ListItemAvatar>
+                                <Avatar  sx={{ width: 70, height: 70 }} alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg"/>
+                            </ListItemAvatar>
+                            <ListItemText primary="Ran Biderman" secondary="The Witcher"/>
+                        </ListItemButton>
+                    </List>
+                </Box>
+                <Box sx={{flex: "2"}} m={1} component={Paper} style={paperStyle} square elevation={0}>
+                    Chat
+                </Box>
             </Box>
         </CustomPaper>
     )
