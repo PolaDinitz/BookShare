@@ -5,6 +5,7 @@ import { RootState } from '../../types/types';
 import CustomPaper from '../custom-paper/CustomPaper';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import ShortcutIcon from '@mui/icons-material/Shortcut';
+import LibraryBook from './libraryBook/LibraryBook';
 
 
 
@@ -112,6 +113,7 @@ const Library = () => {
                         <Divider />
                     </Grid>
                 </Grid>
+                <LibraryBook></LibraryBook>
             </Stack>
         </CustomPaper>
         </div>
