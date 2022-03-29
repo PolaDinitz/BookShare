@@ -54,6 +54,9 @@ const Inbox = () => {
                     <List>
                         <InboxItem/>
                         <InboxItem/>
+                        <InboxItem/>
+                        <InboxItem/>
+                        <InboxItem/>
                     </List>
                 </Box>
                 <Box sx={{flex: "2"}} m={1} component={Paper} style={paperStyle} square elevation={0}>
