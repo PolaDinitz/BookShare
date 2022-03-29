@@ -4,7 +4,7 @@ import {
     InputAdornment,
     List,
     ListItem, ListItemAvatar, ListItemButton,
-    ListItemIcon,
+    ListItemIcon, ListItemSecondaryAction,
     ListItemText,
     Paper,
     TextField,
@@ -16,6 +16,7 @@ import { RootState } from "../../types/types";
 import { config } from "../../config/config";
 import CustomPaper from "../custom-paper/CustomPaper";
 import { Search } from "@mui/icons-material";
+import InboxItem from "./inboxItem/InboxItem";
 
 const Inbox = () => {
 
@@ -45,25 +46,14 @@ const Inbox = () => {
                                 <InputAdornment position="start">
                                     <Search/>
                                 </InputAdornment>
-                            ),
+                            )
                         }}
                         placeholder="Search"
                         variant="filled"
                         fullWidth/>
                     <List>
-                        <ListItemButton key="1">
-                            <ListItemAvatar>
-                                <Avatar  sx={{ width: 70, height: 70 }} alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg"/>
-                            </ListItemAvatar>
-                            <ListItemText primary="Ran Biderman" secondary="The Witcher"/>
-                            <ListItemText primary="Ran Biderman" secondary="The Witcher"/>
-                        </ListItemButton>
-                        <ListItemButton key="2">
-                            <ListItemAvatar>
-                                <Avatar  sx={{ width: 70, height: 70 }} alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg"/>
-                            </ListItemAvatar>
-                            <ListItemText primary="Ran Biderman" secondary="The Witcher"/>
-                        </ListItemButton>
+                        <InboxItem/>
+                        <InboxItem/>
                     </List>
                 </Box>
                 <Box sx={{flex: "2"}} m={1} component={Paper} style={paperStyle} square elevation={0}>
