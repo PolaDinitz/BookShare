@@ -6,20 +6,33 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-const LibraryBook = () => {
+interface ILibraryBook {
+    catagory: string
+    name: string
+    author: string
+}
+
+const LibraryBook = (props: ILibraryBook) => {
+    const { catagory, name, author } = props;
+
     return (
-        <Card sx={{ minWidth: "90%" }} style={{ border: "none", boxShadow: "none" }}>
-        <CardContent>
-            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            Fantacy
-            </Typography>
-            <Typography variant="h5" component="div">
-            Harry Potter
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            by J.K rolling
-            </Typography>
-        </CardContent>
+        <Card sx={{ minWidth: "100%" }} style={{ border: "none", boxShadow: "none" }}>
+            <CardContent>
+                <Box sx={{ display: 'flex'}} >
+                    <img style={{ width: "20%", height: "100%", objectFit: "cover",  borderRadius: 20 }} src="/page-headers/library-header-image.jpg" />
+                    <Box sx={{ display: 'flex', flexDirection: "column", m: 2 }}>
+                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                            {catagory}
+                        </Typography>
+                        <Typography variant="h5" component="div">
+                            {name}
+                        </Typography>
+                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                            by {author}
+                        </Typography>
+                    </Box>
+                </Box>
+            </CardContent>
         </Card>
     );
 }

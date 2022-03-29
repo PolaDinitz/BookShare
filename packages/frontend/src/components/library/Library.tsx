@@ -1,4 +1,4 @@
-import { Grid, Box, Button, Stack, Typography, Divider } from '@mui/material';
+import { Grid, Box, Button, Stack, Typography, Divider, List, ListItem } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { config } from '../../config/config';
 import { RootState } from '../../types/types';
@@ -13,110 +13,81 @@ const Library = () => {
     const user = useSelector((state: RootState) => state.auth.user);
 
     return (
-        <div>
-        <CustomPaper 
-            img="/page-headers/library-header-image.jpg" 
-            contentWidth="90%" 
+        <CustomPaper
+            img="/page-headers/library-header-image.jpg"
+            contentWidth="90%"
             size="large"
             avatarImg={`${config.apiUrl}/${user?.imageUrl}`}
         >
-            <Stack 
+            <Stack
                 spacing={3}
                 alignItems="center"
-                sx={{width: "100%"}}
-                justifyContent="center"
             >
-                <Grid container justifyContent="end">
-                    <Grid
-                        item container
-                        mt={2}
-                        xs={4}
-                        justifyContent="center"
-
-                    >
-                        <Typography
-                            variant="h5"
-                            fontWeight="bold"
-                        >
-                            {user?.firstName} {user?.lastName}'s Library
-                        </Typography>
-                    </Grid>
-                    <Grid
-                        item container
-                        xs={4}
-                        mt={-15}
-                        justifyContent="end"
-                        
-                    >
-                        <Button
-                                type="submit"
-                                sx={{height: "20%", borderRadius: 10}}
-                                variant="contained"
-                        >
-                            <Typography variant="subtitle2" fontWeight="bold">
-                                + Add a Book to Library
-                            </Typography>
-                        </Button>
-                    </Grid>
-                </Grid>
-                <Grid container
-                    justifyContent="space-evenly"
+                <Typography
+                    variant="h4"
                     mt={2}
+                    fontWeight="bold"
                 >
-                    <Grid item>
-                        <Box mb={1}>
-                        <Button 
+                    {user?.firstName} {user?.lastName}'s Library
+                </Typography>
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                    <Button
+                        sx={{ borderRadius: 10 }}
+                        variant="contained"
+                    >
+                        <Typography variant="subtitle2" fontWeight="bold">
+                            + Add a Book to Library
+                        </Typography>
+                    </Button>
+                </Box>
+                <List sx={{ display: 'flex', flexDirection: 'row', padding: 5, width: "100%" }}>
+                    <ListItem>
+                        <Button
+                            fullWidth
                             variant="text"
                             style={{
                                 backgroundColor: "#DCDCDC",
                             }}
                         >
-                            <LibraryBooksIcon sx={{ fontSize: 60 }} color='action'/>
+                            <LibraryBooksIcon sx={{ fontSize: 60 }} color='action' />
                             <Typography fontWeight="bold" padding="5px">
                                 <Grid container fontSize={22}>30</Grid>
                                 <Grid container color="black">My Books</Grid>
                             </Typography>
                         </Button>
-                        </Box>
-                        <Divider flexItem/>
-                    </Grid>
-                    <Divider orientation="vertical" variant="middle" flexItem/>
-                    <Grid item >
-                        <Box mb={1}>
-                            <Button 
-                                variant="text"
-                                >                        
-                                < ShortcutIcon color='action'/>
-                                <LibraryBooksIcon sx={{ fontSize: 60 }} color='action'/>
-                                <Typography fontWeight="bold" padding="5px">
-                                    <Grid container fontSize={22}>10</Grid>
-                                    <Grid container color="black">Borrowed Books</Grid>
-                                </Typography>
-                            </Button>
-                        </Box>
-                        <Divider />
-                    </Grid>
+                    </ListItem>
                     <Divider orientation="vertical" variant="middle" flexItem />
-                    <Grid item>
-                        <Box mb={1}>
-                            <Button 
-                                variant="text"
-                            >
-                                <LibraryBooksIcon sx={{ fontSize: 60 }} color='action'/>
-                                <ShortcutIcon color='action'/>
-                                <Typography fontWeight="bold" padding="5px">
-                                    <Grid container fontSize={22}>20</Grid>
-                                    <Grid container color="black">Lent Books</Grid>
-                                </Typography>
-                            </Button>
-                        </Box>
-                        <Divider />
-                    </Grid>
-                </Grid>
-                <LibraryBook></LibraryBook>
+                    <ListItem>
+                        <Button
+                            variant="text"
+                            fullWidth
+                        >
+                            < ShortcutIcon color='action' />
+                            <LibraryBooksIcon sx={{ fontSize: 60 }} color='action' />
+                            <Typography fontWeight="bold" padding="5px">
+                                <Grid container fontSize={22}>10</Grid>
+                                <Grid container color="black">Borrowed Books</Grid>
+                            </Typography>
+                        </Button>
+                    </ListItem>
+                    <Divider orientation="vertical" variant="middle" flexItem />
+                    <ListItem>
+                        <Button
+                            variant="text"
+                            fullWidth
+                        >
+                            <LibraryBooksIcon sx={{ fontSize: 60 }} color='action' />
+                            <ShortcutIcon color='action' />
+                            <Typography fontWeight="bold" padding="5px">
+                                <Grid container fontSize={22}>20</Grid>
+                                <Grid container color="black">Lent Books</Grid>
+                            </Typography>
+                        </Button>
+                    </ListItem>
+                </List>
+                <LibraryBook catagory='Fantacy' author='J.K. Rolling' name='Harry Potter'></LibraryBook>
             </Stack>
         </CustomPaper>
-        </div>
     )
 }
 
