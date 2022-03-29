@@ -1,5 +1,6 @@
 @font-face {
   font-family: 'Poppins';
+  font-weight: 300;
   src: local('Poppins'), url('utils/fonts/poppins/Poppins-Light.ttf') format('truetype');
 }
 
@@ -41,4 +42,18 @@ code {
 
 a {
   text-decoration: none;
+}
+
+body::-webkit-scrollbar {
+  width: 12px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #222725;        /* color of the tracking area */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #899878;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #222725;  /* creates padding around scroll thumb */
 }

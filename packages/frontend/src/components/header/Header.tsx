@@ -35,10 +35,10 @@ const Header = () => {
                         />
                     </Box>
                     <Box>
-                        <Typography>
+                        <Typography fontWeight={300}>
                             Welcome back,
                         </Typography>
-                        <Typography fontWeight={500}>
+                        <Typography variant="h6" fontWeight={500}>
                             {loggedInUser ? loggedInUser.firstName + ' ' + loggedInUser.lastName : 'Guest'}
                         </Typography>
                     </Box>
