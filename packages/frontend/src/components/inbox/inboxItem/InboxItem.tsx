@@ -38,10 +38,10 @@ const InboxItem = () => {
                             src="https://material-ui.com/static/images/avatar/1.jpg"/>
                 </Box>
                 <Box sx={{flex: 3, justifyContent: "flex-start"}}>
-                    <Typography variant="h6" fontWeight="bold">
+                    <Typography variant="h6" fontWeight={500}>
                         Ran Biderman
                     </Typography>
-                    <Typography variant="subtitle2">
+                    <Typography variant="subtitle2" fontWeight={300}>
                         The Witcher
                     </Typography>
                 </Box>

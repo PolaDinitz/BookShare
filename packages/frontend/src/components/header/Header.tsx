@@ -38,7 +38,7 @@ const Header = () => {
                         <Typography>
                             Welcome back,
                         </Typography>
-                        <Typography fontWeight="bold">
+                        <Typography fontWeight={500}>
                             {loggedInUser ? loggedInUser.firstName + ' ' + loggedInUser.lastName : 'Guest'}
                         </Typography>
                     </Box>

@@ -26,7 +26,7 @@ const Logout = () => {
                 <Typography
                     variant="h4"
                     mt={2}
-                    fontWeight="bold"
+                    fontWeight={600}
                 >
                     Logout
                 </Typography>

@@ -16,6 +16,12 @@ declare module '@mui/material/styles' {
 }
 
 const mainTheme = createTheme({
+    typography: {
+        fontFamily: [
+            'Poppins',
+            'sans-serif'
+        ].join(',')
+    },
     palette: {
         primary: {
             main: "#2FAC90",

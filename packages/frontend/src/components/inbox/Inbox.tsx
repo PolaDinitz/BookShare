@@ -33,7 +33,7 @@ const Inbox = () => {
                 <Typography
                     variant="h4"
                     mt={2}
-                    fontWeight="bold"
+                    fontWeight={600}
                 >
                     {loggedInUser?.firstName + ' ' + loggedInUser?.lastName + '\'s Inbox'}
                 </Typography>
