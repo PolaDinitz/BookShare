@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography';
 import { Button, Grid } from '@mui/material';
 
-interface ILibraryBook {
+interface ILibraryTab {
     headline: string
     amount: number
     selected: boolean
@@ -9,7 +9,7 @@ interface ILibraryBook {
     children?: JSX.Element
 }
 
-const LibraryButtonHeadline = (props: ILibraryBook) => {
+const LibraryTab = (props: ILibraryTab) => {
     const { click, headline, amount, selected } = props;
 
     const getButtonStyle = () => {
@@ -36,4 +36,4 @@ const LibraryButtonHeadline = (props: ILibraryBook) => {
     );
 }
 
-export default LibraryButtonHeadline;
+export default LibraryTab;
