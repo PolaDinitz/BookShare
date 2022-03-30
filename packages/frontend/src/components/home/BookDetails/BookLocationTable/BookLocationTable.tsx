@@ -47,9 +47,7 @@ const BookLocationTable = (props: BookLocationTableProps) => {
               </TableCell>
               <TableCell align="left">{row.city}</TableCell>
               <TableCell align="right">
-                <RoundedButton style={{ backgroundColor: "#3164F4" }}>
-                  Borrow
-                </RoundedButton>
+                <RoundedButton>Borrow</RoundedButton>
               </TableCell>
             </TableRow>
           ))}

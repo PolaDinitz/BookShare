@@ -40,13 +40,8 @@ const BookPost = (props: BookPostProps) => {
           <Typography variant="h6" mt={2}>
             {author}
           </Typography>
-          <RoundedButton
-            style={{ backgroundColor: "#3164F4" }}
-            onClick={handleClickOpen}
-          >
-            Browse
-          </RoundedButton>
-          <BookDetails open={open} onClose={handleClose} />
+          <RoundedButton onClick={handleClickOpen}>Browse</RoundedButton>
+          <BookDetails open={open} onClose={handleClose} book={props.book} />
         </Stack>
       </BookCustomPaper>
     </Grid>

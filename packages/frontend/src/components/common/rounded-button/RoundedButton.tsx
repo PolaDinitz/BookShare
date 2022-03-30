@@ -21,7 +21,7 @@ const CustomPaper = (props: RoundedButtonProps) => {
       sx={{
         borderRadius: "16px",
         fontWeight: "bold",
-        backgroundColor: style?.backgroundColor || "#313131",
+        backgroundColor: style?.backgroundColor || "#3164F4",
       }}
     >
       {children}
