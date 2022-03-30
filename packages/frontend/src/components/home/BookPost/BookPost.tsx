@@ -29,7 +29,14 @@ const BookPost = (props: BookPostProps) => {
           <Typography variant="h6" mt={2}>
             {author}
           </Typography>
-          <Button variant="contained" sx={{borderRadius: "16px", fontWeight: 'bold', backgroundColor: "#3164F4"}}>
+          <Button
+            variant="contained"
+            sx={{
+              borderRadius: "16px",
+              fontWeight: "bold",
+              backgroundColor: "#3164F4",
+            }}
+          >
             Browse
           </Button>
         </Stack>

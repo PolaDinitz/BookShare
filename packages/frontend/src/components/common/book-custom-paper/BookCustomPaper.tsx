@@ -18,7 +18,7 @@ const bookCustomPaperStyleMap = new Map<Size, BookCustomPaperStyle>([
     "small",
     {
       paper: {
-        height: "100%"
+        height: "100%",
       },
       image: {
         height: "100%",
@@ -29,7 +29,7 @@ const bookCustomPaperStyleMap = new Map<Size, BookCustomPaperStyle>([
     "large",
     {
       paper: {
-        height: "300px"
+        height: "300px",
       },
       image: {
         height: "180px",
@@ -72,7 +72,14 @@ const BookCustomPaper = (props: BookCustomPaperProps) => {
             {props.children}
           </Box>
         </Grid>
-        <Grid item xs container direction="column" spacing={2} sx={{alignSelf: "center"}}>
+        <Grid
+          item
+          xs
+          container
+          direction="column"
+          spacing={2}
+          sx={{ alignSelf: "center" }}
+        >
           <Grid item xs={6}>
             <Box
               style={style?.image}
