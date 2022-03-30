@@ -3,7 +3,8 @@ import { Button, Grid, Stack, Typography } from "@mui/material";
 
 import BookCustomPaper from "../../common/book-custom-paper";
 import { BookType } from "../../../utils/books-data";
-import BookDetails from '../BookDetails'
+import BookDetails from "../BookDetails";
+import RoundedButton from "../../common/rounded-button";
 
 type BookPostProps = {
   book: BookType;
@@ -39,18 +40,13 @@ const BookPost = (props: BookPostProps) => {
           <Typography variant="h6" mt={2}>
             {author}
           </Typography>
-          <Button
-            variant="contained"
-            sx={{
-              borderRadius: "16px",
-              fontWeight: "bold",
-              backgroundColor: "#3164F4",
-            }}
+          <RoundedButton
+            style={{ backgroundColor: "#3164F4" }}
             onClick={handleClickOpen}
           >
             Browse
-          </Button>
-          <BookDetails open={open} onClose={handleClose}/>
+          </RoundedButton>
+          <BookDetails open={open} onClose={handleClose} />
         </Stack>
       </BookCustomPaper>
     </Grid>
