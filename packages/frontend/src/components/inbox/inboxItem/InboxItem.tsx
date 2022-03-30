@@ -13,7 +13,13 @@ const Item = styled(Button)<ButtonProps>(({theme}) => ({
     }
 }));
 
-const InboxItem = () => {
+type InboxItemProps = {
+    primary: string;
+    secondary: string;
+    status: string;
+}
+
+const InboxItem = (props: InboxItemProps) => {
 
     return (
         <>
@@ -31,18 +37,18 @@ const InboxItem = () => {
                         paddingLeft: "10px",
                         paddingRight: "10px"
                     }}>
-                    Lending in Prog.
+                    {props.status}
                 </Typography>
-                <Box sx={{flex: 1}}>
-                    <Avatar sx={{width: 70, height: 70, boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)"}} alt="Remy Sharp"
+                <Box sx={{display: "flex", flex: 1, justifyContent: "center"}}>
+                    <Avatar sx={{width: 70, height: 70, boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)"}} alt={props.primary}
                             src="https://material-ui.com/static/images/avatar/1.jpg"/>
                 </Box>
-                <Box sx={{flex: 3, justifyContent: "flex-start"}}>
+                <Box sx={{display: "flex", flex: 3, flexDirection: "column"}}>
                     <Typography variant="h6" fontWeight={500}>
-                        Ran Biderman
+                        {props.primary}
                     </Typography>
                     <Typography variant="subtitle2" fontWeight={300}>
-                        The Witcher
+                        {props.secondary}
                     </Typography>
                 </Box>
             </Item>

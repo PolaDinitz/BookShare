@@ -1,15 +1,4 @@
-import {
-    Avatar,
-    Box,
-    InputAdornment,
-    List,
-    ListItem, ListItemAvatar, ListItemButton,
-    ListItemIcon, ListItemSecondaryAction,
-    ListItemText,
-    Paper,
-    TextField,
-    Typography
-} from "@mui/material";
+import { Avatar, Box, Divider, InputAdornment, List, Paper, TextField, Typography } from "@mui/material";
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/types";
@@ -39,7 +28,7 @@ const Inbox = () => {
                 </Typography>
             </Box>
             <Box sx={{display: "flex"}}>
-                <Box sx={{flex: "1"}} m={1} component={Paper} style={paperStyle} square elevation={0}>
+                <Box sx={{flex: 1}} m={1} component={Paper} style={paperStyle} square elevation={0}>
                     <TextField
                         InputProps={{
                             startAdornment: (
@@ -50,17 +39,32 @@ const Inbox = () => {
                         }}
                         placeholder="Search"
                         variant="filled"
-                        fullWidth/>
+                        fullWidth
+                    />
                     <List>
-                        <InboxItem/>
-                        <InboxItem/>
-                        <InboxItem/>
-                        <InboxItem/>
-                        <InboxItem/>
+                        <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Lend Request"/>
+                        <InboxItem primary="Maayna Mordehai" secondary="The Witcher" status="Borrow Request"/>
+                        <InboxItem primary="Pola Dinitz" secondary="The Witcher" status="Lending in Prog."/>
+                        <InboxItem primary="Daniel Beilin" secondary="The Witcher" status="Borrow in Prog."/>
+                        <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Lending Finished"/>
+                        <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Borrowing Finished"/>
                     </List>
                 </Box>
-                <Box sx={{flex: "2"}} m={1} component={Paper} style={paperStyle} square elevation={0}>
-                    Chat
+                <Box sx={{flex: 2}} m={1} p={1} component={Paper} style={paperStyle} square elevation={0}>
+                    <Box sx={{display: "flex", justifyContent: "flex-start", padding: "5px"}}>
+                        <Avatar sx={{width: 70, height: 70, marginRight: 3}}
+                                alt="Ran Biderman"
+                                src="https://material-ui.com/static/images/avatar/1.jpg"/>
+                        <Box sx={{alignSelf: "center"}}>
+                            <Typography variant="h6" fontWeight={500}>
+                                Ran Biderman
+                            </Typography>
+                            <Typography variant="subtitle2" fontWeight={300}>
+                                The Witcher
+                            </Typography>
+                        </Box>
+                    </Box>
+                    <Divider/>
                 </Box>
             </Box>
         </CustomPaper>

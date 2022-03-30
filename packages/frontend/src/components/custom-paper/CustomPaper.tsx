@@ -74,7 +74,7 @@ const CustomPaper = (props: CustomPaperProps) => {
                 alignItems: "center",
                 borderRadius: "16px",
                 backgroundColor: "#FAFAFA",
-                paddingBottom: "10px",
+                paddingBottom: "10px"
             }}
         >
             <Box
