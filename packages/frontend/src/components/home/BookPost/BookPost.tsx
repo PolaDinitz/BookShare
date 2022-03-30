@@ -3,12 +3,22 @@ import { Button, Grid, Stack, Typography } from "@mui/material";
 
 import BookCustomPaper from "../../common/book-custom-paper";
 import { BookType } from "../../../utils/books-data";
+import BookDetails from '../BookDetails'
 
 type BookPostProps = {
   book: BookType;
 };
 
 const BookPost = (props: BookPostProps) => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const { title, author, genres, cover_img } = props.book;
 
   return (
@@ -36,9 +46,11 @@ const BookPost = (props: BookPostProps) => {
               fontWeight: "bold",
               backgroundColor: "#3164F4",
             }}
+            onClick={handleClickOpen}
           >
             Browse
           </Button>
+          <BookDetails open={open} onClose={handleClose}/>
         </Stack>
       </BookCustomPaper>
     </Grid>
