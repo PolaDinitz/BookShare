@@ -5,10 +5,10 @@ import { Group } from "@mui/icons-material";
 type Size = "small" | "large";
 
 type BookCustomPaperStyle = {
-  paper: {
+  paper?: {
     height: string;
   };
-  image: {
+  image?: {
     height: string;
   };
 };
@@ -18,7 +18,7 @@ const bookCustomPaperStyleMap = new Map<Size, BookCustomPaperStyle>([
     "small",
     {
       paper: {
-        height: "220px"
+        height: "100%"
       },
       image: {
         height: "100%",

@@ -4,7 +4,7 @@ import { Grid } from "@mui/material";
 
 const Home = () => {
     return (
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 2 }}>
+        <Grid container rowSpacing={3} columnSpacing={{ xs: 2 }}>
             {
                 allBooks.map(book => <BookPost book={book}/>)
             }

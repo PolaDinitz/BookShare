@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Button, Grid, Stack, Typography } from "@mui/material";
 
 import BookCustomPaper from "../../common/book-custom-paper";
 import { BookType } from "../../../utils/books-data";
@@ -29,6 +29,9 @@ const BookPost = (props: BookPostProps) => {
           <Typography variant="h6" mt={2}>
             {author}
           </Typography>
+          <Button variant="contained" sx={{borderRadius: "16px", fontWeight: 'bold', backgroundColor: "#3164F4"}}>
+            Browse
+          </Button>
         </Stack>
       </BookCustomPaper>
     </Grid>
