@@ -35,7 +35,7 @@ const rows = [
 const BookLocationTable = (props: BookLocationTableProps) => {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 500 }} aria-label="simple table">
+      <Table sx={{ minWidth: 500 }} size="small" aria-label="simple table">
         <TableBody>
           {rows.map((row) => (
             <TableRow

@@ -16,12 +16,16 @@ const CustomPaper = (props: RoundedButtonProps) => {
 
   return (
     <Button
+    disableElevation
       variant="contained"
       onClick={onClick}
       sx={{
         borderRadius: "16px",
         fontWeight: "bold",
         backgroundColor: style?.backgroundColor || "#3164F4",
+        '&:hover': {
+          background: "#5780f2",
+       },
       }}
     >
       {children}

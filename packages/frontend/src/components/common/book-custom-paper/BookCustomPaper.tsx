@@ -49,19 +49,18 @@ const BookCustomPaper = (props: BookCustomPaperProps) => {
   const style = bookCustomPaperStyleMap.get(props.size);
   return (
     <Paper
-      elevation={5}
+      elevation={0}
       style={style?.paper}
       sx={{
-        margin: "10px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         borderRadius: "16px",
         backgroundColor: "#FAFAFA",
-        paddingBottom: "10px",
+        padding: "5px",
       }}
     >
-      <Grid container spacing={1}>
+      <Grid container spacing={1} direction="row">
         <Grid item xs={6}>
           <Box
             sx={{
@@ -72,19 +71,12 @@ const BookCustomPaper = (props: BookCustomPaperProps) => {
             {props.children}
           </Box>
         </Grid>
-        <Grid
-          item
-          xs
-          container
-          direction="column"
-          spacing={2}
-          sx={{ alignSelf: "center" }}
-        >
+        
           <Grid item xs={6}>
             <Box
               style={style?.image}
               sx={{
-                width: "70%",
+                width: "100%",
                 borderRadius: "16px",
                 overflow: "hidden",
               }}
@@ -99,7 +91,7 @@ const BookCustomPaper = (props: BookCustomPaperProps) => {
                 alt={props.img}
               />
             </Box>
-          </Grid>
+          
         </Grid>
       </Grid>
     </Paper>

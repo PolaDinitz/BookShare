@@ -23,28 +23,26 @@ const BookPost = (props: BookPostProps) => {
   const { title, author, genres, cover_img } = props.book;
 
   return (
-    <Grid item xs={4}>
-      <BookCustomPaper size="small" img={cover_img}>
-        <Stack
-          marginLeft="10%"
-          spacing={3}
-          alignItems="start"
-          sx={{ width: "100%" }}
-        >
-          <Typography variant="h6" mt={2}>
-            {genres[0]}
-          </Typography>
-          <Typography variant="h6" mt={2} fontWeight="bold">
-            {title}
-          </Typography>
-          <Typography variant="h6" mt={2}>
-            {author}
-          </Typography>
-          <RoundedButton onClick={handleClickOpen}>Browse</RoundedButton>
-          <BookDetails open={open} onClose={handleClose} book={props.book} />
-        </Stack>
-      </BookCustomPaper>
-    </Grid>
+    <BookCustomPaper size="small" img={cover_img}>
+      <Stack
+        spacing={1}
+        alignItems="start"
+        padding="5px"
+        sx={{ width: "100%" }}
+      >
+        <Typography variant="subtitle1" mt={1} sx={{color: "#808080"}}>
+          {genres[0]}
+        </Typography>
+        <Typography fontSize={18} fontWeight="bold">
+          {title}
+        </Typography>
+        <Typography variant="subtitle1" sx={{color: "#808080"}}>
+          {`By ${author}`}
+        </Typography>
+        <RoundedButton onClick={handleClickOpen}>Browse</RoundedButton>
+        <BookDetails open={open} onClose={handleClose} book={props.book} />
+      </Stack>
+    </BookCustomPaper>
   );
 };
 
