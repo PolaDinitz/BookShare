@@ -14,10 +14,11 @@ interface ITransactionCard {
     borrowedUserId: string
     lentUserId: string
     active: boolean
+    imageUrl: string
 }
 
 const TransactionCard = (props: ITransactionCard) => {
-    const { catagory, name, author, borrowedUserId, lentUserId, active } = props;
+    const { catagory, name, author, borrowedUserId, lentUserId, active, imageUrl } = props;
     const navigate = useNavigate();
 
     const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -35,7 +36,7 @@ const TransactionCard = (props: ITransactionCard) => {
             }} >
                 <Box sx={{ display: 'flex' }} >
                     <Box sx={{ display: 'flex', flex: 4 }}>
-                        <LibraryBook author={author} name={name} catagory={catagory} />
+                        <LibraryBook imageUrl={imageUrl} author={author} name={name} catagory={catagory} />
                     </Box>
                     <Box sx={{ display: 'flex', flex: 2 }}>
                         {currentUser.id === borrowedUserId &&

@@ -85,21 +85,21 @@ const Library = () => {
                 </List>
                 {buttonSelected === LibraryTabs.MY_BOOKS &&
                     <>
-                        <BookCard catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={false} lent={false}></BookCard>
-                        <BookCard catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={true} lent={true}></BookCard>
-                        <BookCard catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={true} lent={false}></BookCard>
+                        <BookCard imageUrl='/page-headers/library-header-image.jpg' catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={false} lent={false}></BookCard>
+                        <BookCard imageUrl='/page-headers/library-header-image.jpg' catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={true} lent={true}></BookCard>
+                        <BookCard imageUrl='/page-headers/library-header-image.jpg' catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={true} lent={false}></BookCard>
                     </>
                 }
                 {buttonSelected === LibraryTabs.BORROWED_BOOKS &&
                     <>
-                        <TransactionCard active={true} catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' lentUserId="3639e574-e243-4443-ad5c-e682ede9598d" borrowedUserId='43230e94-6ae9-4b75-b092-73d94d6286b0' />
-                        <TransactionCard active={false} catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' lentUserId="3639e574-e243-4443-ad5c-e682ede9598d" borrowedUserId='43230e94-6ae9-4b75-b092-73d94d6286b0' />
+                        <TransactionCard imageUrl='/page-headers/library-header-image.jpg' active={true} catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' lentUserId="3639e574-e243-4443-ad5c-e682ede9598d" borrowedUserId='43230e94-6ae9-4b75-b092-73d94d6286b0' />
+                        <TransactionCard imageUrl='/page-headers/library-header-image.jpg' active={false} catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' lentUserId="3639e574-e243-4443-ad5c-e682ede9598d" borrowedUserId='43230e94-6ae9-4b75-b092-73d94d6286b0' />
                     </>
                 }
                 {buttonSelected === LibraryTabs.LENT_BOOKS &&
                     <>
-                        <TransactionCard active={true} catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' lentUserId='43230e94-6ae9-4b75-b092-73d94d6286b0' borrowedUserId='3639e574-e243-4443-ad5c-e682ede9598d' />
-                        <TransactionCard active={false} catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' lentUserId='43230e94-6ae9-4b75-b092-73d94d6286b0' borrowedUserId='3639e574-e243-4443-ad5c-e682ede9598d' />
+                        <TransactionCard imageUrl='/page-headers/library-header-image.jpg' active={true} catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' lentUserId='43230e94-6ae9-4b75-b092-73d94d6286b0' borrowedUserId='3639e574-e243-4443-ad5c-e682ede9598d' />
+                        <TransactionCard imageUrl='/page-headers/library-header-image.jpg' active={false} catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' lentUserId='43230e94-6ae9-4b75-b092-73d94d6286b0' borrowedUserId='3639e574-e243-4443-ad5c-e682ede9598d' />
                     </>
                 }
 

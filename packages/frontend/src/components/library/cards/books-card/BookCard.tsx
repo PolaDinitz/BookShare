@@ -13,10 +13,11 @@ interface IBookCard {
     author: string
     available: boolean
     lent: boolean
+    imageUrl: string
 }
 
 const BookCard = (props: IBookCard) => {
-    const { catagory, name, author, available, lent } = props;
+    const { catagory, name, author, available, lent, imageUrl } = props;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const open = Boolean(anchorEl);
@@ -38,7 +39,7 @@ const BookCard = (props: IBookCard) => {
             }} >
                 <Box sx={{ display: 'flex' }} >
                     <Box sx={{ display: 'flex', flex: 4 }}>
-                        <LibraryBook author={author} name={name} catagory={catagory} />
+                        <LibraryBook imageUrl={imageUrl} author={author} name={name} catagory={catagory} />
                     </Box>
                     <Box sx={{ display: 'flex', flex: 2 }}>
                         {!available && !lent &&
