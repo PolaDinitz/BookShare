@@ -64,7 +64,8 @@ export class AuthService {
             firstName: user.firstName,
             lastName: user.lastName,
             role: user.role,
-            imageUrl: user.imageUrl
+            imageUrl: user.imageUrl,
+            id: user.id
         };
     }
 }
