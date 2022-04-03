@@ -1,4 +1,4 @@
-import { Grid, Box, Button, Stack, Typography, Divider, List, ListItem, Card, CardContent } from '@mui/material';
+import { Box, Button, Stack, Typography, Divider, List, ListItem } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { config } from '../../config/config';
 import { RootState } from '../../types/types';
@@ -8,16 +8,22 @@ import ShortcutIcon from '@mui/icons-material/Shortcut';
 import React, { useState } from 'react';
 import BookCard from './cards/books-card/BookCard';
 import LibraryTab from './library-tab/LibraryTab';
+import TransactionCard from './cards/transaction-card/TransactionCard';
+
+enum LibraryTabs {
+    MY_BOOKS = "My Books",
+    BORROWED_BOOKS = "Borrowed Books",
+    LENT_BOOKS = "Lent Books"
+}
 
 const Library = () => {
     const user = useSelector((state: RootState) => state.auth.user);
-
-    const [buttonSelected, changedButtonSelected] = useState("My Books");
+    const [buttonSelected, changedButtonSelected] = useState(LibraryTabs.MY_BOOKS);
 
     return (
         <CustomPaper
             img="/page-headers/library-header-image.jpg"
-            contentWidth="70%"
+            contentWidth="75%"
             size="large"
             avatarImg={`${config.apiUrl}/${user?.imageUrl}`}
         >
@@ -46,18 +52,18 @@ const Library = () => {
                 <List sx={{ display: 'flex', flexDirection: 'row', padding: 5, width: "100%" }}>
                     <ListItem>
                         <LibraryTab
-                            headline="My Books"
+                            headline={LibraryTabs.MY_BOOKS.toString()}
                             amount={30}
-                            selected={buttonSelected === "My Books" ? true : false}
-                            click={() => changedButtonSelected("My Books")}>
+                            selected={buttonSelected === LibraryTabs.MY_BOOKS ? true : false}
+                            click={() => changedButtonSelected(LibraryTabs.MY_BOOKS)}>
                             <LibraryBooksIcon sx={{ fontSize: 60 }} color='action' />
                         </LibraryTab>
                     </ListItem>
                     <Divider orientation="vertical" variant="middle" flexItem />
                     <ListItem>
-                        <LibraryTab headline="Borrowed Books" amount={10}
-                            selected={buttonSelected === "Borrowed Books" ? true : false}
-                            click={() => changedButtonSelected("Borrowed Books")}
+                        <LibraryTab headline={LibraryTabs.BORROWED_BOOKS.toString()} amount={10}
+                            selected={buttonSelected === LibraryTabs.BORROWED_BOOKS ? true : false}
+                            click={() => changedButtonSelected(LibraryTabs.BORROWED_BOOKS)}
                         >
                             <>
                                 <ShortcutIcon color='action' />,
@@ -67,9 +73,9 @@ const Library = () => {
                     </ListItem>
                     <Divider orientation="vertical" variant="middle" flexItem />
                     <ListItem>
-                        <LibraryTab headline='Lent Books' amount={20}
-                            selected={buttonSelected === "Lent Books" ? true : false}
-                            click={() => changedButtonSelected("Lent Books")}>
+                        <LibraryTab headline={LibraryTabs.LENT_BOOKS.toString()} amount={20}
+                            selected={buttonSelected === LibraryTabs.LENT_BOOKS ? true : false}
+                            click={() => changedButtonSelected(LibraryTabs.LENT_BOOKS)}>
                             <>
                                 <LibraryBooksIcon sx={{ fontSize: 60 }} color='action' />
                                 <ShortcutIcon color='action' />
@@ -77,9 +83,25 @@ const Library = () => {
                         </LibraryTab>
                     </ListItem>
                 </List>
-                <BookCard catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={true} lent={false}></BookCard>
-                <BookCard catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={false} lent={false}></BookCard>
-                <BookCard catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={true} lent={true}></BookCard>
+                {buttonSelected === LibraryTabs.MY_BOOKS &&
+                    <>
+                        <BookCard catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={false} lent={false}></BookCard>
+                        <BookCard catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={true} lent={true}></BookCard>
+                        <BookCard catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={true} lent={false}></BookCard>
+                    </>
+                }
+                {buttonSelected === LibraryTabs.BORROWED_BOOKS &&
+                    <>
+                        <TransactionCard active={true} catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' lentUserId="3639e574-e243-4443-ad5c-e682ede9598d" borrowedUserId='43230e94-6ae9-4b75-b092-73d94d6286b0' />
+                        <TransactionCard active={false} catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' lentUserId="3639e574-e243-4443-ad5c-e682ede9598d" borrowedUserId='43230e94-6ae9-4b75-b092-73d94d6286b0' />
+                    </>
+                }
+                {buttonSelected === LibraryTabs.LENT_BOOKS &&
+                    <>
+                        <TransactionCard active={true} catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' lentUserId='43230e94-6ae9-4b75-b092-73d94d6286b0' borrowedUserId='3639e574-e243-4443-ad5c-e682ede9598d' />
+                        <TransactionCard active={false} catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' lentUserId='43230e94-6ae9-4b75-b092-73d94d6286b0' borrowedUserId='3639e574-e243-4443-ad5c-e682ede9598d' />
+                    </>
+                }
 
             </Stack >
         </CustomPaper >

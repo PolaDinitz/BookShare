@@ -37,24 +37,24 @@ const BookCard = (props: IBookCard) => {
                 }
             }} >
                 <Box sx={{ display: 'flex' }} >
-                    <Box sx={{ display: 'flex', flex: 3 }}>
+                    <Box sx={{ display: 'flex', flex: 4 }}>
                         <LibraryBook author={author} name={name} catagory={catagory} />
                     </Box>
-                    <Box sx={{ display: 'flex', flex: 1 }}>
+                    <Box sx={{ display: 'flex', flex: 2 }}>
                         {!available && !lent &&
-                            <Typography sx={{ flexShrink: 0, alignSelf: "center", fontSize: 22 }} fontWeight="bold">
+                            <Typography sx={{ alignSelf: "center", fontSize: 22 }} fontWeight="bold">
                                 Book In Library
                             </Typography>
                         }
                         {available && !lent &&
-                            <Typography sx={{ flexShrink: 0, alignSelf: "center", fontSize: 22 }} color="#4BB543" fontWeight="bold">
+                            <Typography sx={{ alignSelf: "center", fontSize: 22 }} color="#4BB543" fontWeight="bold">
                                 Available For Lending
                             </Typography>
                         }
-                        {lent ? <Typography sx={{ flexShrink: 0, alignSelf: "center", fontSize: 22 }} fontWeight="bold">
+                        {lent ? <Typography sx={{ alignSelf: "center", fontSize: 22 }} fontWeight="bold">
                             Book is Lent
                         </Typography> :
-                            <Typography sx={{ flexShrink: 0, alignSelf: "center" }}>
+                            <Typography sx={{  alignSelf: "center" }}>
                                 <IconButton
                                     size="large"
                                     color="inherit"

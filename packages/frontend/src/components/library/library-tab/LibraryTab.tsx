@@ -13,7 +13,7 @@ const LibraryTab = (props: ILibraryTab) => {
     const { click, headline, amount, selected } = props;
 
     const getButtonStyle = () => {
-        const sx = { textTransform: "none" }
+        const sx = { textTransform: "none", borderBottom: '1px solid lightgray' }
         if (selected) {
             return { ...sx, backgroundColor: "#DCDCDC" };
         }
@@ -28,7 +28,7 @@ const LibraryTab = (props: ILibraryTab) => {
             onClick={() => click()}
         >
             {props.children}
-            <Typography fontWeight="bold" padding="5px">
+            <Typography component={'span'} fontWeight="bold" padding="5px">
                 <Grid container fontSize={22}>{amount}</Grid>
                 <Grid container fontSize={22} color="black">{headline}</Grid>
             </Typography>
