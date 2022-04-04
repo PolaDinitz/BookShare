@@ -64,7 +64,7 @@ const Register = () => {
                         <Typography
                             variant="h4"
                             mt={2}
-                            fontWeight="bold"
+                            fontWeight={600}
                         >
                             Register
                         </Typography>
