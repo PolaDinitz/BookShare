@@ -1,7 +1,6 @@
 import {
     Avatar,
     Box,
-    BoxProps,
     Divider,
     IconButton,
     InputAdornment,
@@ -20,6 +19,7 @@ import { RootState } from "../../types/types";
 import { config } from "../../config/config";
 import CustomPaper from "../custom-paper/CustomPaper";
 import InboxItem from "./inboxItem/InboxItem";
+import InboxMessage from "./inboxMessage/InboxMessage";
 
 const Inbox = () => {
 
@@ -32,15 +32,7 @@ const Inbox = () => {
         backgroundColor: "#F5F5F5"
     }
 
-    const ChatRoomsArea = styled(List)<ListProps>(({theme}) => ({
-        height: '60vh',
-        overflowY: "hidden" as "hidden",
-        '&:hover': {
-            overflowY: "auto" as "auto"
-        }
-    }));
-
-    const MessageArea = styled(Box)<BoxProps>(({theme}) => ({
+    const ListScrolledArea = styled(List)<ListProps>(({theme}) => ({
         height: '60vh',
         overflowY: "hidden" as "hidden",
         '&:hover': {
@@ -77,14 +69,14 @@ const Inbox = () => {
                         variant="filled"
                         fullWidth
                     />
-                    <ChatRoomsArea>
+                    <ListScrolledArea>
                         <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Lend Request"/>
                         <InboxItem primary="Maayna Mordehai" secondary="The Witcher" status="Borrow Request"/>
                         <InboxItem primary="Pola Dinitz" secondary="The Witcher" status="Lending in Prog."/>
                         <InboxItem primary="Daniel Beilin" secondary="The Witcher" status="Borrow in Prog."/>
                         <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Lending Finished"/>
                         <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Borrowing Finished"/>
-                    </ChatRoomsArea>
+                    </ListScrolledArea>
                 </Box>
                 <Box sx={{
                     display: "flex",
@@ -117,14 +109,17 @@ const Inbox = () => {
                         </Box>
                     </Box>
                     <Divider/>
-                    <MessageArea sx={{flex: 2}}>
-                        Message Area
-                    </MessageArea>
+                    <ListScrolledArea sx={{flex: 2}}>
+                        <InboxMessage message="Hey Ran, What's up?" time="09:30" type="primary"/>
+                        <InboxMessage message="Fine!" time="09:33" type="secondary"/>
+                        <InboxMessage message="How are you?" time="09:34" type="secondary"/>
+                        <InboxMessage message="Great" time="09:50" type="primary"/>
+                    </ListScrolledArea>
                     <Divider/>
                     <Box padding={1} sx={{display: "flex"}}>
                         <TextField
                             variant="standard"
-                            InputProps={{ disableUnderline: true }}
+                            InputProps={{disableUnderline: true}}
                             autoComplete="off"
                             label="Type a message..."
                             fullWidth
