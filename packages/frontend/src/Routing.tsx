@@ -7,6 +7,7 @@ import Register from "./components/register/Register";
 import PrivateRoute from "./utils/PrivateRouter";
 import Logout from "./components/logout/Logout";
 import Library from "./components/library/Library";
+import Inbox from "./components/inbox/Inbox";
 
 const Routing = () => {
     return (
@@ -24,6 +25,9 @@ const Routing = () => {
                     </Route>
                     <Route path='/logout' element={<PrivateRoute/>}>
                         <Route path="/logout" element={<Logout/>}/>
+                    </Route>
+                    <Route path='/inbox' element={<PrivateRoute/>}>
+                        <Route path='/inbox' element={<Inbox/>}/>
                     </Route>
                 </Routes>
             </>

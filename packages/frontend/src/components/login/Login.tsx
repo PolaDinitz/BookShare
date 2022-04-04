@@ -9,7 +9,7 @@ import { AppDispatch, RootState } from "../../types/types";
 import { loginThunk } from "../../features/auth/auth.slice";
 import Logout from "../logout/Logout";
 import { config } from "../../config/config";
-import CustomPaper from "../custom-paper/CustomPaper";
+import CustomPaper from "../common/custom-paper";
 import { LoginFormInputs, loginSchema } from "../../utils/forms/LoginSchema";
 
 const Login = () => {
@@ -43,7 +43,7 @@ const Login = () => {
                         <Typography
                             variant="h4"
                             mt={2}
-                            fontWeight="bold"
+                            fontWeight={600}
                         >
                             Login
                         </Typography>
