@@ -1,17 +1,52 @@
-import { Avatar, Box, Divider, InputAdornment, List, Paper, TextField, Typography } from "@mui/material";
+import {
+    Avatar,
+    Box,
+    BoxProps,
+    Divider,
+    IconButton,
+    InputAdornment,
+    List,
+    ListProps,
+    Paper,
+    styled,
+    TextField,
+    Typography
+} from "@mui/material";
 import * as React from "react";
 import { useSelector } from "react-redux";
+import { Search } from "@mui/icons-material";
+import SendIcon from '@mui/icons-material/Send';
 import { RootState } from "../../types/types";
 import { config } from "../../config/config";
 import CustomPaper from "../custom-paper/CustomPaper";
-import { Search } from "@mui/icons-material";
 import InboxItem from "./inboxItem/InboxItem";
 
 const Inbox = () => {
 
+    const chatSection = {
+        width: "100%",
+        height: "70vh"
+    }
+
     const paperStyle = {
         backgroundColor: "#F5F5F5"
     }
+
+    const ChatRoomsArea = styled(List)<ListProps>(({theme}) => ({
+        height: '60vh',
+        overflowY: "hidden" as "hidden",
+        '&:hover': {
+            overflowY: "auto" as "auto"
+        }
+    }));
+
+    const MessageArea = styled(Box)<BoxProps>(({theme}) => ({
+        height: '60vh',
+        overflowY: "hidden" as "hidden",
+        '&:hover': {
+            overflowY: "auto" as "auto"
+        }
+    }));
 
     const loggedInUser = useSelector((state: RootState) => state.auth.user);
 
@@ -27,8 +62,9 @@ const Inbox = () => {
                     {loggedInUser?.firstName + ' ' + loggedInUser?.lastName + '\'s Inbox'}
                 </Typography>
             </Box>
-            <Box sx={{display: "flex"}}>
-                <Box sx={{flex: 1}} m={1} component={Paper} style={paperStyle} square elevation={0}>
+            <Box sx={{display: "flex"}} style={chatSection}>
+                <Box sx={{display: "flex", flexDirection: "column", flex: 1}} m={1} component={Paper} style={paperStyle}
+                     square elevation={0}>
                     <TextField
                         InputProps={{
                             startAdornment: (
@@ -41,17 +77,33 @@ const Inbox = () => {
                         variant="filled"
                         fullWidth
                     />
-                    <List>
+                    <ChatRoomsArea>
                         <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Lend Request"/>
                         <InboxItem primary="Maayna Mordehai" secondary="The Witcher" status="Borrow Request"/>
                         <InboxItem primary="Pola Dinitz" secondary="The Witcher" status="Lending in Prog."/>
                         <InboxItem primary="Daniel Beilin" secondary="The Witcher" status="Borrow in Prog."/>
                         <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Lending Finished"/>
                         <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Borrowing Finished"/>
-                    </List>
+                    </ChatRoomsArea>
                 </Box>
-                <Box sx={{flex: 2}} m={1} p={1} component={Paper} style={paperStyle} square elevation={0}>
-                    <Box sx={{display: "flex", justifyContent: "flex-start", padding: "5px"}}>
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    flex: 2,
+                    justifyContent: "space-between",
+                    padding: "5px 20px 5px 20px"
+                }}
+                     component={Paper}
+                     style={paperStyle}
+                     m={1}
+                     square
+                     elevation={0}
+                >
+                    <Box sx={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        padding: "5px"
+                    }}>
                         <Avatar sx={{width: 70, height: 70, marginRight: 3}}
                                 alt="Ran Biderman"
                                 src="https://material-ui.com/static/images/avatar/1.jpg"/>
@@ -65,6 +117,22 @@ const Inbox = () => {
                         </Box>
                     </Box>
                     <Divider/>
+                    <MessageArea sx={{flex: 2}}>
+                        Message Area
+                    </MessageArea>
+                    <Divider/>
+                    <Box padding={1} sx={{display: "flex"}}>
+                        <TextField
+                            variant="standard"
+                            InputProps={{ disableUnderline: true }}
+                            autoComplete="off"
+                            label="Type a message..."
+                            fullWidth
+                        />
+                        <IconButton color="primary" component="span" disabled>
+                            <SendIcon/>
+                        </IconButton>
+                    </Box>
                 </Box>
             </Box>
         </CustomPaper>
