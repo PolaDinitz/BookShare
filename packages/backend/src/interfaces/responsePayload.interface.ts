@@ -7,5 +7,6 @@ export interface ResponsePayload {
     role : Role,
     firstName: string,
     lastName: string,
-    imageUrl: string
+    imageUrl: string,
+    id: string
 }
