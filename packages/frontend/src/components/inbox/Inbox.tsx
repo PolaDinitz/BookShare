@@ -110,10 +110,10 @@ const Inbox = () => {
                     </Box>
                     <Divider/>
                     <ListScrolledArea sx={{flex: 2}}>
-                        <InboxMessage message="Hey Ran, What's up?" time="09:30" type="primary"/>
-                        <InboxMessage message="Fine!" time="09:33" type="secondary"/>
-                        <InboxMessage message="How are you?" time="09:34" type="secondary"/>
-                        <InboxMessage message="Great" time="09:50" type="primary"/>
+                        <InboxMessage time="09:30" color="primary">Hey Ran, What's up?</InboxMessage>
+                        <InboxMessage time="09:33" color="secondary">Fine!</InboxMessage>
+                        <InboxMessage time="09:34" color="secondary">How are you?</InboxMessage>
+                        <InboxMessage time="09:50" color="primary">Great</InboxMessage>
                     </ListScrolledArea>
                     <Divider/>
                     <Box padding={1} sx={{display: "flex"}}>
