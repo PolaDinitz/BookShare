@@ -23,7 +23,7 @@ import { AppDispatch, RootState } from "../../types/types";
 import { registerThunk } from "../../features/auth/auth.slice";
 import Logout from "../logout/Logout";
 import { config } from "../../config/config";
-import CustomPaper from "../custom-paper/CustomPaper";
+import CustomPaper from "../common/custom-paper";
 import { RegisterFormInputs, registerSchema } from "../../utils/forms/RegisterSchema";
 
 const Register = () => {

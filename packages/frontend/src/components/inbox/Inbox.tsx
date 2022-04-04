@@ -17,9 +17,9 @@ import { Search } from "@mui/icons-material";
 import SendIcon from '@mui/icons-material/Send';
 import { RootState } from "../../types/types";
 import { config } from "../../config/config";
-import CustomPaper from "../custom-paper/CustomPaper";
 import InboxItem from "./inboxItem/InboxItem";
 import InboxMessage from "./inboxMessage/InboxMessage";
+import CustomPaper from "../common/custom-paper";
 
 const Inbox = () => {
 

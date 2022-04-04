@@ -1,9 +1,10 @@
 import React from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+
 import { AppDispatch, RootState } from "../../types/types";
 import { logoutThunk } from "../../features/auth/auth.slice";
-import CustomPaper from "../custom-paper/CustomPaper";
+import CustomPaper from "../common/custom-paper";
 import { config } from "../../config/config";
 
 const Logout = () => {
