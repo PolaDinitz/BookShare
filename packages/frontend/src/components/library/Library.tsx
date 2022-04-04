@@ -2,7 +2,7 @@ import { Box, Button, Stack, Typography, Divider, List, ListItem } from '@mui/ma
 import { useSelector } from 'react-redux';
 import { config } from '../../config/config';
 import { RootState } from '../../types/types';
-import CustomPaper from '../custom-paper/CustomPaper';
+import CustomPaper from '../common/custom-paper/CustomPaper';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import ShortcutIcon from '@mui/icons-material/Shortcut';
 import React, { useState } from 'react';
