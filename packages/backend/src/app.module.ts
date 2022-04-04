@@ -5,12 +5,12 @@ import { Connection } from 'typeorm';
 import { UsersModule } from './user/user.module';
 import { AuthModule } from './authentication/auth.module';
 import { BooksApiModule } from './books-api/books-api.module';
+import { UserBookModule } from './user-book/user-book.module';
 import { BookModule } from './book/book.module';
-import { BooksApiModule } from './books-api/books-api.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), AuthModule,UsersModule, BooksApiModule, BookModule],
+  imports: [TypeOrmModule.forRoot(), AuthModule,UsersModule, BooksApiModule, BookModule, UserBookModule],
   controllers: [AppController],
 })
 
