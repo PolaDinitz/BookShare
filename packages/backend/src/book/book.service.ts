@@ -1,26 +1,68 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { IMAGES_BOOK_ASSETS_PATH } from 'src/consts/images.consts';
+import { Repository } from 'typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { Book } from './entities/book.entity';
 
 @Injectable()
 export class BookService {
-  create(createBookDto: CreateBookDto) {
-    return 'This action adds a new book';
+  
+  constructor(
+    @InjectRepository(Book)
+    private booksRepository: Repository<Book>,
+  ) {}
+  
+  public async getBooks(): Promise<Book[]> {
+    return await this.booksRepository.find();
   }
 
-  findAll() {
-    return `This action returns all book`;
+  public async getBookById(id: string): Promise<Book> {
+    return await this.booksRepository.findOne(id);
+  }
+  
+  public async getBooksByTitle(title: string): Promise<Book[]> {
+    return await this.booksRepository.find({
+      where: { title: title}
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} book`;
+  public async getBooksByAuthor(author: string): Promise<Book[]> {
+    return await this.booksRepository.find({
+      where: { author: author }
+    });
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
-    return `This action updates a #${id} book`;
+  public async rateBook(id: string,rating:number) {
+    let book_to_rate = await this.getBookById(id);
+    let new_rate = book_to_rate.book_rating+rating;
+    let new_count = book_to_rate.count++;
+
+    return await this.booksRepository.update(id, { 
+      book_rating:new_rate,
+      count:new_count
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} book`;
+  public async CreateBook(createBookDto: CreateBookDto, imageName: String) :Promise<Book>{
+    const newBook = this.booksRepository.create({
+      author: createBookDto.author,
+        book_rating: createBookDto.book_rating,
+        count: createBookDto.count,
+        description: createBookDto.description,
+        ganers: createBookDto.ganers,
+    });
+
+    if (imageName !== null) {
+      newBook.imageUrl = `${IMAGES_BOOK_ASSETS_PATH}/${imageName.toString()}`;
+    }
+    return await this.booksRepository.save(newBook);
+  }
+
+
+  public async deleteBook(id: string) {
+    await this.booksRepository.delete(id);
+
   }
 }
