@@ -3,6 +3,7 @@ import { SvgIconProps } from "@mui/material";
 import { AppRegistration, Logout } from "@mui/icons-material";
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
+import InboxIcon from '@mui/icons-material/Inbox';
 
 interface HeaderPage {
     icon: React.ReactElement<SvgIconProps>;
@@ -25,11 +26,16 @@ const logoutPage: HeaderPage = {
 }
 
 const inboxPage: HeaderPage = {
-    icon: <LocalLibraryIcon/>,
+    icon: <InboxIcon/>,
     path: "/inbox"
 }
 
+const libraryPage: HeaderPage = {
+    icon: <LocalLibraryIcon/>,
+    path: "/library"
+}
+
 export const guestHeaderPages: HeaderPage[] = [loginPage, registerPage]
-export const userHeaderPages: HeaderPage[] = [inboxPage, logoutPage]
+export const userHeaderPages: HeaderPage[] = [libraryPage, inboxPage, logoutPage]
 
 export default HeaderPage;
