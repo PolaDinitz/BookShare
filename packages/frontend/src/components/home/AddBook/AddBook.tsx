@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -37,9 +36,7 @@ const AddBook = (props: AddBookProps) => {
       <DialogContent>
         <Grid container spacing={1} direction="row">
           <Grid item xs={6}>
-            <Typography>
-              content
-            </Typography>
+            <Typography>content</Typography>
             <DialogActions
               sx={{
                 flexDirection: "column",

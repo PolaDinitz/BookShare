@@ -13,7 +13,6 @@ const fabStyle = {
 };
 
 const Home = () => {
-
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
