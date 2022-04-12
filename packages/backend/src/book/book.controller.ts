@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards,Request, UseInterceptors, UploadedFile, Put, UnauthorizedException, HttpException, HttpStatus, Query, Req} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards,Request, UseInterceptors, UploadedFile, Put, Query, Req} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/authentication/jwt/jwt-auth.guard';
 import { Roles } from 'src/authorization/roles.decorator';
@@ -6,7 +6,6 @@ import { RolesGuard } from 'src/authorization/roles.guard';
 import { Role } from 'src/enums/role.enum';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
 
 @Controller('book')
 export class BookController {
