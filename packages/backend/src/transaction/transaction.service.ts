@@ -16,19 +16,23 @@ export class TransactionService {
   ) {}
 
   public async create(createTransactionDto: CreateTransactionDto) {
-    return this.transactionRepository.create({
+    return await this.transactionRepository.save(this.transactionRepository.create({
       startDate: new Date(),
       borrowUserId: createTransactionDto.borrowUserId,
       userBookId: createTransactionDto.userBookId
-    });
+    }));
   }
 
   public async getTransactions() {
-    return this.transactionRepository.find();
+    return this.transactionRepository.find({
+      relations: ['borrowUser'] // 'userBook', 'userBook.user', 'userBook.book'
+    });
   }
 
   public async getTransactionById(id: string) {
-    return this.transactionRepository.findOne(id);
+    return this.transactionRepository.findOne(id, {
+      relations: ['borrowUser'] // 'userBook', 'userBook.user', 'userBook.book'
+    });
   }
 
   public async updateStatus(id: string, updateTransactionStatusDto: UpdateTransactionStatusDto) {

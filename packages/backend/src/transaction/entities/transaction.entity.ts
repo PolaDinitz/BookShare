@@ -29,7 +29,7 @@ export class Transaction {
     @Column({ nullable: true})
     borrowUserRating: number
     
-    @ManyToOne(() => User, lentUser => lentUser.borrowTransactions)
+    @ManyToOne(() => User, borrowUser => borrowUser.borrowTransactions)
     borrowUser: Promise<User>;
 
     @Column()
