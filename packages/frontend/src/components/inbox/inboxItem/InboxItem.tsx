@@ -36,13 +36,13 @@ const InboxItem = (props: InboxItemProps) => {
                     }}>
                     {props.status}
                 </Typography>
-                <Box sx={{ display: "flex", width: "100%"}}>
+                <Box sx={{display: "flex", width: "100%"}}>
                     <Box sx={{display: "flex", flex: 1, justifyContent: "center"}}>
                         <Avatar sx={{width: 70, height: 70, boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)"}}
                                 alt={props.primary}
                                 src="https://material-ui.com/static/images/avatar/1.jpg"/>
                     </Box>
-                    <Box sx={{display: "flex", flex: 3, flexDirection: "column"}}>
+                    <Box sx={{display: "flex", flex: 2, flexDirection: "column"}}>
                         <Typography variant="h6" fontWeight={500}>
                             {props.primary}
                         </Typography>

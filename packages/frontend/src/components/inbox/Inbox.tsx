@@ -124,7 +124,7 @@ const Inbox = () => {
                             label="Type a message..."
                             fullWidth
                         />
-                        <IconButton color="primary" component="span" disabled>
+                        <IconButton color="primary" component="span">
                             <SendIcon/>
                         </IconButton>
                     </Box>
