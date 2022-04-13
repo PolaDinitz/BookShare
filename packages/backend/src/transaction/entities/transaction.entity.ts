@@ -18,8 +18,6 @@ export class Transaction {
     @Column({default: TransactionStatus.WAITING_CHAT_APPROVAL})
     status: TransactionStatus
           
-    // TODO: 0 <= rate <= 5
-
     @Column({ nullable: true})
     bookRating: number
 
