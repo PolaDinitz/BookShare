@@ -55,5 +55,5 @@ export class User {
   refreshToken: string
 
   @OneToMany(type => Transaction, transaction => transaction.borrowUser)
-  borrowTransactions: Transaction
+  borrowTransactions: Transaction[]
 }
