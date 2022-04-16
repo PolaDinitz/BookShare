@@ -1,8 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { IsDate, IsEmail, IsPhoneNumber } from "class-validator";
-import { Type } from "class-transformer";
 import { DEFAULT_BOOK_IMAGE_FILE_NAME, IMAGES_BOOK_ASSETS_PATH } from "src/consts/images.consts";
-import { Double } from "typeorm/driver/mongodb/typings";
 import { UserBook } from "src/user-book/entities/user-book.entity";
 
 @Entity()
@@ -32,5 +29,5 @@ export class Book {
   count: number
 
   @OneToMany(type => UserBook, userBook => userBook.book)
-  userBook: UserBook
+  userBook: UserBook[];
 }

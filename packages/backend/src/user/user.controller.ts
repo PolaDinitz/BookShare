@@ -14,21 +14,21 @@ export class UsersController {
 
   @Get()
   @Roles(Role.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@UseGuards(JwtAuthGuard, RolesGuard)
   async getUsers(@Request() req: any){
       return this.usersService.getUsers();
   }
 
   @Get(':id')
   @Roles(Role.ADMIN, Role.USER)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@UseGuards(JwtAuthGuard, RolesGuard)
   async getUser(@Request() req: any, @Param('id') id: string) {
       return this.usersService.getUserById(id);
   }
 
   @Put(':id')
   @Roles(Role.ADMIN, Role.USER)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@UseGuards(JwtAuthGuard, RolesGuard)
   @UseInterceptors(FileInterceptor('profileImage'))
   async updateUser(@Request() req: any, @Param('id') id: string, @Body() updateUserDto : UpdateUserDto, @UploadedFile() profileImage: Express.Multer.File) {
       if (req.user.role !== Role.ADMIN && req.user.userId !== id){
@@ -61,7 +61,7 @@ export class UsersController {
 
   @Delete(':id')
   @Roles(Role.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@UseGuards(JwtAuthGuard, RolesGuard)
   async deleteUser(@Request() req: any, @Param('id') id: string) {
       return this.usersService.deleteUser(id);
   }
