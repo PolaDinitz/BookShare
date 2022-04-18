@@ -5,17 +5,17 @@ import { Connection } from 'typeorm';
 import { UsersModule } from './user/user.module';
 import { AuthModule } from './authentication/auth.module';
 import { BooksApiModule } from './books-api/books-api.module';
+import { UserBookModule } from './user-book/user-book.module';
 import { BookModule } from './book/book.module';
 import { ChatGateway } from "./chat.gateway";
 
 
 @Module({
-    imports: [TypeOrmModule.forRoot(), AuthModule, UsersModule, BooksApiModule, BookModule],
+    imports: [TypeOrmModule.forRoot(), AuthModule, UsersModule, BooksApiModule, BookModule, UserBookModule],
     providers: [ChatGateway],
     controllers: [AppController],
 })
 
 export class AppModule {
-    constructor(private connection: Connection) {
-    }
+  constructor(private connection: Connection) {}
 }
