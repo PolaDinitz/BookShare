@@ -1,5 +1,6 @@
 import { Avatar, Box, Button, ButtonProps, Divider, styled, Typography } from "@mui/material";
 import * as React from "react";
+import { MouseEventHandler } from "react";
 
 const Item = styled(Button)<ButtonProps>(({theme}) => ({
     color: "inherit",
@@ -17,13 +18,15 @@ type InboxItemProps = {
     primary: string;
     secondary: string;
     status: string;
+    onCLick?: MouseEventHandler;
+    selected?: boolean;
 }
 
 const InboxItem = (props: InboxItemProps) => {
 
     return (
         <>
-            <Item sx={{display: "flex", flexDirection: "column"}}>
+            <Item onClick={props?.onCLick} sx={{display: "flex", flexDirection: "column", background: props.selected ? "rgba(0, 0, 0, 0.04)" : ""}}>
                 <Typography
                     variant="subtitle2"
                     sx={{

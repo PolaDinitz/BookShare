@@ -12,16 +12,35 @@ import {
     Typography
 } from "@mui/material";
 import * as React from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Search } from "@mui/icons-material";
 import SendIcon from '@mui/icons-material/Send';
 import { RootState } from "../../types/types";
 import { config } from "../../config/config";
 import InboxItem from "./inboxItem/InboxItem";
-import InboxMessage from "./inboxMessage/InboxMessage";
 import CustomPaper from "../common/custom-paper";
+import { socket } from "../../App";
+import InboxMessage from "./inboxMessage/InboxMessage";
 
 const Inbox = () => {
+    const loggedInUser = useSelector((state: RootState) => state.auth.user);
+    const [selectedChatRoom, setSelectedChatRoom] = useState(null as unknown as { transactionId: string, messages: { content: string, fromSelf: boolean }[] });
+    const chatMessage = useFieldInput("");
+
+    useEffect(() => {
+        socket.on("newMessage", (message: { transactionId: string, from: string, body: string }) => {
+            if (message.from !== loggedInUser?.email) {
+                setSelectedChatRoom({
+                    ...selectedChatRoom,
+                    messages: selectedChatRoom.messages.concat([{
+                        content: message.body,
+                        fromSelf: false
+                    }])
+                })
+            }
+        });
+    }, [selectedChatRoom, loggedInUser]);
 
     const chatSection = {
         width: "100%",
@@ -40,7 +59,36 @@ const Inbox = () => {
         }
     }));
 
-    const loggedInUser = useSelector((state: RootState) => state.auth.user);
+    const submitNewMessage = () => {
+        const messageBody: { transactionId: string, from: string | undefined, body: string } = {
+            transactionId: selectedChatRoom?.transactionId,
+            from: loggedInUser?.email,
+            body: chatMessage.value
+        }
+        socket.emit("newMessage", messageBody);
+        setSelectedChatRoom({
+            ...selectedChatRoom,
+            messages: selectedChatRoom.messages.concat([{
+                content: messageBody.body,
+                fromSelf: true
+            }])
+        })
+    }
+
+    const transactions: { transactionId: string, messages: { content: string, fromSelf: boolean }[] }[] = [
+        {
+            transactionId: "test1",
+            messages: []
+        },
+        {
+            transactionId: "test2",
+            messages: []
+        },
+        {
+            transactionId: "test3",
+            messages: []
+        }
+    ]
 
     return (
         <CustomPaper size="large" img="/page-headers/inbox-header-image.jpg"
@@ -70,12 +118,12 @@ const Inbox = () => {
                         fullWidth
                     />
                     <ListScrolledArea>
-                        <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Lend Request"/>
-                        <InboxItem primary="Maayna Mordehai" secondary="The Witcher" status="Borrow Request"/>
-                        <InboxItem primary="Pola Dinitz" secondary="The Witcher" status="Lending in Prog."/>
-                        <InboxItem primary="Daniel Beilin" secondary="The Witcher" status="Borrow in Prog."/>
-                        <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Lending Finished"/>
-                        <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Borrowing Finished"/>
+                        {transactions.map((transaction: { transactionId: string, messages: { content: string, fromSelf: boolean }[] }) => (
+                            <InboxItem key={transaction.transactionId} onCLick={() => setSelectedChatRoom(transaction)}
+                                       primary="Ran Biderman"
+                                       secondary="The Witcher" status="Lend Request"
+                                       selected={selectedChatRoom?.transactionId === transaction.transactionId}/>
+                        ))}
                     </ListScrolledArea>
                 </Box>
                 <Box sx={{
@@ -110,21 +158,26 @@ const Inbox = () => {
                     </Box>
                     <Divider/>
                     <ListScrolledArea sx={{flex: 2}}>
-                        <InboxMessage time="09:30" color="primary">Hey Ran, What's up?</InboxMessage>
+                        {selectedChatRoom?.messages.map((message: { content: string, fromSelf: boolean }, index) => (
+                            <InboxMessage key={index} time="09:33"
+                                          color={message.fromSelf ? "secondary" : "primary"}>{message.content}</InboxMessage>
+                        ))}
+                        {/*<InboxMessage time="09:30" color="primary">Hey Ran, What's up?</InboxMessage>
                         <InboxMessage time="09:33" color="secondary">Fine!</InboxMessage>
                         <InboxMessage time="09:34" color="secondary">How are you?</InboxMessage>
-                        <InboxMessage time="09:50" color="primary">Great</InboxMessage>
+                        <InboxMessage time="09:50" color="primary">Great</InboxMessage>*/}
                     </ListScrolledArea>
                     <Divider/>
                     <Box padding={1} sx={{display: "flex"}}>
                         <TextField
+                            {...chatMessage}
                             variant="standard"
                             InputProps={{disableUnderline: true}}
                             autoComplete="off"
                             label="Type a message..."
                             fullWidth
                         />
-                        <IconButton color="primary" component="span">
+                        <IconButton onClick={submitNewMessage} color="primary" component="button">
                             <SendIcon/>
                         </IconButton>
                     </Box>
@@ -133,6 +186,19 @@ const Inbox = () => {
         </CustomPaper>
     )
 
+}
+
+const useFieldInput = (initialValue: string) => {
+    const [value, setValue] = useState(initialValue);
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.value);
+    }
+
+    return {
+        value,
+        onChange: handleChange
+    }
 }
 
 export default Inbox;

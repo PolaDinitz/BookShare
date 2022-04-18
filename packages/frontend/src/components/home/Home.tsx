@@ -5,8 +5,8 @@ import { Grid } from "@mui/material";
 const Home = () => {
   return (
     <Grid container rowSpacing={3} columnSpacing={3} sx={{padding: "15px"}}>
-      {allBooks.map((book) => (
-        <Grid item xs={3}>
+      {allBooks.map((book, index) => (
+        <Grid key={index} item xs={3}>
           <BookPost book={book} />
         </Grid>
       ))}

@@ -54,7 +54,7 @@ const Library = () => {
                         <LibraryTab
                             headline={LibraryTabs.MY_BOOKS.toString()}
                             amount={30}
-                            selected={buttonSelected === LibraryTabs.MY_BOOKS ? true : false}
+                            selected={buttonSelected === LibraryTabs.MY_BOOKS}
                             click={() => changedButtonSelected(LibraryTabs.MY_BOOKS)}>
                             <LibraryBooksIcon sx={{ fontSize: 60 }} color='action' />
                         </LibraryTab>
@@ -62,7 +62,7 @@ const Library = () => {
                     <Divider orientation="vertical" variant="middle" flexItem />
                     <ListItem>
                         <LibraryTab headline={LibraryTabs.BORROWED_BOOKS.toString()} amount={10}
-                            selected={buttonSelected === LibraryTabs.BORROWED_BOOKS ? true : false}
+                            selected={buttonSelected === LibraryTabs.BORROWED_BOOKS}
                             click={() => changedButtonSelected(LibraryTabs.BORROWED_BOOKS)}
                         >
                             <>
@@ -74,7 +74,7 @@ const Library = () => {
                     <Divider orientation="vertical" variant="middle" flexItem />
                     <ListItem>
                         <LibraryTab headline={LibraryTabs.LENT_BOOKS.toString()} amount={20}
-                            selected={buttonSelected === LibraryTabs.LENT_BOOKS ? true : false}
+                            selected={buttonSelected === LibraryTabs.LENT_BOOKS}
                             click={() => changedButtonSelected(LibraryTabs.LENT_BOOKS)}>
                             <>
                                 <LibraryBooksIcon sx={{ fontSize: 60 }} color='action' />
@@ -85,9 +85,9 @@ const Library = () => {
                 </List>
                 {buttonSelected === LibraryTabs.MY_BOOKS &&
                     <>
-                        <BookCard imageUrl='/page-headers/library-header-image.jpg' catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={false} lent={false}></BookCard>
-                        <BookCard imageUrl='/page-headers/library-header-image.jpg' catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={true} lent={true}></BookCard>
-                        <BookCard imageUrl='/page-headers/library-header-image.jpg' catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={true} lent={false}></BookCard>
+                        <BookCard imageUrl='/page-headers/library-header-image.jpg' catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={false} lent={false}/>
+                        <BookCard imageUrl='/page-headers/library-header-image.jpg' catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={true} lent={true}/>
+                        <BookCard imageUrl='/page-headers/library-header-image.jpg' catagory='Fantacy' author='J.K. Rolling' name='Harry Potter' available={true} lent={false}/>
                     </>
                 }
                 {buttonSelected === LibraryTabs.BORROWED_BOOKS &&
