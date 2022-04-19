@@ -34,7 +34,7 @@ export class BookController {
   async getBook(@Request() req: any, @Param('id') id: string) {
       let book = this.bookService.getBookById(id);
       if (!book) {
-        book = this.booksApiService.getBookById(id);
+        //book = this.booksApiService.getBookById(id);
       }
       return book;
   }
@@ -45,7 +45,7 @@ export class BookController {
   async getBooksByTitle(@Request() req: any, @Param('title') title: string) {
     let books = this.bookService.getBooksByTitle(title);
     if(!books){
-      books = this.booksApiService.getBooksByTitle(title);
+      //books = this.booksApiService.getBooksByTitle(title);
     }
     return books;
   }
@@ -88,7 +88,8 @@ export class BookController {
   async postBook(@Body() createUserBookDto: CreateUserBookDto){
     let book =  await this.bookService.getBookById(createUserBookDto.book.book_id);
     if (!book) {
-      book = await this.booksApiService.getBookById(createUserBookDto.book.book_id);
+      let response = await this.booksApiService.getBookById(createUserBookDto.book.book_id);
+      response.data.
       this.bookService.CreateBook( book, book.imageUrl);
     }
     this.userBookService.CreateUserBook(createUserBookDto);
