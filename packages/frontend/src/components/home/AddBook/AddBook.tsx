@@ -12,6 +12,8 @@ import {
   AutocompleteChangeReason,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ReactTagInput from "@pathofdev/react-tag-input";
+import "@pathofdev/react-tag-input/build/index.css";
 
 import RoundedButton from "../../common/rounded-button";
 import { config } from "../../../config/config";
@@ -24,31 +26,35 @@ type AddBookProps = {
 
 const AddBook = (props: AddBookProps) => {
   const [authorName, setauthorName] = useState("");
-  const [genre, setGenre] = useState("");
+  const [genres, setGenres] = useState([""]);
   const [description, setDescription] = useState("");
 
   const { open, onClose } = props;
 
   const resetForm = () => {
     setauthorName("");
-      setGenre("");
-      setDescription("");
-  }
+    setGenres([""]);
+    setDescription("");
+  };
 
-  const fillPost = (event: React.SyntheticEvent<Element, Event>, value: BookType | null, reason: AutocompleteChangeReason) => {
+  const fillPost = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: BookType | null,
+    reason: AutocompleteChangeReason
+  ) => {
     if (value) {
       setauthorName(value.author);
-      setGenre(value.genres[0]);
+      setGenres(value.genres);
       setDescription(value.description);
     } else {
       resetForm();
     }
-  }
+  };
 
   const closeAndReset = () => {
-    resetForm(); 
+    resetForm();
     onClose();
-  }
+  };
 
   return (
     <Dialog open={open} onClose={closeAndReset} fullWidth maxWidth="md">
@@ -63,14 +69,7 @@ const AddBook = (props: AddBookProps) => {
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={1} direction="row">
-          <Grid
-            item
-            xs={6}
-            container
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-          >
+          <Grid item xs={6} container>
             <Autocomplete
               size="small"
               disablePortal
@@ -91,6 +90,7 @@ const AddBook = (props: AddBookProps) => {
               defaultValue=""
               variant="outlined"
               value={authorName}
+              sx={{ width: 300, marginTop: "10px" }}
             />
             <TextField
               size="small"
@@ -99,7 +99,12 @@ const AddBook = (props: AddBookProps) => {
               label="Genre"
               defaultValue=""
               variant="outlined"
-              value={genre}
+              value={genres[0]}
+              sx={{ width: 300, marginTop: "10px" }}
+            />
+            <ReactTagInput
+              tags={genres}
+              onChange={(newTags) => setGenres(newTags)}
             />
             <TextField
               disabled
@@ -109,6 +114,7 @@ const AddBook = (props: AddBookProps) => {
               minRows={4}
               defaultValue=""
               value={description}
+              sx={{ width: 300, marginTop: "10px" }}
             />
             <DialogActions
               sx={{
