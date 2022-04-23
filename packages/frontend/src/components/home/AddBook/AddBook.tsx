@@ -6,20 +6,16 @@ import {
   DialogTitle,
   Grid,
   IconButton,
-  Typography,
   Box,
   TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Autocomplete,
+  AutocompleteChangeReason,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 import RoundedButton from "../../common/rounded-button";
 import { config } from "../../../config/config";
-import { allBooks } from "../../../utils/books-data";
+import { allBooks, BookType } from "../../../utils/books-data";
 
 type AddBookProps = {
   open: boolean;
@@ -27,14 +23,39 @@ type AddBookProps = {
 };
 
 const AddBook = (props: AddBookProps) => {
+  const [authorName, setauthorName] = useState("");
+  const [genre, setGenre] = useState("");
+  const [description, setDescription] = useState("");
+
   const { open, onClose } = props;
 
+  const resetForm = () => {
+    setauthorName("");
+      setGenre("");
+      setDescription("");
+  }
+
+  const fillPost = (event: React.SyntheticEvent<Element, Event>, value: BookType | null, reason: AutocompleteChangeReason) => {
+    if (value) {
+      setauthorName(value.author);
+      setGenre(value.genres[0]);
+      setDescription(value.description);
+    } else {
+      resetForm();
+    }
+  }
+
+  const closeAndReset = () => {
+    resetForm(); 
+    onClose();
+  }
+
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog open={open} onClose={closeAndReset} fullWidth maxWidth="md">
       <DialogTitle>
         <Box display="flex" alignItems="center">
           <Box>
-            <IconButton onClick={onClose}>
+            <IconButton onClick={closeAndReset}>
               <CloseIcon />
             </IconButton>
           </Box>
@@ -42,28 +63,65 @@ const AddBook = (props: AddBookProps) => {
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={1} direction="row">
-          <Grid item xs={6} container direction="column"
-  alignItems="center"
-  justifyContent="center">
+          <Grid
+            item
+            xs={6}
+            container
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+          >
             <Autocomplete
               size="small"
               disablePortal
               id="combo-box-demo"
               options={allBooks}
+              onChange={fillPost}
               getOptionLabel={(option) => option.title}
-              sx={{ width: 300, marginTop: '5px' }}
-              renderInput={(params) => <TextField {...params} label="Book Name" />}
+              sx={{ width: 300, marginTop: "5px" }}
+              renderInput={(params) => (
+                <TextField {...params} label="Book Name" />
+              )}
+            />
+            <TextField
+              size="small"
+              disabled
+              id="authorName"
+              label="Author Name"
+              defaultValue=""
+              variant="outlined"
+              value={authorName}
+            />
+            <TextField
+              size="small"
+              disabled
+              id="genre"
+              label="Genre"
+              defaultValue=""
+              variant="outlined"
+              value={genre}
+            />
+            <TextField
+              disabled
+              id="description"
+              label="Description"
+              multiline
+              minRows={4}
+              defaultValue=""
+              value={description}
             />
             <DialogActions
               sx={{
-                flexDirection: "column",
+                flexDirection: "row",
               }}
             >
+              {/* TODO: replace with publish function */}
+              <RoundedButton onClick={closeAndReset}>Post Book</RoundedButton>
               <RoundedButton
                 style={{ backgroundColor: "#313131" }}
-                onClick={onClose}
+                onClick={closeAndReset}
               >
-                Close
+                Cancel
               </RoundedButton>
             </DialogActions>
           </Grid>
