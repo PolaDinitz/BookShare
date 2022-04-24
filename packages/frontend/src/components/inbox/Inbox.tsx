@@ -23,7 +23,7 @@ import CustomPaper from "../common/custom-paper";
 import { socket } from "../../App";
 import InboxMessage from "./inboxMessage/InboxMessage";
 import { inboxSelectors, newMessageThunk, transactionReceived } from "../../features/inbox/inbox.slice";
-import { Chat } from "../../features/inbox/inbox.model";
+import { Chat, ChatMessage } from "../../features/inbox/inbox.model";
 
 const Inbox = () => {
     const chatSection = {
@@ -64,15 +64,14 @@ const Inbox = () => {
 
     useEffect(() => {
         socket.on("newMessage", (message: { transactionId: string, from: string, body: string }) => {
-            if (message.from !== loggedInUser?.email) {
-                dispatch(newMessageThunk({
-                    transactionId: message.transactionId,
-                    chatMessage: {
-                        content: message.body,
-                        fromSelf: false
-                    }
-                }));
-            }
+            const fromSelf = (message.from === loggedInUser?.email);
+            dispatch(newMessageThunk({
+                transactionId: message.transactionId,
+                chatMessage: {
+                    content: message.body,
+                    fromSelf
+                }
+            }));
         });
     }, []);
 
@@ -83,13 +82,6 @@ const Inbox = () => {
             body: chatMessage
         }
         socket.emit("newMessage", message);
-        dispatch(newMessageThunk({
-            transactionId: message.transactionId,
-            chatMessage: {
-                content: message.body,
-                fromSelf: true
-            }
-        }));
         setChatMessage("");
     }
 
@@ -174,8 +166,8 @@ const Inbox = () => {
                             <Divider/>
                             <ListScrolledArea sx={{flex: 2}}>
                                 {transactions.find((transaction: Chat) => transaction.transactionId === selectedChatRoom)
-                                    ?.messages.map((message: { content: string, fromSelf: boolean }, index) => (
-                                        <InboxMessage key={index} time="09:33"
+                                    ?.messages.map((message: ChatMessage, index) => (
+                                        <InboxMessage key={index} time={message?.time}
                                                       color={message.fromSelf ? "secondary" : "primary"}>
                                             {message.content}
                                         </InboxMessage>

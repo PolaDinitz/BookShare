@@ -41,9 +41,9 @@ const inboxMessageStyleMap = new Map<MessageType, MessageStyle>([
 ])
 
 type InboxMessageProps = {
-    children?: React.ReactNode;
-    time: string;
     color: MessageType;
+    children?: React.ReactNode;
+    time?: string;
 }
 
 const InboxMessage = (props: InboxMessageProps) => {
