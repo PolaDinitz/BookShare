@@ -3,7 +3,6 @@ import AuthService from "../../services/auth.service";
 import { LoginFormInputs } from "../../utils/forms/LoginSchema";
 import { RegisterFormInputs } from "../../utils/forms/RegisterSchema";
 import { Auth, AuthState } from "./auth.model";
-import { socket } from "../../App";
 
 const user = localStorage.getItem("user");
 
@@ -12,7 +11,6 @@ export const loginThunk = createAsyncThunk<{ user: Auth }, LoginFormInputs>(
     async (payload: LoginFormInputs, thunkApi) => {
         try {
             const user = await AuthService.login(payload);
-            socket.connect();
             return {user};
         } catch (error: any) {
             return thunkApi.rejectWithValue(error.message);

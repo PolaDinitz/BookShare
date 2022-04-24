@@ -35,7 +35,7 @@ const Library = () => {
                 <Typography
                     variant="h4"
                     mt={2}
-                    fontWeight="bold"
+                    fontWeight={600}
                 >
                     {user?.firstName} {user?.lastName}'s Library
                 </Typography>

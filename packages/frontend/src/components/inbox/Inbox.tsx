@@ -12,36 +12,20 @@ import {
     Typography
 } from "@mui/material";
 import * as React from "react";
-import { ChangeEvent, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Search } from "@mui/icons-material";
 import SendIcon from '@mui/icons-material/Send';
-import { RootState } from "../../types/types";
+import { AppDispatch, RootState } from "../../types/types";
 import { config } from "../../config/config";
 import InboxItem from "./inboxItem/InboxItem";
 import CustomPaper from "../common/custom-paper";
 import { socket } from "../../App";
 import InboxMessage from "./inboxMessage/InboxMessage";
+import { inboxSelectors, newMessageThunk, transactionReceived } from "../../features/inbox/inbox.slice";
+import { Chat } from "../../features/inbox/inbox.model";
 
 const Inbox = () => {
-    const loggedInUser = useSelector((state: RootState) => state.auth.user);
-    const [selectedChatRoom, setSelectedChatRoom] = useState(null as unknown as { transactionId: string, messages: { content: string, fromSelf: boolean }[] });
-    const chatMessage = useFieldInput("");
-
-    useEffect(() => {
-        socket.on("newMessage", (message: { transactionId: string, from: string, body: string }) => {
-            if (message.from !== loggedInUser?.email) {
-                setSelectedChatRoom({
-                    ...selectedChatRoom,
-                    messages: selectedChatRoom.messages.concat([{
-                        content: message.body,
-                        fromSelf: false
-                    }])
-                })
-            }
-        });
-    }, [selectedChatRoom, loggedInUser]);
-
     const chatSection = {
         width: "100%",
         height: "70vh"
@@ -59,36 +43,55 @@ const Inbox = () => {
         }
     }));
 
-    const submitNewMessage = () => {
-        const messageBody: { transactionId: string, from: string | undefined, body: string } = {
-            transactionId: selectedChatRoom?.transactionId,
-            from: loggedInUser?.email,
-            body: chatMessage.value
-        }
-        socket.emit("newMessage", messageBody);
-        setSelectedChatRoom({
-            ...selectedChatRoom,
-            messages: selectedChatRoom.messages.concat([{
-                content: messageBody.body,
-                fromSelf: true
-            }])
-        })
-    }
+    const dispatch = useDispatch<AppDispatch>()
+    const loggedInUser = useSelector((state: RootState) => state.auth.user);
+    const [selectedChatRoom, setSelectedChatRoom] = useState("");
+    const [chatMessage, setChatMessage] = useState("");
+    const transactions: Chat[] = useSelector(inboxSelectors.selectAll);
 
-    const transactions: { transactionId: string, messages: { content: string, fromSelf: boolean }[] }[] = [
-        {
-            transactionId: "test1",
-            messages: []
-        },
-        {
-            transactionId: "test2",
-            messages: []
-        },
-        {
-            transactionId: "test3",
-            messages: []
+    useEffect(() => {
+        dispatch(transactionReceived([
+            {
+                transactionId: "test1",
+                messages: []
+            },
+            {
+                transactionId: "test2",
+                messages: []
+            }
+        ]));
+    }, []);
+
+    useEffect(() => {
+        socket.on("newMessage", (message: { transactionId: string, from: string, body: string }) => {
+            if (message.from !== loggedInUser?.email) {
+                dispatch(newMessageThunk({
+                    transactionId: message.transactionId,
+                    chatMessage: {
+                        content: message.body,
+                        fromSelf: false
+                    }
+                }));
+            }
+        });
+    }, []);
+
+    const submitNewMessage = () => {
+        const message: { transactionId: string, from: string | undefined, body: string } = {
+            transactionId: selectedChatRoom,
+            from: loggedInUser?.email,
+            body: chatMessage
         }
-    ]
+        socket.emit("newMessage", message);
+        dispatch(newMessageThunk({
+            transactionId: message.transactionId,
+            chatMessage: {
+                content: message.body,
+                fromSelf: true
+            }
+        }));
+        setChatMessage("");
+    }
 
     return (
         <CustomPaper size="large" img="/page-headers/inbox-header-image.jpg"
@@ -118,11 +121,12 @@ const Inbox = () => {
                         fullWidth
                     />
                     <ListScrolledArea>
-                        {transactions.map((transaction: { transactionId: string, messages: { content: string, fromSelf: boolean }[] }) => (
-                            <InboxItem key={transaction.transactionId} onCLick={() => setSelectedChatRoom(transaction)}
+                        {transactions.map((transaction: Chat) => (
+                            <InboxItem key={transaction.transactionId}
+                                       onCLick={() => setSelectedChatRoom(transaction.transactionId)}
                                        primary="Ran Biderman"
                                        secondary="The Witcher" status="Lend Request"
-                                       selected={selectedChatRoom?.transactionId === transaction.transactionId}/>
+                                       selected={selectedChatRoom === transaction.transactionId}/>
                         ))}
                     </ListScrolledArea>
                 </Box>
@@ -139,66 +143,65 @@ const Inbox = () => {
                      square
                      elevation={0}
                 >
-                    <Box sx={{
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        padding: "5px"
-                    }}>
-                        <Avatar sx={{width: 70, height: 70, marginRight: 3}}
-                                alt="Ran Biderman"
-                                src="https://material-ui.com/static/images/avatar/1.jpg"/>
-                        <Box sx={{alignSelf: "center"}}>
-                            <Typography variant="h6" fontWeight={500}>
-                                Ran Biderman
+                    {selectedChatRoom === "" ?
+                        <Box sx={{margin: "auto"}}>
+                            <Typography fontWeight={"bold"} fontSize="24px">
+                                Choose a chat
                             </Typography>
-                            <Typography variant="subtitle2" fontWeight={300}>
-                                The Witcher
+                            <Typography>
+                                To get started choose a chat room from the list on your left!
                             </Typography>
                         </Box>
-                    </Box>
-                    <Divider/>
-                    <ListScrolledArea sx={{flex: 2}}>
-                        {selectedChatRoom?.messages.map((message: { content: string, fromSelf: boolean }, index) => (
-                            <InboxMessage key={index} time="09:33"
-                                          color={message.fromSelf ? "secondary" : "primary"}>{message.content}</InboxMessage>
-                        ))}
-                        {/*<InboxMessage time="09:30" color="primary">Hey Ran, What's up?</InboxMessage>
-                        <InboxMessage time="09:33" color="secondary">Fine!</InboxMessage>
-                        <InboxMessage time="09:34" color="secondary">How are you?</InboxMessage>
-                        <InboxMessage time="09:50" color="primary">Great</InboxMessage>*/}
-                    </ListScrolledArea>
-                    <Divider/>
-                    <Box padding={1} sx={{display: "flex"}}>
-                        <TextField
-                            {...chatMessage}
-                            variant="standard"
-                            InputProps={{disableUnderline: true}}
-                            autoComplete="off"
-                            label="Type a message..."
-                            fullWidth
-                        />
-                        <IconButton onClick={submitNewMessage} color="primary" component="button">
-                            <SendIcon/>
-                        </IconButton>
-                    </Box>
+                        :
+                        <>
+                            <Box sx={{
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                padding: "5px"
+                            }}>
+                                <Avatar sx={{width: 70, height: 70, marginRight: 3}}
+                                        alt="Ran Biderman"
+                                        src="https://material-ui.com/static/images/avatar/1.jpg"/>
+                                <Box sx={{alignSelf: "center"}}>
+                                    <Typography variant="h6" fontWeight={500}>
+                                        Ran Biderman
+                                    </Typography>
+                                    <Typography variant="subtitle2" fontWeight={300}>
+                                        The Witcher
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Divider/>
+                            <ListScrolledArea sx={{flex: 2}}>
+                                {transactions.find((transaction: Chat) => transaction.transactionId === selectedChatRoom)
+                                    ?.messages.map((message: { content: string, fromSelf: boolean }, index) => (
+                                        <InboxMessage key={index} time="09:33"
+                                                      color={message.fromSelf ? "secondary" : "primary"}>
+                                            {message.content}
+                                        </InboxMessage>
+                                    ))}
+                            </ListScrolledArea>
+                            <Divider/>
+                            <Box padding={1} sx={{display: "flex"}}>
+                                <TextField
+                                    variant="standard"
+                                    value={chatMessage}
+                                    InputProps={{disableUnderline: true}}
+                                    autoComplete="off"
+                                    label="Type a message..."
+                                    onChange={event => setChatMessage(event.target.value)}
+                                    fullWidth
+                                />
+                                <IconButton onClick={submitNewMessage} color="primary" component="button">
+                                    <SendIcon/>
+                                </IconButton>
+                            </Box>
+                        </>
+                    }
                 </Box>
             </Box>
         </CustomPaper>
     )
-
-}
-
-const useFieldInput = (initialValue: string) => {
-    const [value, setValue] = useState(initialValue);
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value);
-    }
-
-    return {
-        value,
-        onChange: handleChange
-    }
 }
 
 export default Inbox;

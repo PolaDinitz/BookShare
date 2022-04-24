@@ -20,11 +20,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleConnection(@ConnectedSocket() client: Socket, ...args: any[]): any {
+    console.log(client.id + " has connected to webSocket!");
     const transactionsIds: string[] = ["test1", "test2", "test3"];
     client.join(transactionsIds);
   }
 
   handleDisconnect(client: any): any {
+    console.log(client.id + " has disconnected from webSocket!");
   }
 
 }
