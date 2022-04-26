@@ -5,6 +5,7 @@ import { Role } from "src/enums/role.enum";
 import { Type } from "class-transformer";
 import { DEFAULT_USER_IMAGE_FILE_NAME, IMAGES_USER_ASSETS_PATH } from "src/consts/images.consts";
 import { Transaction } from "src/transaction/entities/transaction.entity";
+import { UserBook } from "src/user-book/entities/user-book.entity";
 
 @Entity()
 export class User {
@@ -56,4 +57,9 @@ export class User {
 
   @OneToMany(type => Transaction, transaction => transaction.borrowUser)
   borrowTransactions: Transaction[]
+
+  //TODO: ADD my books and landed books relations 
+  
+  @OneToMany(type => UserBook, userBook => userBook.user)
+  userBook: UserBook[]
 }
