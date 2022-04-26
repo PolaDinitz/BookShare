@@ -15,8 +15,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   webSocketServer: Server;
 
   @SubscribeMessage("newMessage")
-  handleNewMessage(@MessageBody() message: { transactionId: string, from: string, body: string }, @ConnectedSocket() client: Socket): void {
-    this.webSocketServer.to(message.transactionId).emit("newMessage", message);
+  handleNewMessage(@MessageBody() message: { transactionId: string, content: string }, @ConnectedSocket() client: Socket): void {
+    const from = client.handshake.auth.email;
+    this.webSocketServer.to(message.transactionId).emit("newMessage", { ...message, from });
   }
 
   handleConnection(@ConnectedSocket() client: Socket, ...args: any[]): any {

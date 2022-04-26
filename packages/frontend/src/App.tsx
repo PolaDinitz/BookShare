@@ -13,6 +13,7 @@ export const socket = socketIOClient(config.apiUrl, {autoConnect: false, transpo
 function App() {
 
     const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+    const loggedInUserEmail = useSelector((state: RootState) => state.auth.user?.email);
 
     useEffect(() => {
         // For Debugging
@@ -20,7 +21,12 @@ function App() {
             console.log(event, args);
         });
 
-        (isLoggedIn) ? socket.connect() : socket.disconnect();
+        if (isLoggedIn) {
+            socket.auth = { email: loggedInUserEmail } ;
+            socket.connect()
+        } else {
+            socket.disconnect();
+        }
     }, [isLoggedIn]);
 
     return (

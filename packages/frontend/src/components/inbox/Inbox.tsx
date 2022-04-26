@@ -63,12 +63,12 @@ const Inbox = () => {
     }, []);
 
     useEffect(() => {
-        socket.on("newMessage", (message: { transactionId: string, from: string, body: string }) => {
+        socket.on("newMessage", (message: { transactionId: string, from: string, content: string }) => {
             const fromSelf = (message.from === loggedInUser?.email);
             dispatch(newMessageThunk({
                 transactionId: message.transactionId,
                 chatMessage: {
-                    content: message.body,
+                    content: message.content,
                     fromSelf
                 }
             }));
@@ -76,10 +76,9 @@ const Inbox = () => {
     }, []);
 
     const submitNewMessage = () => {
-        const message: { transactionId: string, from: string | undefined, body: string } = {
+        const message: { transactionId: string, content: string } = {
             transactionId: selectedChatRoom,
-            from: loggedInUser?.email,
-            body: chatMessage
+            content: chatMessage
         }
         socket.emit("newMessage", message);
         setChatMessage("");
