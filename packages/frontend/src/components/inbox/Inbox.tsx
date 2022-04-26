@@ -43,37 +43,12 @@ const Inbox = () => {
         }
     }));
 
-    const dispatch = useDispatch<AppDispatch>()
     const loggedInUser = useSelector((state: RootState) => state.auth.user);
     const [selectedChatRoom, setSelectedChatRoom] = useState("");
     const [chatMessage, setChatMessage] = useState("");
     const transactions: Chat[] = useSelector(inboxSelectors.selectAll);
 
-    useEffect(() => {
-        dispatch(transactionReceived([
-            {
-                transactionId: "test1",
-                messages: []
-            },
-            {
-                transactionId: "test2",
-                messages: []
-            }
-        ]));
-    }, []);
 
-    useEffect(() => {
-        socket.on("newMessage", (message: { transactionId: string, from: string, content: string }) => {
-            const fromSelf = (message.from === loggedInUser?.email);
-            dispatch(newMessageThunk({
-                transactionId: message.transactionId,
-                chatMessage: {
-                    content: message.content,
-                    fromSelf
-                }
-            }));
-        });
-    }, []);
 
     const submitNewMessage = () => {
         const message: { transactionId: string, content: string } = {
