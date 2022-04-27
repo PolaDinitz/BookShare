@@ -45,13 +45,3 @@ const SearchFilter = (props: SearchFilterProps) => {
 };
 
 export default SearchFilter;
-
-// by genre - multiple choice
-
-// location - current location
-
-// user rating - bar + number
-
-// book rating - bar + number
-
-// ditance - bar + number
