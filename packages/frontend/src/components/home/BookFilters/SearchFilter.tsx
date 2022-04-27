@@ -14,7 +14,7 @@ const SearchFilter = (props: SearchFilterProps) => {
   return (
     <div
       style={{
-        width: "30%",
+        width: "100%",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",

@@ -62,9 +62,9 @@ const Home = () => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 10, margin: "15px"}}>
         <Grid container spacing={3}>
-          <Grid item xs={3}>
+          <Grid item xs={6}>
             <SearchFilter
               searchText={state.searchText}
               onTextChange={(event) =>
@@ -76,7 +76,7 @@ const Home = () => {
               suggestions={_.map(allBooks, "title")}
             />
           </Grid>
-          <Grid item xs={3}>
+          {/* <Grid item xs={3}>
             <MultipleChoiceFilter
               options={_(allBooks).map("gneres").flatten().uniq().value()}
               checked={state.genres}
@@ -87,7 +87,7 @@ const Home = () => {
                 })
               }
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={2}>
             <SliderFilter
               key={filterActionTypes.byBookRating}
