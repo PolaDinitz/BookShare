@@ -28,6 +28,7 @@ const AddBook = (props: AddBookProps) => {
   const [authorName, setauthorName] = useState("");
   const [genres, setGenres] = useState([""]);
   const [description, setDescription] = useState("");
+  const [coverImage, setCoverImage] = useState("");
 
   const { open, onClose } = props;
 
@@ -35,6 +36,7 @@ const AddBook = (props: AddBookProps) => {
     setauthorName("");
     setGenres([""]);
     setDescription("");
+    setCoverImage("");
   };
 
   const fillPost = (
@@ -46,6 +48,7 @@ const AddBook = (props: AddBookProps) => {
       setauthorName(value.author);
       setGenres(value.genres);
       setDescription(value.description);
+      setCoverImage(value.cover_img);
     } else {
       resetForm();
     }
@@ -92,20 +95,15 @@ const AddBook = (props: AddBookProps) => {
               value={authorName}
               sx={{ width: 300, marginTop: "10px" }}
             />
-            <TextField
-              size="small"
-              disabled
-              id="genre"
-              label="Genre"
-              defaultValue=""
-              variant="outlined"
-              value={genres[0]}
-              sx={{ width: 300, marginTop: "10px" }}
-            />
+            <div style={{ width: 300, marginTop: "10px" }}>
             <ReactTagInput
               tags={genres}
               onChange={(newTags) => setGenres(newTags)}
-            />
+              editable={false}
+              readOnly={true}
+              placeholder="Genres"
+              />
+              </div>
             <TextField
               disabled
               id="description"
@@ -138,8 +136,8 @@ const AddBook = (props: AddBookProps) => {
                 height: "100%",
                 objectFit: "cover",
               }}
-              src={`${config.apiUrl}/${config.defaultUserImageName}`}
-              alt={`${config.apiUrl}/${config.defaultUserImageName}`}
+              src={coverImage ? coverImage : "/Placeholder-Portrait.png"}
+              alt="Book Cover"
             />
           </Grid>
         </Grid>
