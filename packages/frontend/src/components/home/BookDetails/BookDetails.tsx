@@ -27,7 +27,7 @@ const BookDetails = (props: BookDetailsProps) => {
   const { title, author, genres, description, cover_img } = props.book;
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>
         <Box display="flex" alignItems="center">
           <Box>
