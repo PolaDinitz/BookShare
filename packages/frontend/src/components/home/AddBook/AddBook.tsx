@@ -10,6 +10,10 @@ import {
   TextField,
   Autocomplete,
   AutocompleteChangeReason,
+  Typography,
+  Switch,
+  FormControlLabel,
+  DialogProps,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ReactTagInput from "@pathofdev/react-tag-input";
@@ -29,8 +33,14 @@ const AddBook = (props: AddBookProps) => {
   const [genres, setGenres] = useState([""]);
   const [description, setDescription] = useState("");
   const [coverImage, setCoverImage] = useState("");
+  const [isAvailabale, setIsAvailabale] = React.useState(true);
+  const [scroll, setScroll] = React.useState<DialogProps["scroll"]>("paper");
 
   const { open, onClose } = props;
+
+  const handleAvailability = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsAvailabale(event.target.checked);
+  };
 
   const resetForm = () => {
     setauthorName("");
@@ -60,7 +70,13 @@ const AddBook = (props: AddBookProps) => {
   };
 
   return (
-    <Dialog open={open} onClose={closeAndReset} fullWidth maxWidth="md">
+    <Dialog
+      open={open}
+      onClose={closeAndReset}
+      fullWidth
+      maxWidth="md"
+      scroll={scroll}
+    >
       <DialogTitle>
         <Box display="flex" alignItems="center">
           <Box>
@@ -68,11 +84,12 @@ const AddBook = (props: AddBookProps) => {
               <CloseIcon />
             </IconButton>
           </Box>
+          <Typography>Post A Book</Typography>
         </Box>
       </DialogTitle>
       <DialogContent>
-        <Grid container spacing={1} direction="row">
-          <Grid item xs={6} container>
+        <Grid container spacing={1}>
+          <Grid item xs={6} container rowSpacing={0}>
             <Autocomplete
               size="small"
               disablePortal
@@ -80,7 +97,7 @@ const AddBook = (props: AddBookProps) => {
               options={allBooks}
               onChange={fillPost}
               getOptionLabel={(option) => option.title}
-              sx={{ width: 300, marginTop: "5px" }}
+              sx={{ width: 300, paddingTop: "10px" }}
               renderInput={(params) => (
                 <TextField {...params} label="Book Name" />
               )}
@@ -93,17 +110,17 @@ const AddBook = (props: AddBookProps) => {
               defaultValue=""
               variant="outlined"
               value={authorName}
-              sx={{ width: 300, marginTop: "10px" }}
+              sx={{ width: 300 }}
             />
-            <div style={{ width: 300, marginTop: "10px" }}>
-            <ReactTagInput
-              tags={genres}
-              onChange={(newTags) => setGenres(newTags)}
-              editable={false}
-              readOnly={true}
-              placeholder="Genres"
+            <div style={{ width: 300 }}>
+              <ReactTagInput
+                tags={genres}
+                onChange={(newTags) => setGenres(newTags)}
+                editable={false}
+                readOnly={true}
+                placeholder="Genres"
               />
-              </div>
+            </div>
             <TextField
               disabled
               id="description"
@@ -112,29 +129,25 @@ const AddBook = (props: AddBookProps) => {
               minRows={4}
               defaultValue=""
               value={description}
-              sx={{ width: 300, marginTop: "10px" }}
+              sx={{ width: 300 }}
             />
-            <DialogActions
-              sx={{
-                flexDirection: "row",
-              }}
-            >
-              {/* TODO: replace with publish function */}
-              <RoundedButton onClick={closeAndReset}>Post Book</RoundedButton>
-              <RoundedButton
-                style={{ backgroundColor: "#313131" }}
-                onClick={closeAndReset}
-              >
-                Cancel
-              </RoundedButton>
-            </DialogActions>
+            <FormControlLabel
+              control={
+                <Switch
+                  defaultChecked
+                  value={isAvailabale}
+                  onChange={handleAvailability}
+                />
+              }
+              label="Make availabale for landing"
+            />
           </Grid>
           <Grid item xs={6}>
             <img
               style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
+                width: "90%",
+                height: "90%",
+                objectFit: "fill",
               }}
               src={coverImage ? coverImage : "/Placeholder-Portrait.png"}
               alt="Book Cover"
@@ -142,6 +155,20 @@ const AddBook = (props: AddBookProps) => {
           </Grid>
         </Grid>
       </DialogContent>
+      <DialogActions
+        sx={{
+          flexDirection: "row",
+        }}
+      >
+        <RoundedButton
+          style={{ backgroundColor: "#313131" }}
+          onClick={closeAndReset}
+        >
+          Cancel
+        </RoundedButton>
+        {/* TODO: replace with publish function */}
+        <RoundedButton onClick={closeAndReset}>Post Book</RoundedButton>
+      </DialogActions>
     </Dialog>
   );
 };
