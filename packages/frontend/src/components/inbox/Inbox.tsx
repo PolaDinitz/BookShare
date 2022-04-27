@@ -12,17 +12,17 @@ import {
     Typography
 } from "@mui/material";
 import * as React from "react";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Search } from "@mui/icons-material";
 import SendIcon from '@mui/icons-material/Send';
-import { AppDispatch, RootState } from "../../types/types";
+import { RootState } from "../../types/types";
 import { config } from "../../config/config";
 import InboxItem from "./inboxItem/InboxItem";
 import CustomPaper from "../common/custom-paper";
 import { socket } from "../../App";
 import InboxMessage from "./inboxMessage/InboxMessage";
-import { inboxSelectors, newMessageThunk, transactionReceived } from "../../features/inbox/inbox.slice";
+import { inboxSelectors } from "../../features/inbox/inbox.slice";
 import { Chat, ChatMessage } from "../../features/inbox/inbox.model";
 
 const Inbox = () => {
@@ -47,8 +47,6 @@ const Inbox = () => {
     const [selectedChatRoom, setSelectedChatRoom] = useState("");
     const [chatMessage, setChatMessage] = useState("");
     const transactions: Chat[] = useSelector(inboxSelectors.selectAll);
-
-
 
     const submitNewMessage = () => {
         const message: { transactionId: string, content: string } = {
