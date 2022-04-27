@@ -7,7 +7,7 @@ const Home = () => {
     <Grid container rowSpacing={3} columnSpacing={3} sx={{padding: "15px"}}>
       {allBooks.map((book) => (
         <Grid item xs={3}>
-          <BookPost book={book} />
+          <BookPost key={book.id} book={book} />
         </Grid>
       ))}
     </Grid>

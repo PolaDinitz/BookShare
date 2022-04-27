@@ -1,5 +1,6 @@
 export const allBooks = [
     {
+        id: 1,
         title: 'Harry Potter and the Philosophers Stone',
         author: 'Rowling, J K',
         description: `This story is filled with dark comedy and crafted with a quality of writing that has garnered J.K. Rowling top awards in her country and ours. Harry Potter spent ten long years living with his aunt and uncle and stupid cousin, Dudley. Fortunately, Harry has a destiny that he was born to fulfill. One that will rocket him out of his dull life and into a unique experience at the Hogworts School of Witchcraft and Wizardry.`,
@@ -7,6 +8,7 @@ export const allBooks = [
         genres: ['Fantasy', 'Adventure'],
     },
     {
+        id: 2,
         title: 'Harry Potter and the Deathly Hallows',
         author: 'Rowling, J K',
         description: `In the seventh and final installment of the epic Harry Potter series, seventeen-year-old Harry embarks on the mission of finding and destroying Voldemort's Horcruxes. During his travels, Harry becomes distracted by the seductive allure of the Deathly Hallows and learns surprising secrets of Dumbledore's past.`,
@@ -14,6 +16,7 @@ export const allBooks = [
         genres: ['Fantasy', 'Adventure'],
     },
     {
+        id: 3,
         title: 'Harry Potter and the Goblet of Fire',
         author: 'Rowling, J K',
         description: `Harry Potter is midway through his training as a wizard and his coming of age. Harry wants to get away from the pernicious Dursleys and go to the International Quidditch Cup. He wants to find out about the mysterious event that's supposed to take place at Hogwarts this year, an event involving two other rival schools of magic, and a competition that hasn't happened for a hundred years. He wants to be a normal, fourteen-year-old wizard. But unfortunately for Harry Potter, he's not normal - even by wizarding standards. And in his case, different can be deadly.`,
@@ -21,6 +24,7 @@ export const allBooks = [
         genres: ['Fantasy', 'Adventure'],
     },
     {
+        id: 4,
         title: 'Harry Potter and the Order of the Phoenix',
         author: 'Rowling, J K',
         description: `The book that took the world by storm....In his fifth year at Hogwart's, Harry faces challenges at every turn, from the dark threat of He-Who-Must-Not-Be- Named and the unreliability of the government of the magical world to the rise of Ron Weasley as the keeper of the Gryffindor Quidditch Team. Along the way he learns about the strength of his friends, the fierceness of his enemies, and the meaning of sacrifice.`,
@@ -30,6 +34,7 @@ export const allBooks = [
 ]
 
 export type BookType = {
+    id: number,
     title: string,
     author: string,
     description: string,
