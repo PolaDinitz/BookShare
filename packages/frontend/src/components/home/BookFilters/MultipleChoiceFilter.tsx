@@ -49,11 +49,3 @@ const MultipleChoiceFilter = (props: MultipleChoiceFilterProps) => {
 };
 
 export default MultipleChoiceFilter;
-
-// location - current location
-
-// user rating - bar + number
-
-// book rating - bar + number
-
-// ditance - bar + number

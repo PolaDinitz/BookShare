@@ -13,7 +13,7 @@ export const allBooks = [
         author: 'Rowling, J K',
         description: `In the seventh and final installment of the epic Harry Potter series, seventeen-year-old Harry embarks on the mission of finding and destroying Voldemort's Horcruxes. During his travels, Harry becomes distracted by the seductive allure of the Deathly Hallows and learns surprising secrets of Dumbledore's past.`,
         cover_img: 'https://cdn.shopify.com/s/files/1/2181/2535/products/02e5ee995b80d61e09a9849df5c83513_x700.gif?v=1514210286',
-        genres: ['Fantasy', 'Adventure'],
+        genres: ['Fantasy', 'Adventure', 'Fiction'],
     },
     {
         id: 3,
@@ -30,7 +30,15 @@ export const allBooks = [
         description: `The book that took the world by storm....In his fifth year at Hogwart's, Harry faces challenges at every turn, from the dark threat of He-Who-Must-Not-Be- Named and the unreliability of the government of the magical world to the rise of Ron Weasley as the keeper of the Gryffindor Quidditch Team. Along the way he learns about the strength of his friends, the fierceness of his enemies, and the meaning of sacrifice.`,
         cover_img: 'https://cdn.shopify.com/s/files/1/2181/2535/products/fe4d33b76d404830c2efb1520c609fb4_x700.gif?v=1514210281',
         genres: ['Fantasy', 'Adventure'],
-    }
+    },
+    {
+        id: 5,
+        title: 'The Notebook',
+        author: 'Nicholas Sparks',
+        description: `Set amid the austere beauty of the North Carolina coast begins the story of Noah Calhoun, a rural Southerner recently returned from the Second World War. Noah is restoring a plantation home to its former glory, and he is haunted by images of the beautiful girl he met fourteen years earlier, a girl he loved like no other. Unable to find her, yet unwilling to forget the summer they spent together, Noah is content to live with only memories...until she unexpectedly returns to his town to see him once again.`,
+        cover_img: 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1483183484l/33648131._SY475_.jpg',
+        genres: ['Romance', 'Fiction'],
+    },
 ]
 
 export type BookType = {

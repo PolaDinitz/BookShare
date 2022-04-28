@@ -23,7 +23,7 @@ type State = {
 
 const initialState = {
   searchText: "",
-  genres: [""],
+  genres: [],
   userRating: 0,
   bookRating: 0,
   distance: 0,
@@ -37,27 +37,28 @@ const filterActionTypes = {
   byDistance: "byDistance",
 };
 
-function filterReducer(state: State, action: AnyAction) {
+function filterReducer(state: State = initialState, action: AnyAction) {
   switch (action.type) {
     case "byName":
-      return { ...initialState, searchText: action.payload };
+      return { ...state, searchText: action.payload };
     case "byGenres":
-      return { ...initialState, genres: action.payload };
+      return { ...state, genres: action.payload };
     case "byUserRating":
-      return { ...initialState, userRating: action.payload };
+      return { ...state, userRating: action.payload };
     case "byBookRating":
-      return { ...initialState, bookRating: action.payload };
+      return { ...state, bookRating: action.payload };
     case "byDistance":
-      return { ...initialState, distance: action.payload };
+      return { ...state, distance: action.payload };
     default:
       throw new Error();
   }
 }
 
 const fabStyle = {
-  position: "absolute",
-  bottom: 16,
-  right: 16,
+  position: 'fixed',
+  bottom: '5%',
+  right: '5%',
+  alignSelf: 'flex-end',
 };
 
 const Home = () => {
@@ -73,14 +74,22 @@ const Home = () => {
   const [state, dispatch] = useReducer(filterReducer, initialState);
 
   const filteredBooks = allBooks.filter((book: BookType) => {
-    return book.title
+    return (
+      (
+        book.title
       .toLocaleLowerCase()
-      .includes(state.searchText.toLocaleLowerCase());
+      .includes(state.searchText.toLocaleLowerCase()) ||
+      book.author
+      .toLocaleLowerCase()
+      .includes(state.searchText.toLocaleLowerCase())
+      ) &&
+     (!_.isEmpty(state.genres) ? book.genres.some(item => state.genres.includes(item)) : true)
+    );
   });
 
   return (
     <>
-      <Box sx={{ flexGrow: 10, margin: "30px 15px 15px 15px" }}>
+      <Box sx={{ flexGrow: 10, margin: "30px 15px 15px 15px" }}>מה
         <Grid container spacing={3}>
           <Grid item xs={3}>
             <SearchFilter
@@ -97,7 +106,7 @@ const Home = () => {
           <Grid item xs={3}>
             <MultipleChoiceFilter
               label="Choose Genres"
-              options={_(allBooks).map("gneres").flatten().uniq().value()}
+              options={_(allBooks).map("genres").flatten().uniq().value()}
               checked={state.genres}
               onCheck={(event) =>
                 dispatch({
