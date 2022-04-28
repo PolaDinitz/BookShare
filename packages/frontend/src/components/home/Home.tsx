@@ -1,6 +1,9 @@
 import { AnyAction } from "@reduxjs/toolkit";
 import _ from "lodash";
 import { useReducer, useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
+import { Box, Fab, Grid } from "@mui/material";
+
 import { allBooks, BookType } from "../../utils/books-data";
 import BooksCollection from "./BooksCollection";
 import {
@@ -8,7 +11,7 @@ import {
   SearchFilter,
   SliderFilter,
 } from "./BookFilters";
-import { Box, Grid } from "@mui/material";
+import AddBook from "./AddBook";
 
 type State = {
   searchText: string;
@@ -51,7 +54,22 @@ function filterReducer(state: State, action: AnyAction) {
   }
 }
 
+const fabStyle = {
+  position: "absolute",
+  bottom: 16,
+  right: 16,
+};
+
 const Home = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const [state, dispatch] = useReducer(filterReducer, initialState);
 
   const filteredBooks = allBooks.filter((book: BookType) => {
@@ -137,6 +155,15 @@ const Home = () => {
         </Grid>
       </Box>
       <BooksCollection books={filteredBooks} />
+      <Fab
+        sx={fabStyle}
+        color="primary"
+        aria-label="add"
+        onClick={handleClickOpen}
+      >
+        <AddIcon />
+      </Fab>
+      <AddBook open={open} onClose={handleClose} />
     </>
   );
 };
