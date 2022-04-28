@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import {
-  Slider,
-} from "@mui/material";
+import { Slider, Typography } from "@mui/material";
 
 type SliderFilterProps = {
   value: number;
   maxRange: number;
   step: number;
+  label: string;
   onSlide: (event: any) => void;
 };
 
@@ -15,19 +14,25 @@ function valuetext(value: number) {
 }
 
 const SliderFilter = (props: SliderFilterProps) => {
-  const { value, maxRange, step, onSlide } = props;
+  const { value, maxRange, step, label, onSlide } = props;
 
   return (
-    <Slider
-      defaultValue={3}
-      getAriaValueText={valuetext}
-      step={step}
-      marks
-      min={0}
-      max={maxRange}
-      valueLabelDisplay="auto"
-      value={value}
-    />
+    <>
+      <Typography id="input-slider" gutterBottom>
+        {label}
+      </Typography>
+      <Slider
+        defaultValue={3}
+        getAriaValueText={valuetext}
+        step={step}
+        marks
+        min={0}
+        max={maxRange}
+        valueLabelDisplay="auto"
+        value={value}
+        onChange={onSlide}
+      />
+    </>
   );
 };
 

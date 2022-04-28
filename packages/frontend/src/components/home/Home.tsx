@@ -62,9 +62,9 @@ const Home = () => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 10, margin: "15px"}}>
+      <Box sx={{ flexGrow: 10, margin: "30px 15px 15px 15px" }}>
         <Grid container spacing={3}>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <SearchFilter
               searchText={state.searchText}
               onTextChange={(event) =>
@@ -76,8 +76,9 @@ const Home = () => {
               suggestions={_.map(allBooks, "title")}
             />
           </Grid>
-          {/* <Grid item xs={3}>
+          <Grid item xs={3}>
             <MultipleChoiceFilter
+              label="Choose Genres"
               options={_(allBooks).map("gneres").flatten().uniq().value()}
               checked={state.genres}
               onCheck={(event) =>
@@ -87,10 +88,11 @@ const Home = () => {
                 })
               }
             />
-          </Grid> */}
+          </Grid>
           <Grid item xs={2}>
             <SliderFilter
               key={filterActionTypes.byBookRating}
+              label="Book Rating"
               value={state.bookRating}
               maxRange={10}
               step={1}
@@ -105,6 +107,7 @@ const Home = () => {
           <Grid item xs={2}>
             <SliderFilter
               key={filterActionTypes.byUserRating}
+              label="User Rating"
               value={state.userRating}
               maxRange={5}
               step={0.5}
@@ -119,12 +122,13 @@ const Home = () => {
           <Grid item xs={2}>
             <SliderFilter
               key={filterActionTypes.byDistance}
+              label="Distance"
               value={state.distance}
               maxRange={1000}
-              step={1}
+              step={20}
               onSlide={(event) =>
                 dispatch({
-                  type: filterActionTypes.byBookRating,
+                  type: filterActionTypes.byDistance,
                   payload: event.target.value,
                 })
               }
