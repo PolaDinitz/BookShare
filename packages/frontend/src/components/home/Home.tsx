@@ -89,7 +89,7 @@ const Home = () => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 10, margin: "30px 15px 15px 15px" }}>מה
+      <Box sx={{ flexGrow: 10, margin: "30px 15px 15px 15px" }}>
         <Grid container spacing={3}>
           <Grid item xs={3}>
             <SearchFilter
