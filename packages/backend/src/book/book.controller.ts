@@ -1,14 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards,Request, UseInterceptors, UploadedFile, Put, Query, Req, HttpStatus, HttpException} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Get, Post, Body, Param, UseGuards,Request, Put, Query, Req } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/authentication/jwt/jwt-auth.guard';
 import { Roles } from 'src/authorization/roles.decorator';
 import { RolesGuard } from 'src/authorization/roles.guard';
 import { Role } from 'src/enums/role.enum';
 import { BookService } from './book.service';
 import { UserBookService } from 'src/user-book/user-book.service';
-import { CreateBookDto } from './dto/create-book.dto';
 import { BooksApiService } from 'src/books-api/books-api.service';
 import { CreateUserBookDto } from 'src/user-book/dto/create-user-book.dto';
+import { CreateBookDto } from './dto/create-book.dto';
 
 @Controller('book')
 export class BookController {
@@ -16,82 +15,65 @@ export class BookController {
               private readonly booksApiService: BooksApiService,
               private readonly userBookService: UserBookService) {}
 
-  @Post()
-  create(@Body() createBookDto: CreateBookDto) {
-    //return this.bookService.create(createBookDto);
-  }
-
   @Get()
   @Roles(Role.USER,Role.ADMIN)
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async getBooks(@Request() req: any) {
     return this.bookService.getBooks();
   }
 
   @Get(':id')
   @Roles(Role.ADMIN, Role.USER)
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async getBook(@Request() req: any, @Param('id') id: string) {
-      let book = this.bookService.getBookById(id);
-      if (!book) {
-        book = this.booksApiService.getBookById(id);
-      }
-      return book;
+      return await this.bookService.getBookById(id);
   }
 
   @Get('title/:title')
   @Roles(Role.ADMIN, Role.USER)
-  //@UseGuards(JwtAuthGuard, RolesGuard)
-  async getBooksByTitle(@Request() req: any, @Param('title') title: string) {
-    let books = this.bookService.getBooksByTitle(title);
-    if(!books){
-      books = this.booksApiService.getBooksByTitle(title);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async getBooksByTitle(@Request() req: any, @Param('title') title: string) : Promise<BookApi[]> {
+    let bookOptions = [];
+    const books = await this.bookService.getBooksByTitle(title);
+    if(books.length === 0) {
+      bookOptions = await this.booksApiService.getBooksByTitle(title);
+    } else {
+      books.map((book) => {
+        bookOptions.push({
+          id: book.id,
+          description: book.description,
+          categories: book.categories,
+          title: book.title,
+          imageUrl: book.imageUrl
+        });
+      });
     }
-    return books;
+    return bookOptions;
   }
 
-  @Get('author/:id')
+  @Get('author/:name')
   @Roles(Role.ADMIN, Role.USER)
-  //@UseGuards(JwtAuthGuard, RolesGuard)
-  async getBooksByAuthour(@Request() req: any, @Param('AuthorName') AuthorName: string) {
-      return this.bookService.getBookById(AuthorName);
-  }
-
-  @Delete(':id')
-  @Roles(Role.ADMIN)
-  //@UseGuards(JwtAuthGuard, RolesGuard)
-  async deleteUser(@Request() req: any, @Param('id') id: string) {
-      return this.bookService.deleteBook(id);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async getBooksByAuthor(@Request() req: any, @Param('name') authorName: string) {
+      return this.bookService.getBooksByAuthor(authorName);
   }
 
   @Post()
-  @UseInterceptors(FileInterceptor('bookImage'))
-  //@UseGuards(JwtAuthGuard, RolesGuard)
-  async CreateBook(@UploadedFile() bookImage: Express.Multer.File, @Body() createBookDto: CreateBookDto) {
-      let imageName : String = null;
-      if (bookImage) {
-          imageName = bookImage.filename;
-      }
-      return this.bookService.CreateBook(createBookDto, imageName);
+  @Roles(Role.ADMIN, Role.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async create(@Request() req: any, @Body() createBookDto : CreateBookDto) {
+    let book =  await this.bookService.getBookById(createBookDto.bookId);
+    if (!book) {
+      const apiBook = await this.booksApiService.getBookById(createBookDto.bookId);
+      await this.bookService.create(apiBook);
+    }
+    await this.userBookService.create(createBookDto);
   }
 
-  @Put('rate/:id?')
+  @Put('rate/:id')
   @Roles(Role.ADMIN, Role.USER)
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async rateBook(@Req() req: Request, @Param('id') id: string, @Query('rating') rating: number){
     return this.bookService.rateBook(id, rating);
   }
-
-  @Put(':id')
-  @Roles(Role.ADMIN, Role.USER)
-  //@UseGuards(JwtAuthGuard, RolesGuard)
-  async postBook(@Body() createUserBookDto: CreateUserBookDto){
-    let book =  await this.bookService.getBookById(createUserBookDto.book.book_id);
-    if (!book) {
-      book = await this.booksApiService.getBookById(createUserBookDto.book.book_id);
-      this.bookService.CreateBook( book, book.imageUrl);
-    }
-    this.userBookService.CreateUserBook(createUserBookDto);
-  }
-
 }

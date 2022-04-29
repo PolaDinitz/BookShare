@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, Grid, Stack, Typography } from "@mui/material";
+import { useState } from "react";
+import { Stack, Typography } from "@mui/material";
 
 import BookCustomPaper from "../../common/book-custom-paper";
 import { BookType } from "../../../utils/books-data";
@@ -11,7 +11,7 @@ type BookPostProps = {
 };
 
 const BookPost = (props: BookPostProps) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,13 +30,13 @@ const BookPost = (props: BookPostProps) => {
         padding="5px"
         sx={{ width: "100%" }}
       >
-        <Typography variant="subtitle1" mt={1} sx={{color: "#808080"}}>
+        <Typography variant="subtitle1" mt={1} sx={{ color: "#808080" }}>
           {genres[0]}
         </Typography>
         <Typography fontSize={18} fontWeight="bold">
           {title}
         </Typography>
-        <Typography variant="subtitle1" sx={{color: "#808080"}}>
+        <Typography variant="subtitle1" sx={{ color: "#808080" }}>
           {`By ${author}`}
         </Typography>
         <RoundedButton onClick={handleClickOpen}>Browse</RoundedButton>
