@@ -17,8 +17,8 @@ export class UserBookService {
     return await this.userBookRepository.save(this.userBookRepository.create(createBookDto));
   }
   
-  public async delete(createBookDto: CreateBookDto) {
-    return await this.userBookRepository.save(this.userBookRepository.create(createBookDto));
+  public async delete(id: string) {
+    return await this.userBookRepository.delete(id);
   }
 
   public async getUserBooksByUser(userId : string) {

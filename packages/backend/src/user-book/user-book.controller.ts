@@ -19,8 +19,19 @@ export class UserBookController {
 
   @Post(":id")
   @Roles(Role.ADMIN, Role.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async updateUserBookAvailability(@Request() req: any, @Param('id') id: string, @Body() updateUserBookAvailabilityDto : UpdateUserBookAvailabilityDto){
+    if (req.user.role !== Role.ADMIN && req.user.userId !== id) {
+      return UnauthorizedException;
+    }
     return this.userBookService.updateUserBookAvailability(id ,updateUserBookAvailabilityDto)
+  }
+
+  @Post(":id")
+  @Roles(Role.ADMIN, Role.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async deleteUserBook(@Request() req: any, @Param('id') id: string){
+    return this.userBookService.delete(id);
   }
 
 }
