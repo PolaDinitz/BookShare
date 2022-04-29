@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { CreateBookDto } from 'src/book/dto/create-book.dto';
 import { Book } from 'src/book/entities/book.entity';
-import { CreateUserBookDto } from './dto/create-user-book.dto';
 import { UpdateUserBookDto } from './dto/update-user-book.dto';
 
 @Injectable()
 export class UserBookService {
-  CreateUserBook(createUserBookDto: CreateUserBookDto) {
-    throw new Error('Method not implemented.');
-  }
-  create(createUserBookDto: CreateUserBookDto) {
+  
+  public async create(createBookDto: CreateBookDto) {
     return 'This action adds a new userBook';
   }
 

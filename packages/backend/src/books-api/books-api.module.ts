@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { BooksApiService } from './books-api.service';
-import {BooksApiController } from './books-api.controller';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
     providers: [BooksApiService],
-    controllers: [BooksApiController],
-    exports: [BooksApiService]
+    exports: [BooksApiService],
+    imports: [HttpModule]
   })
   export class BooksApiModule {}
