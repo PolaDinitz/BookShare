@@ -63,12 +63,9 @@ export class BookController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async create(@Request() req: any, @Body() createBookDto : CreateBookDto) {
     let book =  await this.bookService.getBookById(createBookDto.bookId);
-    console.log("here");
     if (!book) {
       const apiBook = await this.booksApiService.getBookById(createBookDto.bookId);
-      console.log(apiBook.id);
       await this.bookService.create(apiBook);
-      console.log("here");
     }
     await this.userBookService.create(createBookDto);
   }
