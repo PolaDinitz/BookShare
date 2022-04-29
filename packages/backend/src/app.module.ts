@@ -10,6 +10,7 @@ import { BookModule } from "./book/book.module";
 import { ChatGateway } from "./chat.gateway";
 import { ChatModule } from "./modules/chat/chat.module";
 import { BookCategoryModule } from "./book-category/book-category.module";
+import { TransactionModule } from "./transaction/transaction.module";
 
 
 @Module({
@@ -20,6 +21,7 @@ import { BookCategoryModule } from "./book-category/book-category.module";
     BooksApiModule,
     BookModule,
     UserBookModule,
+    TransactionModule,
     BookCategoryModule,
     ChatModule
   ],

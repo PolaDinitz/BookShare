@@ -6,4 +6,7 @@ export class CreateBookDto {
     
     @IsNotEmpty()
     userId: string;  
+
+    @IsNotEmpty()
+    available: boolean;
 }

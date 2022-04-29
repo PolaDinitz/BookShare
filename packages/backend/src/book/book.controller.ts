@@ -6,7 +6,6 @@ import { Role } from 'src/enums/role.enum';
 import { BookService } from './book.service';
 import { UserBookService } from 'src/user-book/user-book.service';
 import { BooksApiService } from 'src/books-api/books-api.service';
-import { CreateUserBookDto } from 'src/user-book/dto/create-user-book.dto';
 import { CreateBookDto } from './dto/create-book.dto';
 
 @Controller('book')
