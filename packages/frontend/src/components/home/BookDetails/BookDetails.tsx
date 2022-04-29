@@ -24,7 +24,7 @@ type BookDetailsProps = {
 
 const BookDetails = (props: BookDetailsProps) => {
   const { open, onClose } = props;
-  const { title, author, genres, description, cover_img } = props.book;
+  const { title, author, categories, description, imageUrl } = props.book;
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -41,7 +41,7 @@ const BookDetails = (props: BookDetailsProps) => {
         <Grid container spacing={1} direction="row">
           <Grid item xs={6}>
             <Typography variant="h6" mt={2}>
-              {genres[0]}
+              {categories[0]}
             </Typography>
             <Typography variant="h6" mt={2} fontWeight="bold">
               {title}
@@ -71,8 +71,8 @@ const BookDetails = (props: BookDetailsProps) => {
                 height: "100%",
                 objectFit: "cover",
               }}
-              src={cover_img}
-              alt={cover_img}
+              src={imageUrl}
+              alt={imageUrl}
             />
           </Grid>
         </Grid>

@@ -20,10 +20,10 @@ const BookPost = (props: BookPostProps) => {
     setOpen(false);
   };
 
-  const { title, author, genres, cover_img } = props.book;
+  const { title, author, categories, imageUrl } = props.book;
 
   return (
-    <BookCustomPaper size="small" img={cover_img}>
+    <BookCustomPaper size="small" img={imageUrl}>
       <Stack
         spacing={1}
         alignItems="start"
@@ -31,7 +31,7 @@ const BookPost = (props: BookPostProps) => {
         sx={{ width: "100%" }}
       >
         <Typography variant="subtitle1" mt={1} sx={{ color: "#808080" }}>
-          {genres[0]}
+          {categories[0]}
         </Typography>
         <Typography fontSize={18} fontWeight="bold">
           {title}
