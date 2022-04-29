@@ -9,6 +9,7 @@ import { UserBookModule } from "./user-book/user-book.module";
 import { BookModule } from "./book/book.module";
 import { ChatGateway } from "./chat.gateway";
 import { ChatModule } from "./modules/chat/chat.module";
+import { BookCategoryModule } from "./book-category/book-category.module";
 
 
 @Module({
@@ -19,6 +20,7 @@ import { ChatModule } from "./modules/chat/chat.module";
     BooksApiModule,
     BookModule,
     UserBookModule,
+    BookCategoryModule,
     ChatModule
   ],
   providers: [ChatGateway],
