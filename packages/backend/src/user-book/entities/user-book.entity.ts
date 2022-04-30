@@ -1,8 +1,11 @@
+import { Transform } from "class-transformer";
+import { IsBoolean } from "class-validator";
 import { Book } from "src/book/entities/book.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
+@Unique(["bookId", "userId"])
 export class UserBook {
 
     @PrimaryGeneratedColumn('uuid')
@@ -11,13 +14,13 @@ export class UserBook {
     @Column()
     bookId: string
     
-    @ManyToOne(type => Book, book => book.userBook, {primary: true})
+    @ManyToOne(type => Book, book => book.userBook)
     book: Book;
   
     @Column()
     userId: string;
 
-    @ManyToOne(type => User, user => user.userBook, {primary: true})
+    @ManyToOne(type => User, user => user.userBook)
     user: User;
 
     @Column()

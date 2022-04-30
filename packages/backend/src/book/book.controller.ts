@@ -64,9 +64,9 @@ export class BookController {
     let book =  await this.bookService.getBookById(createBookDto.bookId);
     if (!book) {
       const apiBook = await this.booksApiService.getBookById(createBookDto.bookId);
-      await this.bookService.create(apiBook);
+      return await this.bookService.create(apiBook).then(async () => this.userBookService.create(createBookDto));
     }
-    await this.userBookService.create(createBookDto);
+    return await this.userBookService.create(createBookDto);
   }
 
   @Put('rate/:id')
