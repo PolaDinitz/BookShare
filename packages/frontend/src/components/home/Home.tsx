@@ -55,10 +55,10 @@ function filterReducer(state: State = initialState, action: AnyAction) {
 }
 
 const fabStyle = {
-  position: 'fixed',
-  bottom: '5%',
-  right: '5%',
-  alignSelf: 'flex-end',
+  position: "fixed",
+  bottom: "5%",
+  right: "5%",
+  alignSelf: "flex-end",
 };
 
 const Home = () => {
@@ -75,15 +75,16 @@ const Home = () => {
 
   const filteredBooks = allBooks.filter((book: BookType) => {
     return (
-      (
-        book.title
-      .toLocaleLowerCase()
-      .includes(state.searchText.toLocaleLowerCase()) ||
-      book.author
-      .toLocaleLowerCase()
-      .includes(state.searchText.toLocaleLowerCase())
-      ) &&
-     (!_.isEmpty(state.genres) ? book.genres.some(item => state.genres.includes(item)) : true)
+      (book.title
+        .toLocaleLowerCase()
+        .includes(state.searchText.toLocaleLowerCase()) ||
+        book.author
+          .toLocaleLowerCase()
+          .includes(state.searchText.toLocaleLowerCase())) &&
+      (!_.isEmpty(state.genres)
+        ? book.genres.some((item) => state.genres.includes(item))
+        : true) &&
+        book.rating >= state.bookRating
     );
   });
 

@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Checkbox, FormControl, IconButton, InputBase, InputLabel, ListItemText, MenuItem, OutlinedInput, Paper, Select, Typography } from "@mui/material";
+import {
+  Checkbox,
+  FormControl,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
+} from "@mui/material";
 
 type MultipleChoiceFilterProps = {
   label: string;
@@ -33,7 +41,7 @@ const MultipleChoiceFilter = (props: MultipleChoiceFilterProps) => {
           value={checked}
           onChange={onCheck}
           input={<OutlinedInput label={label} />}
-          renderValue={(selected) => selected.join(', ')}
+          renderValue={(selected) => selected.join(", ")}
           MenuProps={MenuProps}
         >
           {options.map((option) => (
