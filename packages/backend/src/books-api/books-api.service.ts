@@ -15,7 +15,7 @@ export class BooksApiService {
           id: item.id,
           description: item.volumeInfo.description || null,
           title: item.volumeInfo.title,
-          categories: item.volumeInfo.categories,
+          categories: item.volumeInfo.categories || [],
           author: (item.volumeInfo.authors) ? item.volumeInfo.authors[0] : null
         }
         if (item.volumeInfo.imageLinks) {
