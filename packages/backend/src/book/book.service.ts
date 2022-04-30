@@ -21,7 +21,7 @@ export class BookService {
   
   public async getBooksByTitle(title: string): Promise<Book[]> {
     return await this.booksRepository.find({
-      where: { title: title}
+      where: { title: title }
     });
   }
 

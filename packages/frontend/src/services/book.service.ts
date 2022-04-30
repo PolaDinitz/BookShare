@@ -12,8 +12,19 @@ const getBooksByTitle = (title: string) => {
         })
 }
 
+const addBookToLibrary = (bookId: string, userId: string | undefined) => {
+    return axiosInstance.post(`${config.apiUrl}/book`, {userId, bookId})
+        .then((response: AxiosResponse) => {
+            return response.data;
+        }).catch((error: AxiosError) => {
+            throw new Error(`Something went wrong while trying to create a book, 
+                            ${(error.response ? error.response?.data?.message : error.message)}`);
+        })
+}
+
 const bookService = {
-    getBooksByTitle
+    getBooksByTitle,
+    addBookToLibrary
 };
 
 export default bookService;

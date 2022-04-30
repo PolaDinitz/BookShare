@@ -11,7 +11,8 @@ import {
     FormControl,
     FormControlLabel,
     Grid,
-    IconButton, Stack,
+    IconButton,
+    Stack,
     Switch,
     TextField,
     Typography,
@@ -23,6 +24,9 @@ import RoundedButton from "../../common/rounded-button";
 import { BookType } from "../../../utils/books-data";
 import bookService from "../../../services/book.service";
 import "./AddBook.css";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../types/types";
+import { toast } from "react-toastify";
 
 type AddBookProps = {
     open: boolean;
@@ -32,6 +36,9 @@ type AddBookProps = {
 const AddBook = (props: AddBookProps) => {
     const {open, onClose} = props;
 
+    const userId = useSelector((state: RootState) => state.auth?.user?.id)
+
+    const [bookId, setBookId] = useState("");
     const [authorName, setAuthorName] = useState("");
     const [genres, setGenres] = useState([] as string[]);
     const [description, setDescription] = useState("");
@@ -58,6 +65,7 @@ const AddBook = (props: AddBookProps) => {
     };
 
     const resetForm = () => {
+        setBookId("");
         setAuthorName("");
         setGenres([]);
         setDescription("");
@@ -72,6 +80,7 @@ const AddBook = (props: AddBookProps) => {
         reason: AutocompleteChangeReason
     ) => {
         if (value) {
+            setBookId(value.id);
             setSearchedBookName(value.title);
             setAuthorName(value.author || "No Author Provided");
             setGenres(value.categories || ["No Genres Provided"]);
@@ -86,6 +95,16 @@ const AddBook = (props: AddBookProps) => {
         resetForm();
         onClose();
     };
+
+    function postBook() {
+        bookService.addBookToLibrary(bookId, userId)
+            .then((data: any) => {
+                console.log(data);
+            })
+            .catch((error: Error) => {
+                toast.error(error?.message);
+            });
+    }
 
     return (
         <Dialog
@@ -195,8 +214,7 @@ const AddBook = (props: AddBookProps) => {
                 >
                     Cancel
                 </RoundedButton>
-                {/* TODO: replace with publish function */}
-                <RoundedButton onClick={closeAndReset}>Post Book</RoundedButton>
+                <RoundedButton onClick={postBook}>Post Book</RoundedButton>
             </DialogActions>
         </Dialog>
     );
