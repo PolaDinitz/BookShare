@@ -11,7 +11,7 @@ import {
     FormControl,
     FormControlLabel,
     Grid,
-    IconButton,
+    IconButton, Stack,
     Switch,
     TextField,
     Typography,
@@ -73,9 +73,9 @@ const AddBook = (props: AddBookProps) => {
     ) => {
         if (value) {
             setSearchedBookName(value.title);
-            setAuthorName(value?.author);
-            setGenres(value?.categories);
-            setDescription(value?.description);
+            setAuthorName(value?.author || "No Author Provided");
+            setGenres(value?.categories || ["No Tags Provided"]);
+            setDescription(value.description || "No Description Provided");
             setCoverImage(value?.imageUrl);
         } else {
             resetForm();
@@ -92,86 +92,94 @@ const AddBook = (props: AddBookProps) => {
             open={open}
             onClose={closeAndReset}
             fullWidth
-            maxWidth="md"
+            maxWidth="lg"
+            sx={{
+                height: "auto"
+            }}
             scroll={scroll}
         >
             <DialogTitle>
-                <Box display="flex" alignItems="center">
+                <Box display="flex" alignItems="center" justifyContent="space-between">
+                    <Typography fontSize={24} fontWeight="bold">
+                        Add A Book
+                    </Typography>
                     <Box>
                         <IconButton onClick={closeAndReset}>
                             <CloseIcon/>
                         </IconButton>
                     </Box>
-                    <Typography>Post A Book</Typography>
                 </Box>
             </DialogTitle>
             <DialogContent>
-                <Grid container spacing={1}>
-                    <Grid item xs={6} container rowSpacing={0}>
-                        <Autocomplete
-                            size="small"
-                            disablePortal
-                            options={searchedBookResults}
-                            onChange={fillPost}
-                            renderOption={(props, option) => {
-                                return (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                );
-                            }}
-                            getOptionLabel={(option) => option.title}
-                            inputValue={searchedBookName}
-                            renderInput={(params) => (
-                                <TextField {...params} label="Book Name" variant="filled"
-                                           onChange={event => setSearchedBookName(event.target.value)}/>
-                            )}
-                            fullWidth
-                        />
-                        <TextField
-                            size="small"
-                            disabled
-                            id="authorName"
-                            label="Author Name"
-                            variant="filled"
-                            value={authorName}
-                            fullWidth
-                        />
-                        <FormControl fullWidth disabled>
-                            <ReactTagInput
-                                tags={genres}
-                                onChange={(newTags) => setGenres(newTags)}
-                                readOnly={false}
-                                placeholder="Genres"
-                            />
-                        </FormControl>
-                        <TextField
-                            disabled
-                            id="description"
-                            label="Description"
-                            multiline
-                            minRows={4}
-                            value={description}
-                            variant="filled"
-                            fullWidth
-                        />
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    defaultChecked
-                                    value={isAvailable}
-                                    onChange={toggleAvailability}
-                                />
-                            }
-                            label="Make available for landing"
-                        />
-                    </Grid>
+                <Grid container spacing={3}>
                     <Grid item xs={6}>
+                        <Stack spacing={3}>
+                            <Autocomplete
+                                size="small"
+                                disablePortal
+                                options={searchedBookResults}
+                                onChange={fillPost}
+                                renderOption={(props, option) => {
+                                    return (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    );
+                                }}
+                                getOptionLabel={(option) => option.title}
+                                inputValue={searchedBookName}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Book Name" variant="filled"
+                                               onChange={event => setSearchedBookName(event.target.value)}/>
+                                )}
+                                fullWidth
+                            />
+                            <TextField
+                                size="small"
+                                disabled
+                                id="authorName"
+                                label="Author Name"
+                                variant="filled"
+                                value={authorName}
+                                fullWidth
+                            />
+                            <FormControl fullWidth disabled>
+                                <ReactTagInput
+                                    tags={genres}
+                                    onChange={(newTags) => setGenres(newTags)}
+                                    readOnly={false}
+                                    placeholder="Genres"
+                                />
+                            </FormControl>
+                            <TextField
+                                disabled
+                                id="description"
+                                label="Description"
+                                multiline
+                                minRows={15}
+                                maxRows={15}
+                                value={description}
+                                variant="filled"
+                                fullWidth
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        defaultChecked
+                                        value={isAvailable}
+                                        onChange={toggleAvailability}
+                                    />
+                                }
+                                label="Make available for landing"
+                            />
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={6} sx={{ width: "auto", height: "auto" }}>
                         <img
                             style={{
-                                width: "90%",
-                                height: "90%",
-                                objectFit: "fill",
+                                height: "100%",
+                                width: "100%",
+                                objectFit: "cover"
                             }}
                             src={coverImage ? coverImage : "/Placeholder-Portrait.png"}
                             alt="Book Cover"
