@@ -73,8 +73,8 @@ const AddBook = (props: AddBookProps) => {
     ) => {
         if (value) {
             setSearchedBookName(value.title);
-            setAuthorName(value?.author || "No Author Provided");
-            setGenres(value?.categories || ["No Tags Provided"]);
+            setAuthorName(value.author || "No Author Provided");
+            setGenres(value.categories || ["No Genres Provided"]);
             setDescription(value.description || "No Description Provided");
             setCoverImage(value?.imageUrl);
         } else {
@@ -93,9 +93,6 @@ const AddBook = (props: AddBookProps) => {
             onClose={closeAndReset}
             fullWidth
             maxWidth="lg"
-            sx={{
-                height: "auto"
-            }}
             scroll={scroll}
         >
             <DialogTitle>
@@ -156,8 +153,8 @@ const AddBook = (props: AddBookProps) => {
                                 id="description"
                                 label="Description"
                                 multiline
-                                minRows={15}
-                                maxRows={15}
+                                minRows={20}
+                                maxRows={20}
                                 value={description}
                                 variant="filled"
                                 fullWidth
@@ -170,14 +167,14 @@ const AddBook = (props: AddBookProps) => {
                                         onChange={toggleAvailability}
                                     />
                                 }
-                                label="Make available for landing"
+                                label="Make available for lending"
                             />
                         </Stack>
                     </Grid>
-                    <Grid item xs={6} sx={{ width: "auto", height: "auto" }}>
+                    <Grid item xs={6}>
                         <img
                             style={{
-                                height: "100%",
+                                height: "auto",
                                 width: "100%",
                                 objectFit: "cover"
                             }}

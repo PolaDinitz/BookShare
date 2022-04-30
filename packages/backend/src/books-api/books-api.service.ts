@@ -10,12 +10,12 @@ export class BooksApiService {
     public async getBooksByTitle(title: string) : Promise<BookApi[]> {
       const items = (await firstValueFrom(this.httpService.get(`https://www.googleapis.com/books/v1/volumes?q=isbn+intitle:"${title.replace(" ", "+")}"&printType=books&langRestrict=en,he`))).data.items;
       const newItems = [];
-      items.map((item) => {
+      items?.map((item) => {
         let newItem = {
           id: item.id,
           description: item.volumeInfo.description || null,
           title: item.volumeInfo.title,
-          categories: item.volumeInfo.categories || [],
+          categories: item.volumeInfo.categories || null,
           author: (item.volumeInfo.authors) ? item.volumeInfo.authors[0] : null
         }
         if (item.volumeInfo.imageLinks) {
