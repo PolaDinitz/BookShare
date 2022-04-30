@@ -10,11 +10,7 @@ export class UserBook {
   
     @ManyToOne(type => User, user => user.userBook, {primary: true})
     user: User;
-  
-    @Column()
-    user_book_rating: number;
-  
+
     @Column()
     available: boolean;
-  
 }
