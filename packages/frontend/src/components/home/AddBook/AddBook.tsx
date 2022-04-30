@@ -8,6 +8,7 @@ import {
     DialogContent,
     DialogProps,
     DialogTitle,
+    FormControl,
     FormControlLabel,
     Grid,
     IconButton,
@@ -21,6 +22,7 @@ import "@pathofdev/react-tag-input/build/index.css";
 import RoundedButton from "../../common/rounded-button";
 import { BookType } from "../../../utils/books-data";
 import bookService from "../../../services/book.service";
+import "./AddBook.css";
 
 type AddBookProps = {
     open: boolean;
@@ -31,7 +33,7 @@ const AddBook = (props: AddBookProps) => {
     const {open, onClose} = props;
 
     const [authorName, setAuthorName] = useState("");
-    const [genres, setGenres] = useState([""]);
+    const [genres, setGenres] = useState([] as string[]);
     const [description, setDescription] = useState("");
     const [coverImage, setCoverImage] = useState("");
     const [isAvailable, setIsAvailable] = React.useState(true);
@@ -57,9 +59,11 @@ const AddBook = (props: AddBookProps) => {
 
     const resetForm = () => {
         setAuthorName("");
-        setGenres([""]);
+        setGenres([]);
         setDescription("");
         setCoverImage("");
+        setSearchedBookName("");
+        setSearchedBookResults([]);
     };
 
     const fillPost = (
@@ -68,8 +72,9 @@ const AddBook = (props: AddBookProps) => {
         reason: AutocompleteChangeReason
     ) => {
         if (value) {
+            setSearchedBookName(value.title);
             setAuthorName(value?.author);
-            setGenres(value.categories);
+            setGenres(value?.categories);
             setDescription(value?.description);
             setCoverImage(value?.imageUrl);
         } else {
@@ -108,41 +113,47 @@ const AddBook = (props: AddBookProps) => {
                             disablePortal
                             options={searchedBookResults}
                             onChange={fillPost}
+                            renderOption={(props, option) => {
+                                return (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                );
+                            }}
                             getOptionLabel={(option) => option.title}
-                            sx={{width: 300, paddingTop: "10px"}}
+                            inputValue={searchedBookName}
                             renderInput={(params) => (
-                                <TextField {...params} label="Book Name" value={searchedBookName}
+                                <TextField {...params} label="Book Name" variant="filled"
                                            onChange={event => setSearchedBookName(event.target.value)}/>
                             )}
+                            fullWidth
                         />
                         <TextField
                             size="small"
                             disabled
                             id="authorName"
                             label="Author Name"
-                            defaultValue=""
-                            variant="outlined"
+                            variant="filled"
                             value={authorName}
-                            sx={{width: 300}}
+                            fullWidth
                         />
-                        <div style={{width: 300}}>
+                        <FormControl fullWidth disabled>
                             <ReactTagInput
                                 tags={genres}
                                 onChange={(newTags) => setGenres(newTags)}
-                                editable={false}
-                                readOnly={true}
+                                readOnly={false}
                                 placeholder="Genres"
                             />
-                        </div>
+                        </FormControl>
                         <TextField
                             disabled
                             id="description"
                             label="Description"
                             multiline
                             minRows={4}
-                            defaultValue=""
                             value={description}
-                            sx={{width: 300}}
+                            variant="filled"
+                            fullWidth
                         />
                         <FormControlLabel
                             control={
@@ -152,7 +163,7 @@ const AddBook = (props: AddBookProps) => {
                                     onChange={toggleAvailability}
                                 />
                             }
-                            label="Make availabale for landing"
+                            label="Make available for landing"
                         />
                     </Grid>
                     <Grid item xs={6}>

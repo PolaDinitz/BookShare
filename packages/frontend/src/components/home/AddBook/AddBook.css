@@ -1,0 +1,29 @@
+.react-tag-input {
+    background: rgba(0, 0, 0, 0.12);
+    color: #333;
+    border-radius: 0;
+    min-height: 45px;
+}
+.react-tag-input__input {
+    pointer-events: none;
+    background: transparent;
+    color: #333;
+}
+.react-tag-input__input::placeholder, .react-tag-input__input:-moz-placeholder, .react-tag-input__input:-ms-input-placeholder, .react-tag-input__input::-moz-placeholder, .react-tag-input__input::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, 0.38); /* Input placeholder */
+}
+.react-tag-input__tag {
+    background: #f8f7f7;
+}
+.react-tag-input__tag__remove {
+    background: #f8f7f7;
+    pointer-events: none;
+    width: auto;
+}
+.react-tag-input__tag__remove:before, .react-tag-input__tag__remove:after {
+    pointer-events: none;
+    display: none;
+}
+.react-tag-input input::placeholder {
+    color: rgba(0, 0, 0, 0.38);
+}

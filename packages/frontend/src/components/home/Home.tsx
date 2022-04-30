@@ -7,7 +7,7 @@ import { useState } from "react";
 import AddBook from "./AddBook";
 
 const fabStyle = {
-    position: 'absolute',
+    position: 'fixed',
     bottom: 16,
     right: 16,
 };
