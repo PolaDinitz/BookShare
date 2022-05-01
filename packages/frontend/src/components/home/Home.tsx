@@ -1,42 +1,181 @@
+import { AnyAction } from "@reduxjs/toolkit";
+import _ from "lodash";
+import { useReducer, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { Fab, Grid } from "@mui/material";
+import { Box, Fab, Grid } from "@mui/material";
 
-import BookPost from "./BookPost";
-import { allBooks } from "../../utils/books-data";
-import { useState } from "react";
+import { allBooks, BookType } from "../../utils/books-data";
+import BooksCollection from "./BooksCollection";
+import {
+  MultipleChoiceFilter,
+  SearchFilter,
+  SliderFilter,
+} from "./BookFilters";
 import AddBook from "./AddBook";
 
+type State = {
+  searchText: string;
+  genres: string[];
+  userRating: number;
+  bookRating: number;
+  distance: number;
+};
+
+const initialState = {
+  searchText: "",
+  genres: [],
+  userRating: 0,
+  bookRating: 0,
+  distance: 0,
+};
+
+const filterActionTypes = {
+  byName: "byName",
+  byGenres: "byGenres",
+  byUserRating: "byUserRating",
+  byBookRating: "byBookRating",
+  byDistance: "byDistance",
+};
+
+function filterReducer(state: State = initialState, action: AnyAction) {
+  switch (action.type) {
+    case "byName":
+      return { ...state, searchText: action.payload };
+    case "byGenres":
+      return { ...state, genres: action.payload };
+    case "byUserRating":
+      return { ...state, userRating: action.payload };
+    case "byBookRating":
+      return { ...state, bookRating: action.payload };
+    case "byDistance":
+      return { ...state, distance: action.payload };
+    default:
+      throw new Error();
+  }
+}
+
 const fabStyle = {
-    position: 'absolute',
-    bottom: 16,
-    right: 16,
+  position: "fixed",
+  bottom: "5%",
+  right: "5%",
+  alignSelf: "flex-end",
 };
 
 const Home = () => {
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
+  const [state, dispatch] = useReducer(filterReducer, initialState);
+
+  const filteredBooks = allBooks.filter((book: BookType) => {
     return (
-        <>
-            <Grid container rowSpacing={3} columnSpacing={3} sx={{padding: "15px"}}>
-                {allBooks.map((book, index) => (
-                    <Grid key={index} item xs={3}>
-                        <BookPost book={book}/>
-                    </Grid>
-                ))}
-            </Grid>
-            <Fab sx={fabStyle} color="primary" aria-label="add" onClick={handleClickOpen}>
-                <AddIcon/>
-            </Fab>
-            <AddBook open={open} onClose={handleClose}/>
-        </>
+      (book.title
+        .toLocaleLowerCase()
+        .includes(state.searchText.toLocaleLowerCase()) ||
+        book.author
+          .toLocaleLowerCase()
+          .includes(state.searchText.toLocaleLowerCase())) &&
+      (!_.isEmpty(state.genres)
+        ? book.genres.some((item) => state.genres.includes(item))
+        : true) &&
+        book.rating >= state.bookRating
     );
+  });
+
+  return (
+    <>
+      <Box sx={{ flexGrow: 10, margin: "30px 15px 15px 15px" }}>
+        <Grid container spacing={3}>
+          <Grid item xs={3}>
+            <SearchFilter
+              searchText={state.searchText}
+              onTextChange={(event) =>
+                dispatch({
+                  type: filterActionTypes.byName,
+                  payload: event.target.value,
+                })
+              }
+              suggestions={_.map(allBooks, "title")}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <MultipleChoiceFilter
+              label="Choose Genres"
+              options={_(allBooks).map("genres").flatten().uniq().value()}
+              checked={state.genres}
+              onCheck={(event) =>
+                dispatch({
+                  type: filterActionTypes.byGenres,
+                  payload: event.target.value,
+                })
+              }
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <SliderFilter
+              key={filterActionTypes.byBookRating}
+              label="Book Rating"
+              value={state.bookRating}
+              maxRange={10}
+              step={1}
+              onSlide={(event) =>
+                dispatch({
+                  type: filterActionTypes.byBookRating,
+                  payload: event.target.value,
+                })
+              }
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <SliderFilter
+              key={filterActionTypes.byUserRating}
+              label="User Rating"
+              value={state.userRating}
+              maxRange={5}
+              step={0.5}
+              onSlide={(event) =>
+                dispatch({
+                  type: filterActionTypes.byUserRating,
+                  payload: event.target.value,
+                })
+              }
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <SliderFilter
+              key={filterActionTypes.byDistance}
+              label="Distance"
+              value={state.distance}
+              maxRange={1000}
+              step={20}
+              onSlide={(event) =>
+                dispatch({
+                  type: filterActionTypes.byDistance,
+                  payload: event.target.value,
+                })
+              }
+            />
+          </Grid>
+        </Grid>
+      </Box>
+      <BooksCollection books={filteredBooks} />
+      <Fab
+        sx={fabStyle}
+        color="primary"
+        aria-label="add"
+        onClick={handleClickOpen}
+      >
+        <AddIcon />
+      </Fab>
+      <AddBook open={open} onClose={handleClose} />
+    </>
+  );
 };
 
 export default Home;
