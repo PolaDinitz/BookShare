@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Stack, Typography } from "@mui/material";
+import { Icon, Stack, Typography } from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
 
 import BookCustomPaper from "../../common/book-custom-paper";
 import { BookType } from "../../../utils/books-data";
@@ -20,7 +21,7 @@ const BookPost = (props: BookPostProps) => {
     setOpen(false);
   };
 
-  const { title, author, genres, cover_img } = props.book;
+  const { title, author, genres, cover_img, rating } = props.book;
 
   return (
     <BookCustomPaper size="small" img={cover_img}>
@@ -38,6 +39,12 @@ const BookPost = (props: BookPostProps) => {
         </Typography>
         <Typography variant="subtitle1" sx={{ color: "#808080" }}>
           {`By ${author}`}
+        </Typography>
+        <Typography variant="subtitle1" sx={{ color: "#808080" }}>
+          <Icon sx={{ color: "#3164F4" }}>
+            <StarIcon />
+          </Icon>
+          {rating}
         </Typography>
         <RoundedButton onClick={handleClickOpen}>Browse</RoundedButton>
         <BookDetails open={open} onClose={handleClose} book={props.book} />
