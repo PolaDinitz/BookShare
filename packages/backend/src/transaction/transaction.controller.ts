@@ -146,10 +146,11 @@ export class TransactionController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async reportUser(@Request() req: any, @Param('id') id: string) {
     const transaction = await this.transactionService.getTransactionById(id);
-    this.transactionService.updateStatus(id, {status: TransactionStatus.FINSHED_TRANSACTION}, false);
-    if (transaction.borrowUserId === req.user.id) {
+    if (transaction.borrowUserId === req.user.userId) {
+      this.transactionService.updateStatus(id, {status: TransactionStatus.FINSHED_TRANSACTION}, false);
       return await this.transactionService.updateLentUserRating(id, { lentUserRating: 0 });
-    } else if (transaction.userBook.userId === req.user.id) {
+    } else if (transaction.userBook.userId === req.user.userId) {
+      this.transactionService.updateStatus(id, {status: TransactionStatus.FINSHED_TRANSACTION}, false);
       return await this.transactionService.updateBorrowUserRating(id, { borrowUserRating : 0 });
     } else {
       throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
