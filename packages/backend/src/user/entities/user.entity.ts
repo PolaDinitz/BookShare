@@ -58,7 +58,7 @@ export class User {
   @OneToMany(type => Transaction, transaction => transaction.borrowUser)
   borrowTransactions: Transaction[]
 
-  //TODO: ADD my books and landed books relations 
+  //TODO: ADD landed books relations 
   
   @OneToMany(type => UserBook, userBook => userBook.user)
   userBook: UserBook[]

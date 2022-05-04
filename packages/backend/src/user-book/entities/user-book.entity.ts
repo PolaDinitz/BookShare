@@ -1,8 +1,7 @@
-import { Transform } from "class-transformer";
-import { IsBoolean } from "class-validator";
 import { Book } from "src/book/entities/book.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Transaction } from "src/transaction/entities/transaction.entity";
 
 @Entity()
 @Unique(["bookId", "userId"])
@@ -23,6 +22,12 @@ export class UserBook {
     @ManyToOne(type => User, user => user.userBook)
     user: User;
 
+    @Column({default: false})
+    lented: boolean;
+
     @Column()
     available: boolean;
+
+    @OneToMany(type => Transaction, transaction => transaction.userBook)
+    transactions: Transaction[]    
 }

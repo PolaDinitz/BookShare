@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request, UnauthorizedException, HttpException, HttpStatus, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request, UnauthorizedException } from '@nestjs/common';
 import { UserBookService } from './user-book.service';
 import { Roles } from 'src/authorization/roles.decorator';
 import { Role } from 'src/enums/role.enum';
@@ -16,8 +16,15 @@ export class UserBookController {
   async getUserBooksByUserId(@Request() req: any, @Param('id') id: string){
       return this.userBookService.getUserBooksByUser(id);
   }
+  
+  @Get('book/:id')
+  @Roles(Role.ADMIN, Role.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+ async getAvailableUserBooksByBookId(@Request() req: any, @Param('id') id: string) {
+      return this.userBookService.getAvailableUserBooksByBook(id);
+ }
 
-  @Post(":id")
+  @Post("available/:id")
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateUserBookAvailability(@Request() req: any, @Param('id') id: string, @Body() updateUserBookAvailabilityDto : UpdateUserBookAvailabilityDto){
@@ -27,10 +34,13 @@ export class UserBookController {
     return this.userBookService.updateUserBookAvailability(id ,updateUserBookAvailabilityDto)
   }
 
-  @Post(":id")
+  @Delete(":id")
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteUserBook(@Request() req: any, @Param('id') id: string){
+    if (req.user.role !== Role.ADMIN && req.user.userId !== id) {
+      return UnauthorizedException;
+    }
     return this.userBookService.delete(id);
   }
 

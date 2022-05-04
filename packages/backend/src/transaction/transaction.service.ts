@@ -25,18 +25,21 @@ export class TransactionService {
 
   public async getTransactions() {
     return this.transactionRepository.find({
-      relations: ['borrowUser'] // 'userBook', 'userBook.user', 'userBook.book'
+      relations: ['borrowUser', 'userBook', 'userBook.user', 'userBook.book']
     });
   }
 
   public async getTransactionById(id: string) {
     return this.transactionRepository.findOne(id, {
-      relations: ['borrowUser'] // 'userBook', 'userBook.user', 'userBook.book'
+      relations: ['borrowUser', 'userBook', 'userBook.user', 'userBook.book'] 
     });
   }
 
-  public async updateStatus(id: string, updateTransactionStatusDto: UpdateTransactionStatusDto) {
-    return this.transactionRepository.update(id, updateTransactionStatusDto);
+  public async updateStatus(id: string, updateTransactionStatusDto: UpdateTransactionStatusDto, active: boolean) {
+    return this.transactionRepository.update(id, {
+      ...updateTransactionStatusDto,
+      active: active
+    });
   }
 
   public async updateBookRating(id: string, updateBookRatingDto: UpdateBookRatingDto) {
@@ -49,5 +52,48 @@ export class TransactionService {
   
   public async updateLentUserRating(id: string, updateLentUserRatingDto: UpdatelentUserRatingDto) {
     return this.transactionRepository.update(id, updateLentUserRatingDto);
+  }
+
+  public async getTransctionsByBorrowUser(id: string) {
+    return this.transactionRepository.find({
+      where: {
+        borrowUserId: id,
+      },
+      relations: ['borrowUser', 'userBook', 'userBook.user', 'userBook.book']
+    });
+  }
+
+  public async getTransctionsByLentUser(id: string) {
+    return this.transactionRepository.find({
+      where: {
+        userBook: {
+          user: {
+            id: id
+          }
+        },
+      },
+      relations: ['borrowUser', 'userBook', 'userBook.user', 'userBook.book']
+    });
+  }
+
+  public async getTransctionsByUserBook(id: string) {
+    return this.transactionRepository.find({
+      where: {
+        userBook: {
+          id: id
+        },
+      },
+      relations: ['userBook']
+    });
+  }
+
+  public async deactivateOtherTransactionsByUserBook(userBookId: string, currentTransactionId: string) {
+    return this.transactionRepository.createQueryBuilder()
+            .update()
+            .set({ active: false })
+            .where("userBookId = :userBookId")
+            .andWhere("id != :id")
+            .setParameters({ userBookId: userBookId, id: currentTransactionId })
+            .execute();
   }
 }
