@@ -20,9 +20,9 @@ export class BookService {
   }
   
   public async getBooksByTitle(title: string): Promise<Book[]> {
-    return await this.booksRepository.find({
-      where: { title: title}
-    });
+    return await this.booksRepository.createQueryBuilder()
+            .where("title like :search", {search : `${title}%`})
+            .getMany();
   }
 
   public async getBooksByAuthor(author: string): Promise<Book[]> {
