@@ -21,12 +21,15 @@ export class TransactionController {
   @Post()
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async create(@Body() createTransactionDto: CreateTransactionDto) {
+  async create(@Request() req: any, @Body() createTransactionDto: CreateTransactionDto) {
+    if (req.user.userId !== createTransactionDto.borrowUserId) {
+      throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
+    }
     return await this.transactionService.create(createTransactionDto);
   }
 
   @Get()
-  @Roles(Role.USER, Role.ADMIN)
+  @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getTransactions() {
     return await this.transactionService.getTransactions();
@@ -35,11 +38,15 @@ export class TransactionController {
   @Get(':id')
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async getTransactionById(@Param('id') id: string) {
-    return await this.transactionService.getTransactionById(id);;
+  async getTransactionById(@Request() req: any, @Param('id') id: string) {
+    const tran = await this.transactionService.getTransactionById(id);
+    if (req.user.role !== Role.ADMIN && req.user.userId !== tran.borrowUserId && req.user.userId !== tran.userBook.userId) {
+      throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
+    }
+    return tran;
   }
 
-  @Get('/borrowUser/:id')
+  @Get('borrowUser/:id')
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getTransactionsByBorrowUserId(@Param('id') id: string) {
@@ -47,14 +54,14 @@ export class TransactionController {
   }
 
   
-  @Get('LentUser/:id')
+  @Get('lentUser/:id')
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getTransactionsByLentUserId(@Param('id') id: string) {
     return await this.transactionService.getTransctionsByLentUser(id);;
   }
 
-  @Patch('/status/:id')
+  @Patch('status/:id')
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateTransactionStatus(@Request() req: any, @Param('id') id: string, @Body() updateTransactionStatusDto: UpdateTransactionStatusDto) {
@@ -101,7 +108,7 @@ export class TransactionController {
       } else if (updateTransactionStatusDto.status === TransactionStatus.LEND_DECLINED) {
         newActive = false;
       } else if (updateTransactionStatusDto.status === TransactionStatus.WAITING_FOR_BOOK_RETURNED) {
-        this.userBookService.updateUserBookLented(transaction.userBookId, true);
+        this.userBookService.updateUserBookLent(transaction.userBookId, true);
         this.transactionService.deactivateOtherTransactionsByUserBook(transaction.userBookId, transaction.id);
       } else {
         throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
@@ -118,7 +125,7 @@ export class TransactionController {
           throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
         }
       } else if (updateTransactionStatusDto.status === TransactionStatus.FINSHED_TRANSACTION) {
-        await this.userBookService.updateUserBookLented(transaction.userBookId, false);
+        await this.userBookService.updateUserBookLent(transaction.userBookId, false);
         newActive = false;
       } else {
         throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
@@ -132,7 +139,7 @@ export class TransactionController {
       if (transaction.userBook.userId !== req.user.userId) {
         throw new HttpException("UnAuthorized", HttpStatus.UNAUTHORIZED);
       } else if (updateTransactionStatusDto.status === TransactionStatus.FINSHED_TRANSACTION) {
-        await this.userBookService.updateUserBookLented(transaction.userBookId, false);
+        await this.userBookService.updateUserBookLent(transaction.userBookId, false);
         newActive = false;
       } else {
         throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);

@@ -23,7 +23,7 @@ export class UserBook {
     user: User;
 
     @Column({default: false})
-    lented: boolean;
+    isLent: boolean;
 
     @Column()
     available: boolean;
