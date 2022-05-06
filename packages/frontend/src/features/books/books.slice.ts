@@ -7,12 +7,13 @@ export const booksAdapter = createEntityAdapter<Book>({
     selectId: (book: Book) => book.id,
 })
 
-export const addBookThunk = createAsyncThunk<{ book: Book }, { bookId: string, userId?: string }>(
+export const addBookThunk = createAsyncThunk<{ book: Book }, { bookId: string, userId?: string, isAvailable: boolean }>(
     'books/addBook',
     async (payload, thunkApi) => {
         try {
-            const book = await BookService.addBookToLibrary(payload.bookId, payload.userId);
-            return {book};
+            const userBook = await BookService.addBookToLibrary(payload.bookId, payload.userId, payload.isAvailable);
+            const book = await BookService.getBookById(payload.bookId);
+            return {userBook, book};
         } catch (error: any) {
             return thunkApi.rejectWithValue(error.message);
         }

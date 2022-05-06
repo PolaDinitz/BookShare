@@ -99,7 +99,7 @@ const AddBook = (props: AddBookProps) => {
     };
 
     function postBook() {
-        dispatch(addBookThunk({bookId, userId})).unwrap()
+        dispatch(addBookThunk({bookId, userId, isAvailable})).unwrap()
             .catch((errorMessage: string) => {
                 toast.error(errorMessage);
             });
