@@ -14,7 +14,7 @@ type BookDetailsProps = {
 
 const BookDetails = (props: BookDetailsProps) => {
     const {open, onClose} = props;
-    const {title, author, categories, description, imageUrl} = props.book;
+    const {title, author, genres, description, imageUrl} = props.book;
 
     return (
         <Dialog
@@ -36,7 +36,7 @@ const BookDetails = (props: BookDetailsProps) => {
                 <Grid container spacing={1} direction="row">
                     <Grid item xs={6}>
                         <Typography variant="h6" mt={2}>
-                            {categories[0]}
+                            {genres[0]}
                         </Typography>
                         <Typography variant="h6" mt={2} fontWeight="bold">
                             {title}

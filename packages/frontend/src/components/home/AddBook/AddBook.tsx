@@ -24,9 +24,10 @@ import RoundedButton from "../../common/rounded-button";
 import { BookType } from "../../../utils/books-data";
 import bookService from "../../../services/book.service";
 import "./AddBook.css";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../types/types";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../types/types";
 import { toast } from "react-toastify";
+import { addBookThunk } from "../../../features/books/books.slice";
 
 type AddBookProps = {
     open: boolean;
@@ -34,6 +35,7 @@ type AddBookProps = {
 };
 
 const AddBook = (props: AddBookProps) => {
+    const dispatch = useDispatch<AppDispatch>()
     const {open, onClose} = props;
 
     const userId = useSelector((state: RootState) => state.auth?.user?.id)
@@ -83,7 +85,7 @@ const AddBook = (props: AddBookProps) => {
             setBookId(value.id);
             setSearchedBookName(value.title);
             setAuthorName(value.author || "No Author Provided");
-            setGenres(value.categories || ["No Genres Provided"]);
+            setGenres(value.genres || ["No Genres Provided"]);
             setDescription(value.description || "No Description Provided");
             setCoverImage(value?.imageUrl);
         } else {
@@ -97,12 +99,9 @@ const AddBook = (props: AddBookProps) => {
     };
 
     function postBook() {
-        bookService.addBookToLibrary(bookId, userId)
-            .then((data: any) => {
-                console.log(data);
-            })
-            .catch((error: Error) => {
-                toast.error(error?.message);
+        dispatch(addBookThunk({bookId, userId})).unwrap()
+            .catch((errorMessage: string) => {
+                toast.error(errorMessage);
             });
     }
 
