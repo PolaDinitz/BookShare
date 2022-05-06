@@ -27,7 +27,7 @@ import "./AddBook.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../types/types";
 import { toast } from "react-toastify";
-import { addBookThunk } from "../../../features/books/books.slice";
+import { addUserBookThunk } from "../../../features/user-books/user-book.slice";
 
 type AddBookProps = {
     open: boolean;
@@ -99,7 +99,7 @@ const AddBook = (props: AddBookProps) => {
     };
 
     function postBook() {
-        dispatch(addBookThunk({bookId, userId, isAvailable})).unwrap()
+        dispatch(addUserBookThunk({bookId, userId, isAvailable})).unwrap()
             .catch((errorMessage: string) => {
                 toast.error(errorMessage);
             });
