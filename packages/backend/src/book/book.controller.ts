@@ -6,7 +6,6 @@ import { Role } from 'src/enums/role.enum';
 import { BookService } from './book.service';
 import { UserBookService } from 'src/user-book/user-book.service';
 import { BooksApiService } from 'src/books-api/books-api.service';
-import { CreateUserBookDto } from 'src/user-book/dto/create-user-book.dto';
 import { CreateBookDto } from './dto/create-book.dto';
 
 @Controller('book')
@@ -65,9 +64,9 @@ export class BookController {
     let book =  await this.bookService.getBookById(createBookDto.bookId);
     if (!book) {
       const apiBook = await this.booksApiService.getBookById(createBookDto.bookId);
-      await this.bookService.create(apiBook);
+      return await this.bookService.create(apiBook).then(async () => await this.userBookService.create(createBookDto));
     }
-    await this.userBookService.create(createBookDto);
+    return await this.userBookService.create(createBookDto);
   }
 
   @Put('rate/:id')
