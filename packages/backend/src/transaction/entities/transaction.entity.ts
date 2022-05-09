@@ -32,7 +32,7 @@ export class Transaction {
     borrowUserRating: number
     
     @ManyToOne(() => User, borrowUser => borrowUser.borrowTransactions)
-    borrowUser: Promise<User>;
+    borrowUser: User;
 
     @Column()
     borrowUserId: string

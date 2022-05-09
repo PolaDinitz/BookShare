@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateBookDto } from 'src/book/dto/create-book.dto';
 import { Repository } from 'typeorm';
 import { UpdateUserBookAvailabilityDto } from './dto/update-user-book-availability.dto';
-import { UpdateUserBookLentedDto } from './dto/update-user-book-lented.dto';
+import { UpdateUserBookLentDto } from './dto/update-user-book-lent.dto';
 import { UserBook } from './entities/user-book.entity';
 
 @Injectable()
@@ -42,7 +42,7 @@ export class UserBookService {
       where: {
         bookId: id,
         available: true,
-        lented: false
+        isLent: false
       },
       relations: [
         "user"
@@ -56,9 +56,9 @@ export class UserBookService {
     });
   }
 
-  public async updateUserBookLented(id: string, isLented: boolean) {
+  public async updateUserBookLent(id: string, isLent: boolean) {
     return await this.userBookRepository.update(id, {
-      lented: isLented
+      isLent: isLent
     });
   }
 }
