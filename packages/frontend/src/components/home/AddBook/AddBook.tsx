@@ -100,6 +100,9 @@ const AddBook = (props: AddBookProps) => {
 
     function postBook() {
         dispatch(addUserBookThunk({bookId, userId, isAvailable})).unwrap()
+            .then(() => {
+                closeAndReset();
+            })
             .catch((errorMessage: string) => {
                 toast.error(errorMessage);
             });
