@@ -1,16 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Book } from './entities/book.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Book } from "./entities/book.entity";
 
 @Injectable()
 export class BookService {
-  
+
   constructor(
     @InjectRepository(Book)
-    private booksRepository: Repository<Book>,
-  ) {}
-  
+    private booksRepository: Repository<Book>
+  ) {
+  }
+
   public async getBooks(): Promise<Book[]> {
     return await this.booksRepository.find();
   }
@@ -18,11 +19,11 @@ export class BookService {
   public async getBookById(id: string): Promise<Book> {
     return await this.booksRepository.findOne(id);
   }
-  
+
   public async getBooksByTitle(title: string): Promise<Book[]> {
     return await this.booksRepository.createQueryBuilder()
-            .where("title like :search", {search : `${title}%`})
-            .getMany();
+      .where("title like :search", { search: `${title}%` })
+      .getMany();
   }
 
   public async getBooksByAuthor(author: string): Promise<Book[]> {
@@ -31,18 +32,18 @@ export class BookService {
     });
   }
 
-  public async rateBook(id: string, rating:number) {
+  public async rateBook(id: string, rating: number) {
     let bookToRate = await this.getBookById(id);
-    let newRate = bookToRate.bookRating+rating;
+    let newRate = bookToRate.bookRating + rating;
     let newCount = bookToRate.count++;
 
-    return await this.booksRepository.update(id, { 
-      bookRating:newRate,
-      count:newCount
+    return await this.booksRepository.update(id, {
+      bookRating: newRate,
+      count: newCount
     });
   }
 
-  public async create(bookApi: BookApi) :Promise<Book>{
+  public async create(bookApi: BookApi): Promise<Book> {
     const newBook = this.booksRepository.create({
       id: bookApi.id,
       author: bookApi.author,
