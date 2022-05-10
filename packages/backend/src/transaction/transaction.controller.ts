@@ -11,6 +11,7 @@ import { JwtAuthGuard } from 'src/authentication/jwt/jwt-auth.guard';
 import { RolesGuard } from 'src/authorization/roles.guard';
 import { TransactionStatus } from 'src/enums/transaction-status.enum';
 import { UserBookService } from 'src/user-book/user-book.service';
+import { handleChangeStatusFromWaitingForBookReturn, handleChangeStatusFromWaitingForChat, handleChangeStatusFromWaitingForLend, handleChangeStatusFromWaitingForReturnApproval } from './transactionStatus.handlers';
 
 @Controller('transaction')
 export class TransactionController {
@@ -74,76 +75,16 @@ export class TransactionController {
     }
     let newActive = true;
     if (transaction.status === TransactionStatus.WAITING_CHAT_APPROVAL) {
-      // In waiting for chat approval the borrow user can:
-      // - cancel the chat request
-      // The lend user can
-      // - decline chat
-      // - approve chat and update state to wating for lend
-
-      if (transaction.userBook.userId !== req.user.userId) {
-        if (updateTransactionStatusDto.status !== TransactionStatus.CHAT_CANCELED) {
-          throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
-        }
-        newActive = false;
-      }
-      else if (updateTransactionStatusDto.status === TransactionStatus.CHAT_DECLINED) {
-        newActive = false;
-      }
-      else if (updateTransactionStatusDto.status !== TransactionStatus.WAITING_FOR_LEND) {
-        throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
-      }
+      newActive = handleChangeStatusFromWaitingForChat(transaction, req.user.userId, updateTransactionStatusDto.status);
     }
     else if (transaction.status === TransactionStatus.WAITING_FOR_LEND) {
-      // In waiting for lent the borrow user can:
-      // - cancel the chat
-      // The lend user can
-      // - decline lent
-      // - approve lent and pass to waiting for book returnal status
-
-      if (transaction.userBook.userId !== req.user.userId) {
-        if (updateTransactionStatusDto.status !== TransactionStatus.CHAT_CANCELED) {
-          throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
-        }
-        newActive = false;
-      } else if (updateTransactionStatusDto.status === TransactionStatus.LEND_DECLINED) {
-        newActive = false;
-      } else if (updateTransactionStatusDto.status === TransactionStatus.WAITING_FOR_BOOK_RETURNED) {
-        this.userBookService.updateUserBookLent(transaction.userBookId, true);
-        this.transactionService.deactivateOtherTransactionsByUserBook(transaction.userBookId, transaction.id);
-      } else {
-        throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
-      }
+      newActive = handleChangeStatusFromWaitingForLend(transaction, req.user.userId, updateTransactionStatusDto.status);
     }
     else if (transaction.status === TransactionStatus.WAITING_FOR_BOOK_RETURNED) {
-      // in waiting for book returnal the borrow user can: 
-      // - return the book and change the status to waiting for book return approval
-      // The lent user can
-      // - say the book was returned and finish the transaction
-
-      if (transaction.userBook.userId !== req.user.userId) {
-        if (updateTransactionStatusDto.status !== TransactionStatus.WAITING_FOR_RETURN_APPROVAL) {
-          throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
-        }
-      } else if (updateTransactionStatusDto.status === TransactionStatus.FINSHED_TRANSACTION) {
-        await this.userBookService.updateUserBookLent(transaction.userBookId, false);
-        newActive = false;
-      } else {
-        throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
-      }
+      newActive = await handleChangeStatusFromWaitingForBookReturn(transaction, req.user.userId, updateTransactionStatusDto.status);
     }
     else if (transaction.status === TransactionStatus.WAITING_FOR_RETURN_APPROVAL) {
-      // in waiting for book return approval the borrow user can't do anything.
-      // The lent user can
-      // - approve and finish the transaction
-      
-      if (transaction.userBook.userId !== req.user.userId) {
-        throw new HttpException("UnAuthorized", HttpStatus.UNAUTHORIZED);
-      } else if (updateTransactionStatusDto.status === TransactionStatus.FINSHED_TRANSACTION) {
-        await this.userBookService.updateUserBookLent(transaction.userBookId, false);
-        newActive = false;
-      } else {
-        throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
-      }
+      newActive = await handleChangeStatusFromWaitingForReturnApproval(transaction, req.user.userId, updateTransactionStatusDto.status);
     }
     return await this.transactionService.updateStatus(id, updateTransactionStatusDto, newActive);
   }
