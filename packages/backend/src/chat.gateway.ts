@@ -1,31 +1,46 @@
 import {
-  ConnectedSocket,
-  MessageBody,
-  OnGatewayConnection, OnGatewayDisconnect,
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer
+    ConnectedSocket,
+    MessageBody,
+    OnGatewayConnection,
+    OnGatewayDisconnect,
+    SubscribeMessage,
+    WebSocketGateway,
+    WebSocketServer
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
+import { ChatService } from "./modules/chat/chat.service";
+import { HttpException, HttpStatus } from "@nestjs/common";
 
-@WebSocketGateway({ cors: true, transports: ['websocket'] })
+@WebSocketGateway({cors: true, transports: ['websocket']})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
-  @WebSocketServer()
-  webSocketServer: Server;
+    constructor(private chatService: ChatService) {
+    }
 
-  @SubscribeMessage("newMessage")
-  handleNewMessage(@MessageBody() message: { transactionId: string, content: string }, @ConnectedSocket() client: Socket): void {
-    const from = client.handshake.auth.email;
-    this.webSocketServer.to(message.transactionId).emit("newMessage", { ...message, from });
-  }
+    @WebSocketServer()
+    webSocketServer: Server;
 
-  handleConnection(@ConnectedSocket() client: Socket, ...args: any[]): any {
-    const transactionsIds: string[] = ["test1", "test2", "test3"];
-    client.join(transactionsIds);
-  }
+    @SubscribeMessage("newMessage")
+    handleNewMessage(@MessageBody() message: { transactionId: string, content: string }, @ConnectedSocket() client: Socket): void {
+        const from = client.handshake.auth.userId;
+        this.chatService.create({
+            transactionId: message.transactionId,
+            userId: from,
+            content: message.content
+        }).then(() => {
+            this.webSocketServer.to(message.transactionId).emit("newMessage", {...message, from});
+        }).catch(reason => {
+            console.log(reason);
+        })
 
-  handleDisconnect(client: any): any {
-  }
+    }
+
+    handleConnection(@ConnectedSocket() client: Socket, ...args: any[]): any {
+        const transactionsIds: string[] = ["34b348a1-213c-4301-911a-2ce067fac531"];
+        client.join(transactionsIds);
+    }
+
+    handleDisconnect(client: any): any {
+    }
 
 }

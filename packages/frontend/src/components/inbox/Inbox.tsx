@@ -12,7 +12,7 @@ import {
     Typography
 } from "@mui/material";
 import * as React from "react";
-import { useState } from "react";
+import { KeyboardEventHandler, useState } from "react";
 import { useSelector } from "react-redux";
 import { Search } from "@mui/icons-material";
 import SendIcon from '@mui/icons-material/Send';
@@ -155,6 +155,12 @@ const Inbox = () => {
                                     label="Type a message..."
                                     onChange={event => setChatMessage(event.target.value)}
                                     fullWidth
+                                    onKeyDown={event => {
+                                        if (event.key === 'Enter') {
+                                            submitNewMessage();
+                                            event.preventDefault()
+                                        }
+                                    }}
                                 />
                                 <IconButton onClick={submitNewMessage} color="primary" component="button">
                                     <SendIcon/>

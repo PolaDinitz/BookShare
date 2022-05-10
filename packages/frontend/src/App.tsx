@@ -14,11 +14,11 @@ export const socket = socketIOClient(config.apiUrl, {autoConnect: false, transpo
 function App() {
     const dispatch = useDispatch<AppDispatch>()
     const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-    const loggedInUserEmail = useSelector((state: RootState) => state.auth.user?.email);
+    const loggedInUserId = useSelector((state: RootState) => state.auth.user?.id);
 
     useEffect(() => {
         if (isLoggedIn) {
-            socket.auth = {email: loggedInUserEmail};
+            socket.auth = {userId: loggedInUserId};
             socket.connect()
         } else {
             socket.disconnect();
@@ -28,11 +28,7 @@ function App() {
     useEffect(() => {
         dispatch(transactionReceived([
             {
-                transactionId: "test1",
-                messages: []
-            },
-            {
-                transactionId: "test2",
+                transactionId: "34b348a1-213c-4301-911a-2ce067fac531",
                 messages: []
             }
         ]));
@@ -40,7 +36,7 @@ function App() {
 
     useEffect(() => {
         socket.on("newMessage", (message: { transactionId: string, from: string, content: string }) => {
-            const fromSelf = (message.from === loggedInUserEmail);
+            const fromSelf = (message.from === loggedInUserId);
             dispatch(newMessageThunk({
                 transactionId: message.transactionId,
                 chatMessage: {
