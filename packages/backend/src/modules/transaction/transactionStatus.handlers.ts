@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { TransactionStatus } from "src/enums/transaction-status.enum";
+import { UserBookService } from "../user-book/user-book.service";
 import { Transaction } from "./entities/transaction.entity";
+import { TransactionService } from "./transaction.service";
 
 
 export function handleChangeStatusFromWaitingForChat(transaction : Transaction, currentUserId : string, newStatus : TransactionStatus) : boolean{
@@ -25,7 +27,7 @@ export function handleChangeStatusFromWaitingForChat(transaction : Transaction, 
   return isActive;
 }
 
-export function handleChangeStatusFromWaitingForLend(transaction : Transaction, currentUserId : string, newStatus: TransactionStatus) : boolean {
+export async function handleChangeStatusFromWaitingForLend(transaction : Transaction, currentUserId : string, newStatus: TransactionStatus, userBookService: UserBookService, transactionService: TransactionService) : Promise<boolean> {
     // In waiting for lent the borrow user can:
     // - cancel the chat
     // The lend user can
@@ -40,15 +42,15 @@ export function handleChangeStatusFromWaitingForLend(transaction : Transaction, 
     } else if (newStatus === TransactionStatus.LEND_DECLINED) {
       isActive = false;
     } else if (newStatus === TransactionStatus.WAITING_FOR_BOOK_RETURNED) {
-      this.userBookService.updateUserBookLent(transaction.userBookId, true);
-      this.transactionService.deactivateOtherTransactionsByUserBook(transaction.userBookId, transaction.id);
+      await userBookService.updateUserBookLent(transaction.userBookId, true);
+      await transactionService.deactivateOtherTransactionsByUserBook(transaction.userBookId, transaction.id);
     } else {
       throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
     }
     return isActive;
 }
 
-export async function handleChangeStatusFromWaitingForBookReturn(transaction : Transaction, currentUserId : string, newStatus: TransactionStatus) : Promise<boolean> {
+export async function handleChangeStatusFromWaitingForBookReturn(transaction : Transaction, currentUserId : string, newStatus: TransactionStatus, userBookService: UserBookService) : Promise<boolean> {
   // in waiting for book returnal the borrow user can: 
   // - return the book and change the status to waiting for book return approval
   // The lent user can
@@ -59,7 +61,7 @@ export async function handleChangeStatusFromWaitingForBookReturn(transaction : T
       throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
     }
   } else if (newStatus === TransactionStatus.FINSHED_TRANSACTION) {
-    await this.userBookService.updateUserBookLent(transaction.userBookId, false);
+    await userBookService.updateUserBookLent(transaction.userBookId, false);
     isActive = false;
   } else {
     throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
@@ -67,7 +69,7 @@ export async function handleChangeStatusFromWaitingForBookReturn(transaction : T
   return isActive;
 }
 
-export async function handleChangeStatusFromWaitingForReturnApproval(transaction : Transaction, currentUserId : string, newStatus: TransactionStatus) : Promise<boolean> {
+export async function handleChangeStatusFromWaitingForReturnApproval(transaction : Transaction, currentUserId : string, newStatus: TransactionStatus, userBookService: UserBookService) : Promise<boolean> {
   // in waiting for book return approval the borrow user can't do anything.
   // The lent user can
   // - approve and finish the transaction
@@ -75,7 +77,7 @@ export async function handleChangeStatusFromWaitingForReturnApproval(transaction
   if (transaction.userBook.userId !== currentUserId) {
     throw new HttpException("UnAuthorized", HttpStatus.UNAUTHORIZED);
   } else if (newStatus === TransactionStatus.FINSHED_TRANSACTION) {
-    await this.userBookService.updateUserBookLent(transaction.userBookId, false);
+    await userBookService.updateUserBookLent(transaction.userBookId, false);
     isActive = false;
   } else {
     throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);

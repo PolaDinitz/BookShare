@@ -78,13 +78,13 @@ export class TransactionController {
       newActive = handleChangeStatusFromWaitingForChat(transaction, req.user.userId, updateTransactionStatusDto.status);
     }
     else if (transaction.status === TransactionStatus.WAITING_FOR_LEND) {
-      newActive = handleChangeStatusFromWaitingForLend(transaction, req.user.userId, updateTransactionStatusDto.status);
+      newActive = await handleChangeStatusFromWaitingForLend(transaction, req.user.userId, updateTransactionStatusDto.status, this.userBookService, this.transactionService);
     }
     else if (transaction.status === TransactionStatus.WAITING_FOR_BOOK_RETURNED) {
-      newActive = await handleChangeStatusFromWaitingForBookReturn(transaction, req.user.userId, updateTransactionStatusDto.status);
+      newActive = await handleChangeStatusFromWaitingForBookReturn(transaction, req.user.userId, updateTransactionStatusDto.status, this.userBookService);
     }
     else if (transaction.status === TransactionStatus.WAITING_FOR_RETURN_APPROVAL) {
-      newActive = await handleChangeStatusFromWaitingForReturnApproval(transaction, req.user.userId, updateTransactionStatusDto.status);
+      newActive = await handleChangeStatusFromWaitingForReturnApproval(transaction, req.user.userId, updateTransactionStatusDto.status, this.userBookService);
     }
     return await this.transactionService.updateStatus(id, updateTransactionStatusDto, newActive);
   }
