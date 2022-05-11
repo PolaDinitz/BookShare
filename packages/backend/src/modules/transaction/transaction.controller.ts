@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Request, UseGuards, HttpException, HttpStatus, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Request, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionStatusDto } from './dto/update-transaction-status.dto';
@@ -151,7 +151,7 @@ export class TransactionController {
     }
     if (transaction && transaction.borrowUserId === req.user.userId) {
       await this.userService.rateUser(transaction.userBook.userId, updateLentUserRatingDto.lentUserRating);
-      return this.transactionService.updateLentUserRating(id, updateLentUserRatingDto);
+      return await this.transactionService.updateLentUserRating(id, updateLentUserRatingDto);
     }
     throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
   }
