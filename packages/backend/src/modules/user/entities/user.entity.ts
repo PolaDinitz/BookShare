@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { IsDate, IsEmail, IsPhoneNumber } from "class-validator";
+import { IsDate, IsEmail, IsPhoneNumber, Max, Min } from "class-validator";
 import { Gender } from "src/enums/gender.enum";
 import { Role } from "src/enums/role.enum";
 import { Type } from "class-transformer";
@@ -60,4 +60,12 @@ export class User {
   
   @OneToMany(type => UserBook, userBook => userBook.user)
   userBook: UserBook[]
+
+  @Column({default: 0})
+  @Min(0)
+  @Max(5)
+  rating: number;
+
+  @Column({default: 0})
+  count: number;
 }
