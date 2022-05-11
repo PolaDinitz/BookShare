@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateBookDto } from 'src/book/dto/create-book.dto';
+import { CreateBookDto } from 'src/modules/book/dto/create-book.dto';
 import { Repository } from 'typeorm';
 import { UpdateUserBookAvailabilityDto } from './dto/update-user-book-availability.dto';
-import { UpdateUserBookLentDto } from './dto/update-user-book-lent.dto';
 import { UserBook } from './entities/user-book.entity';
 
 @Injectable()

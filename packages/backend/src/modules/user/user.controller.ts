@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request, UnauthorizedException, HttpException, HttpStatus, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Roles } from 'src/authorization/roles.decorator';
+import { Roles } from 'src/modules/authorization/roles.decorator';
 import { Role } from 'src/enums/role.enum';
-import { JwtAuthGuard } from 'src/authentication/jwt/jwt-auth.guard';
-import { RolesGuard } from 'src/authorization/roles.guard';
+import { JwtAuthGuard } from 'src/modules/authentication/jwt/jwt-auth.guard';
+import { RolesGuard } from 'src/modules/authorization/roles.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
