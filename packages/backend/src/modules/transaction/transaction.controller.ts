@@ -5,12 +5,12 @@ import { UpdateTransactionStatusDto } from './dto/update-transaction-status.dto'
 import { UpdateBookRatingDto } from './dto/update-book-rating.dto';
 import { UpdateBorrowUserRatingDto } from './dto/update-borrow-user-rating.dto';
 import { UpdatelentUserRatingDto } from './dto/update-lent-user-rating.dto';
-import { Role } from 'src/enums/role.enum';
-import { Roles } from 'src/authorization/roles.decorator';
-import { JwtAuthGuard } from 'src/authentication/jwt/jwt-auth.guard';
-import { RolesGuard } from 'src/authorization/roles.guard';
-import { TransactionStatus } from 'src/enums/transaction-status.enum';
-import { UserBookService } from 'src/user-book/user-book.service';
+import { Role } from '../../enums/role.enum';
+import { Roles } from '../authorization/roles.decorator';
+import { JwtAuthGuard } from '../authentication/jwt/jwt-auth.guard';
+import { RolesGuard } from '../authorization/roles.guard';
+import { TransactionStatus } from '../../enums/transaction-status.enum';
+import { UserBookService } from '../user-book/user-book.service';
 import { handleChangeStatusFromWaitingForBookReturn, handleChangeStatusFromWaitingForChat, handleChangeStatusFromWaitingForLend, handleChangeStatusFromWaitingForReturnApproval } from './transactionStatus.handlers';
 
 @Controller('transaction')

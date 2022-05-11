@@ -1,8 +1,8 @@
-import { ConsoleLogger, Controller, Post, Request, UseGuards} from '@nestjs/common';
-import { AuthService } from './authentication/auth.service';
-import { LocalAuthGuard } from './authentication/local/local-auth.guard';
-import { JwtAuthGuard } from './authentication/jwt/jwt-auth.guard';
-import { JwtRefreshAuthGuard } from './authentication/jwt/refresh.guard';
+import { Controller, Post, Request, UseGuards} from '@nestjs/common';
+import { AuthService } from './modules/authentication/auth.service';
+import { LocalAuthGuard } from './modules/authentication/local/local-auth.guard';
+import { JwtAuthGuard } from './modules/authentication/jwt/jwt-auth.guard';
+import { JwtRefreshAuthGuard } from './modules/authentication/jwt/refresh.guard';
 
 @Controller()
 export class AppController {

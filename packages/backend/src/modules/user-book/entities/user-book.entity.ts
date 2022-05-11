@@ -1,7 +1,7 @@
-import { Book } from "src/book/entities/book.entity";
-import { User } from "src/user/entities/user.entity";
+import { Book } from "src/modules/book/entities/book.entity";
+import { User } from "src/modules/user/entities/user.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
-import { Transaction } from "src/transaction/entities/transaction.entity";
+import { Transaction } from "src/modules/transaction/entities/transaction.entity";
 
 @Entity()
 @Unique(["bookId", "userId"])

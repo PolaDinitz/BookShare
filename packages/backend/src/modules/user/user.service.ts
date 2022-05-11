@@ -6,7 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { DEFAULT_USER_IMAGE_FILE_NAME, IMAGES_USER_ASSETS_PATH, IMAGES_PUBLIC_ASSETS_PATH } from "../consts/images.consts";
+import { DEFAULT_USER_IMAGE_FILE_NAME, IMAGES_USER_ASSETS_PATH, IMAGES_PUBLIC_ASSETS_PATH } from "../../consts/images.consts";
 import { unlinkSync } from 'fs';
 
 

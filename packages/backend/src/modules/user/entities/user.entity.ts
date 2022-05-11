@@ -4,8 +4,8 @@ import { Gender } from "src/enums/gender.enum";
 import { Role } from "src/enums/role.enum";
 import { Type } from "class-transformer";
 import { DEFAULT_USER_IMAGE_FILE_NAME, IMAGES_USER_ASSETS_PATH } from "src/consts/images.consts";
-import { Transaction } from "src/transaction/entities/transaction.entity";
-import { UserBook } from "src/user-book/entities/user-book.entity";
+import { Transaction } from "src/modules/transaction/entities/transaction.entity";
+import { UserBook } from "src/modules/user-book/entities/user-book.entity";
 
 @Entity()
 export class User {
