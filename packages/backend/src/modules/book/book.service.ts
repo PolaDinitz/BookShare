@@ -33,14 +33,20 @@ export class BookService {
   }
 
   public async rateBook(id: string, rating: number) {
-    let bookToRate = await this.getBookById(id);
-    let newRate = bookToRate.bookRating + rating;
-    let newCount = bookToRate.count++;
+    const bookToRate = await this.getBookById(id);
 
     return await this.booksRepository.update(id, {
-      bookRating: newRate,
-      count: newCount
+      bookRating: bookToRate.bookRating + rating,
+      count: bookToRate.count+1
     });
+  }
+
+  public async getBookRating(id: string) {
+    const book = await this.getBookById(id);
+    if (book.count === 0) {
+      return { rating: -1 };
+    }
+    return { rating: (book.bookRating / book.count) };
   }
 
   public async create(bookApi: BookApi): Promise<Book> {

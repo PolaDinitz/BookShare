@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
-import { UserBook } from "src/user-book/entities/user-book.entity";
+import { UserBook } from "src/modules/user-book/entities/user-book.entity";
 import { BookCategory } from "../../book-category/entities/book-category.entity";
 import { DEFAULT_BOOK_IMAGE } from "src/consts/images.consts";
 

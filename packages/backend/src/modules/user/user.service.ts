@@ -6,7 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { DEFAULT_USER_IMAGE_FILE_NAME, IMAGES_USER_ASSETS_PATH, IMAGES_PUBLIC_ASSETS_PATH } from "../consts/images.consts";
+import { DEFAULT_USER_IMAGE_FILE_NAME, IMAGES_USER_ASSETS_PATH, IMAGES_PUBLIC_ASSETS_PATH } from "../../consts/images.consts";
 import { unlinkSync } from 'fs';
 
 
@@ -102,5 +102,22 @@ export class UsersService {
 
   public async deleteUser(id: string) {
     await this.usersRepository.delete(id);
+  }
+
+  public async rateUser(id: string, rating: number) {
+    const user = await this.getUserById(id);
+
+    return await this.usersRepository.update(id, {
+      rating: user.rating + rating,
+      count: user.count+1
+    });
+  }
+
+  public async getUserRating(id: string) {
+    const user = await this.getUserById(id);
+    if (user.count === 0) {
+      return { rating: -1 };
+    }
+    return { rating: (user.rating / user.count)};
   }
 }

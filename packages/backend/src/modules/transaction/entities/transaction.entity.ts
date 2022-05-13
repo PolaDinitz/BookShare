@@ -2,8 +2,8 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { IsDate } from "class-validator";
 import { Type } from "class-transformer";
 import { TransactionStatus } from "src/enums/transaction-status.enum";
-import { User } from "src/user/entities/user.entity";
-import { UserBook } from "src/user-book/entities/user-book.entity";
+import { User } from "src/modules/user/entities/user.entity";
+import { UserBook } from "src/modules/user-book/entities/user-book.entity";
 
 @Entity()
 export class Transaction {
