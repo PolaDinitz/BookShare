@@ -62,7 +62,7 @@ export class TransactionController {
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getTransactionsByBorrowUserId(@Param('id') id: string) {
-    return await this.transactionService.getTransactionsByBorrowUser(id);;
+    return await this.transactionService.getTransactionsByBorrowUser(id);
   }
 
   
@@ -70,7 +70,7 @@ export class TransactionController {
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getTransactionsByLentUserId(@Param('id') id: string) {
-    return await this.transactionService.getTransactionsByLentUser(id);;
+    return await this.transactionService.getTransactionsByLentUser(id);
   }
 
   @Patch('status/:id')
