@@ -60,7 +60,7 @@ export async function handleChangeStatusFromWaitingForBookReturn(transaction : T
     if (newStatus !== TransactionStatus.WAITING_FOR_RETURN_APPROVAL) {
       throw new HttpException("You can't change to this state from current state", HttpStatus.BAD_REQUEST);
     }
-  } else if (newStatus === TransactionStatus.FINSHED_TRANSACTION) {
+  } else if (newStatus === TransactionStatus.FINiSHED_TRANSACTION) {
     await userBookService.updateUserBookLent(transaction.userBookId, false);
     isActive = false;
   } else {
@@ -76,7 +76,7 @@ export async function handleChangeStatusFromWaitingForReturnApproval(transaction
   let isActive = true;    
   if (transaction.userBook.userId !== currentUserId) {
     throw new HttpException("UnAuthorized", HttpStatus.UNAUTHORIZED);
-  } else if (newStatus === TransactionStatus.FINSHED_TRANSACTION) {
+  } else if (newStatus === TransactionStatus.FINiSHED_TRANSACTION) {
     await userBookService.updateUserBookLent(transaction.userBookId, false);
     isActive = false;
   } else {

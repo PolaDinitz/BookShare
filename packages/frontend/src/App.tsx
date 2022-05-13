@@ -7,7 +7,8 @@ import Routing from './Routing';
 import { config } from "./config/config";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./types/types";
-import { newMessageThunk, transactionReceived } from "./features/inbox/inbox.slice";
+import { newMessageThunk } from "./features/inbox/inbox.slice";
+import { fetchTransactionsThunk } from "./features/transactions/transactions.slice";
 
 export const socket = socketIOClient(config.apiUrl, {autoConnect: false, transports: ['websocket']});
 
@@ -26,22 +27,22 @@ function App() {
     }, [isLoggedIn]);
 
     useEffect(() => {
-        dispatch(transactionReceived([
-            {
-                transactionId: "34b348a1-213c-4301-911a-2ce067fac531",
-                messages: []
-            }
-        ]));
+        if (isLoggedIn && loggedInUserId) {
+            dispatch(fetchTransactionsThunk({
+                userId: loggedInUserId
+            }));
+        }
     }, []);
 
     useEffect(() => {
-        socket.on("newMessage", (message: { transactionId: string, from: string, content: string }) => {
+        socket.on("newMessage", (message: { transactionId: string, from: string, content: string, time: Date }) => {
             const fromSelf = (message.from === loggedInUserId);
             dispatch(newMessageThunk({
                 transactionId: message.transactionId,
                 chatMessage: {
                     content: message.content,
-                    fromSelf
+                    fromSelf,
+                    time: message.time
                 }
             }));
         });

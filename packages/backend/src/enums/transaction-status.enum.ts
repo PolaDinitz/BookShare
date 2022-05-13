@@ -6,7 +6,7 @@ export enum TransactionStatus {
     LEND_DECLINED="Lend Declined",
     WAITING_FOR_BOOK_RETURNED="Waiting for book return",
     WAITING_FOR_RETURN_APPROVAL="Waiting for return approval",
-    FINSHED_TRANSACTION="Finished Transaction"
+    FINiSHED_TRANSACTION="Finished Transaction"
 }
 
 // Request to chat 

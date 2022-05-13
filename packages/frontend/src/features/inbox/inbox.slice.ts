@@ -1,7 +1,7 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { Chat, ChatMessage } from "./inbox.model";
 import { RootState } from "../../types/types";
-import moment from "moment";
+import { fetchTransactionsThunk } from "../transactions/transactions.slice";
 
 export const inboxAdapter = createEntityAdapter<Chat>({
     selectId: (chat) => chat.transactionId,
@@ -11,12 +11,10 @@ export const newMessageThunk = createAsyncThunk<{ transactionId: string, chatMes
     'inbox/newMessage',
     async (payload: { transactionId: string, chatMessage: ChatMessage }, thunkApi) => {
         try {
-            // TODO: Add new message to DB
             return {
                 ...payload,
                 chatMessage: {
-                    ...payload.chatMessage,
-                    time: moment(new Date()).format('DD/MM/YY HH:mm')
+                    ...payload.chatMessage
                 }
             };
         } catch (error: any) {
@@ -43,6 +41,9 @@ const inboxSlice = createSlice({
                         messages: state.entities[action.payload.transactionId]?.messages.concat([action.payload.chatMessage])
                     }
                 });
+            })
+            .addCase(fetchTransactionsThunk.fulfilled, (state, action) => {
+                inboxAdapter.setAll(state, action.payload.chats);
             })
     },
 });

@@ -12,7 +12,7 @@ import {
     Typography
 } from "@mui/material";
 import * as React from "react";
-import { KeyboardEventHandler, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Search } from "@mui/icons-material";
 import SendIcon from '@mui/icons-material/Send';
@@ -46,7 +46,7 @@ const Inbox = () => {
     const loggedInUser = useSelector((state: RootState) => state.auth.user);
     const [selectedChatRoom, setSelectedChatRoom] = useState("");
     const [chatMessage, setChatMessage] = useState("");
-    const transactions: Chat[] = useSelector(inboxSelectors.selectAll);
+    const chats: Chat[] = useSelector(inboxSelectors.selectAll);
 
     const submitNewMessage = () => {
         const message: { transactionId: string, content: string } = {
@@ -85,12 +85,12 @@ const Inbox = () => {
                         fullWidth
                     />
                     <ListScrolledArea>
-                        {transactions.map((transaction: Chat) => (
-                            <InboxItem key={transaction.transactionId}
-                                       onCLick={() => setSelectedChatRoom(transaction.transactionId)}
+                        {chats.map((chat: Chat) => (
+                            <InboxItem key={chat.transactionId}
+                                       onCLick={() => setSelectedChatRoom(chat.transactionId)}
                                        primary="Ran Biderman"
                                        secondary="The Witcher" status="Lend Request"
-                                       selected={selectedChatRoom === transaction.transactionId}/>
+                                       selected={selectedChatRoom === chat.transactionId}/>
                         ))}
                     </ListScrolledArea>
                 </Box>
@@ -137,8 +137,10 @@ const Inbox = () => {
                             </Box>
                             <Divider/>
                             <ListScrolledArea sx={{flex: 2}}>
-                                {transactions.find((transaction: Chat) => transaction.transactionId === selectedChatRoom)
-                                    ?.messages.map((message: ChatMessage, index) => (
+                                {chats.find((chat: Chat) => chat.transactionId === selectedChatRoom)
+                                    ?.messages
+                                    /*.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())*/
+                                    .map((message: ChatMessage, index) => (
                                         <InboxMessage key={index} time={message?.time}
                                                       color={message.fromSelf ? "secondary" : "primary"}>
                                             {message.content}

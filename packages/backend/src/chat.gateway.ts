@@ -9,6 +9,7 @@ import {
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { ChatService } from "./modules/chat/chat.service";
+import { ChatMessage } from "./modules/chat/entities/chat-message.entity";
 
 @WebSocketGateway({cors: true, transports: ['websocket']})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -26,8 +27,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             transactionId: message.transactionId,
             userId: from,
             content: message.content
-        }).then(() => {
-            this.webSocketServer.to(message.transactionId).emit("newMessage", {...message, from});
+        }).then((chatMessage: ChatMessage) => {
+            this.webSocketServer.to(message.transactionId).emit("newMessage", {
+                ...message,
+                from,
+                time: chatMessage.creationTimestamp
+            });
         }).catch(reason => {
             console.log(reason);
         })
