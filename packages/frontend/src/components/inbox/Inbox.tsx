@@ -88,8 +88,9 @@ const Inbox = () => {
                         {chats.map((chat: Chat) => (
                             <InboxItem key={chat.transactionId}
                                        onCLick={() => setSelectedChatRoom(chat.transactionId)}
-                                       primary={chat.transactionId}
-                                       secondary="The Witcher" status="Lend Request"
+                                       primary="Ran Biderman"
+                                       secondary="The Witcher"
+                                       status="Lend Request"
                                        selected={selectedChatRoom === chat.transactionId}/>
                         ))}
                     </ListScrolledArea>
