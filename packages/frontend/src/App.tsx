@@ -32,7 +32,7 @@ function App() {
                 userId: loggedInUserId
             }));
         }
-    }, []);
+    }, [loggedInUserId]);
 
     useEffect(() => {
         socket.on("newMessage", (message: { transactionId: string, from: string, content: string, time: Date }) => {

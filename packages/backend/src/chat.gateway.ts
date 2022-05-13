@@ -10,11 +10,14 @@ import {
 import { Server, Socket } from "socket.io";
 import { ChatService } from "./modules/chat/chat.service";
 import { ChatMessage } from "./modules/chat/entities/chat-message.entity";
+import { Transaction } from "./modules/transaction/entities/transaction.entity";
+import { TransactionService } from "./modules/transaction/transaction.service";
 
 @WebSocketGateway({cors: true, transports: ['websocket']})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
-    constructor(private chatService: ChatService) {
+    constructor(private chatService: ChatService,
+                private transactionService: TransactionService) {
     }
 
     @WebSocketServer()
@@ -40,8 +43,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     handleConnection(@ConnectedSocket() client: Socket, ...args: any[]): any {
-        const transactionsIds: string[] = ["34b348a1-213c-4301-911a-2ce067fac531"];
-        client.join(transactionsIds);
+        const userId = client.handshake.auth.userId;
+        this.transactionService.getTransactionsByUserId(userId)
+          .then((transactions: Transaction[]) => {
+              const transactionsIds: string[] = transactions.map((transaction) => transaction.id);
+              client.join(transactionsIds);
+          })
+          .catch(reason => {
+              console.log(reason);
+          })
     }
 
     handleDisconnect(client: any): any {
