@@ -27,10 +27,7 @@ const inboxSlice = createSlice({
     name: "inbox",
     initialState: inboxAdapter.getInitialState(),
     reducers: {
-        transactionCreated: inboxAdapter.addOne,
-        transactionReceived(state, action: { payload: Chat[] }) {
-            inboxAdapter.setAll(state, action.payload);
-        }
+        transactionCreated: inboxAdapter.addOne
     },
     extraReducers: (builder) => {
         builder
@@ -50,7 +47,6 @@ const inboxSlice = createSlice({
 
 export const {
     transactionCreated,
-    transactionReceived,
 } = inboxSlice.actions
 
 export const inboxSelectors = inboxAdapter.getSelectors((state: RootState) => state.inbox);
