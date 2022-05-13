@@ -18,7 +18,7 @@ export class BookController {
   @Roles(Role.USER,Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getBooks(@Request() req: any) {
-    return this.bookService.getBooks();
+    return await this.bookService.getBooks();
   }
 
   @Get(':id')
@@ -54,7 +54,7 @@ export class BookController {
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getBooksByAuthor(@Request() req: any, @Param('name') authorName: string) {
-      return this.bookService.getBooksByAuthor(authorName);
+      return await this.bookService.getBooksByAuthor(authorName);
   }
 
   @Post()
@@ -73,6 +73,13 @@ export class BookController {
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async rateBook(@Req() req: Request, @Param('id') id: string, @Query('rating') rating: number){
-    return this.bookService.rateBook(id, rating);
+    return await this.bookService.rateBook(id, rating);
+  }
+
+  @Get('rate/:id')
+  @Roles(Role.ADMIN, Role.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async getBookRating(@Req() req: Request, @Param('id') id: string) {
+    return await this.bookService.getBookRating(id);
   }
 }

@@ -26,6 +26,13 @@ export class UsersController {
       return this.usersService.getUserById(id);
   }
 
+  @Get('rate/:id')
+  @Roles(Role.ADMIN, Role.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async getUserRating(@Request() req: any, @Param('id') id: string) {
+      return this.usersService.getUserRating(id);
+  }
+
   @Put(':id')
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)

@@ -103,4 +103,21 @@ export class UsersService {
   public async deleteUser(id: string) {
     await this.usersRepository.delete(id);
   }
+
+  public async rateUser(id: string, rating: number) {
+    const user = await this.getUserById(id);
+
+    return await this.usersRepository.update(id, {
+      rating: user.rating + rating,
+      count: user.count+1
+    });
+  }
+
+  public async getUserRating(id: string) {
+    const user = await this.getUserById(id);
+    if (user.count === 0) {
+      return { rating: -1 };
+    }
+    return { rating: (user.rating / user.count)};
+  }
 }
