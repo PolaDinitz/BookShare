@@ -9,7 +9,6 @@ import {
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { ChatService } from "./modules/chat/chat.service";
-import { HttpException, HttpStatus } from "@nestjs/common";
 
 @WebSocketGateway({cors: true, transports: ['websocket']})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {

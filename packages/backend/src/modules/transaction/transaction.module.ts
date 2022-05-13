@@ -6,11 +6,13 @@ import { Transaction } from './entities/transaction.entity';
 import { UserBookModule } from 'src/modules/user-book/user-book.module';
 import { BookModule } from '../book/book.module';
 import { UsersModule } from '../user/user.module';
+import { ChatModule } from "../chat/chat.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Transaction]), UserBookModule, BookModule, UsersModule],
-  controllers: [TransactionController],
-  providers: [TransactionService],
-  exports: [TransactionService]
+    imports: [TypeOrmModule.forFeature([Transaction]), UserBookModule, BookModule, UsersModule, ChatModule],
+    controllers: [TransactionController],
+    providers: [TransactionService],
+    exports: [TransactionService]
 })
-export class TransactionModule {}
+export class TransactionModule {
+}

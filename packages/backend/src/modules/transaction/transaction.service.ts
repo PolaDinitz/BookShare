@@ -25,13 +25,13 @@ export class TransactionService {
 
   public async getTransactions() {
     return this.transactionRepository.find({
-      relations: ['borrowUser', 'userBook', 'userBook.user', 'userBook.book']
+      relations: ['borrowUser', 'userBook', 'userBook.user', 'userBook.book', 'chatMessages']
     });
   }
 
   public async getTransactionById(id: string) {
     return this.transactionRepository.findOne(id, {
-      relations: ['borrowUser', 'userBook', 'userBook.user', 'userBook.book'] 
+      relations: ['borrowUser', 'userBook', 'userBook.user', 'userBook.book', 'chatMessages']
     });
   }
 
@@ -54,16 +54,23 @@ export class TransactionService {
     return this.transactionRepository.update(id, updateLentUserRatingDto);
   }
 
-  public async getTransctionsByBorrowUser(id: string) {
+  public async getTransactionsByBorrowUser(id: string) {
     return this.transactionRepository.find({
       where: {
         borrowUserId: id,
       },
-      relations: ['borrowUser', 'userBook', 'userBook.user', 'userBook.book']
+      relations: ['borrowUser', 'userBook', 'userBook.user', 'userBook.book', 'chatMessages']
     });
   }
 
-  public async getTransctionsByLentUser(id: string) {
+  public async getTransactionsByUserId(id: string) {
+    return [
+      await this.getTransactionsByLentUser(id),
+      await this.getTransactionsByBorrowUser(id)
+    ]
+  }
+
+  public async getTransactionsByLentUser(id: string) {
     return this.transactionRepository.find({
       where: {
         userBook: {
@@ -72,11 +79,11 @@ export class TransactionService {
           }
         },
       },
-      relations: ['borrowUser', 'userBook', 'userBook.user', 'userBook.book']
+      relations: ['borrowUser', 'userBook', 'userBook.user', 'userBook.book', 'chatMessages']
     });
   }
 
-  public async getTransctionsByUserBook(id: string) {
+  public async getTransactionsByUserBook(id: string) {
     return this.transactionRepository.find({
       where: {
         userBook: {
