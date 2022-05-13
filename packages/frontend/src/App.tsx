@@ -20,14 +20,15 @@ function App() {
     useEffect(() => {
         if (isLoggedIn) {
             socket.auth = {userId: loggedInUserId};
-            socket.connect()
+            socket.connect();
         } else {
+            socket.removeAllListeners();
             socket.disconnect();
         }
     }, [isLoggedIn]);
 
     useEffect(() => {
-        if (isLoggedIn && loggedInUserId) {
+        if (loggedInUserId) {
             dispatch(fetchTransactionsThunk({
                 userId: loggedInUserId
             }));
@@ -35,18 +36,20 @@ function App() {
     }, [loggedInUserId]);
 
     useEffect(() => {
-        socket.on("newMessage", (message: { transactionId: string, from: string, content: string, time: Date }) => {
-            const fromSelf = (message.from === loggedInUserId);
-            dispatch(newMessageThunk({
-                transactionId: message.transactionId,
-                chatMessage: {
-                    content: message.content,
-                    fromSelf,
-                    time: message.time
-                }
-            }));
-        });
-    }, []);
+        if (loggedInUserId) {
+            socket.on("newMessage", (message: { transactionId: string, from: string, content: string, time: Date }) => {
+                const fromSelf = (message.from === loggedInUserId);
+                dispatch(newMessageThunk({
+                    transactionId: message.transactionId,
+                    chatMessage: {
+                        content: message.content,
+                        fromSelf,
+                        time: message.time
+                    }
+                }));
+            });
+        }
+    }, [loggedInUserId]);
 
     return (
         <LocalizationProvider dateAdapter={DateAdapter}>

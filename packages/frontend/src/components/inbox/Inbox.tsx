@@ -24,6 +24,7 @@ import { socket } from "../../App";
 import InboxMessage from "./inboxMessage/InboxMessage";
 import { inboxSelectors } from "../../features/inbox/inbox.slice";
 import { Chat, ChatMessage } from "../../features/inbox/inbox.model";
+import _ from "lodash";
 
 const Inbox = () => {
     const chatSection = {
@@ -40,7 +41,7 @@ const Inbox = () => {
         overflowY: "hidden" as "hidden",
         '&:hover': {
             overflowY: "auto" as "auto"
-        }
+        },
     }));
 
     const loggedInUser = useSelector((state: RootState) => state.auth.user);
@@ -138,9 +139,7 @@ const Inbox = () => {
                             </Box>
                             <Divider/>
                             <ListScrolledArea sx={{flex: 2}}>
-                                {chats.find((chat: Chat) => chat.transactionId === selectedChatRoom)
-                                    ?.messages
-                                    /*.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())*/
+                                {_.sortBy(chats.find((chat: Chat) => chat.transactionId === selectedChatRoom)?.messages, ['time'])
                                     .map((message: ChatMessage, index) => (
                                         <InboxMessage key={index} time={message?.time}
                                                       color={message.fromSelf ? "secondary" : "primary"}>
@@ -160,8 +159,8 @@ const Inbox = () => {
                                     fullWidth
                                     onKeyDown={event => {
                                         if (event.key === 'Enter') {
+                                            event.preventDefault();
                                             submitNewMessage();
-                                            event.preventDefault()
                                         }
                                     }}
                                 />

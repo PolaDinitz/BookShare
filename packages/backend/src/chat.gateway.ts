@@ -54,7 +54,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           })
     }
 
-    handleDisconnect(client: any): any {
+    handleDisconnect(@ConnectedSocket() client: Socket): any {
     }
 
 }
