@@ -3,12 +3,14 @@ import authReducer from "./auth/auth.slice";
 import inboxReducer from "./inbox/inbox.slice";
 import booksReducer from "./books/books.slice";
 import userBooksReducer from "./user-books/user-book.slice";
+import transactionsReducer from "./transactions/transactions.slice";
 
 const rootReducer = combineReducers({
     auth: authReducer,
     inbox: inboxReducer,
     books: booksReducer,
     userBooks: userBooksReducer,
+    transactions: transactionsReducer,
 });
 
 const store = configureStore({

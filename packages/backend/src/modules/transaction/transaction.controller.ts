@@ -51,11 +51,18 @@ export class TransactionController {
     return tran;
   }
 
+  @Get('user/:id')
+  @Roles(Role.USER, Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async getTransactionsByUserId(@Param('id') id: string) {
+    return await this.transactionService.getTransactionsByUserId(id);
+  }
+
   @Get('borrowUser/:id')
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getTransactionsByBorrowUserId(@Param('id') id: string) {
-    return await this.transactionService.getTransctionsByBorrowUser(id);;
+    return await this.transactionService.getTransactionsByBorrowUser(id);
   }
 
   
@@ -63,7 +70,7 @@ export class TransactionController {
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getTransactionsByLentUserId(@Param('id') id: string) {
-    return await this.transactionService.getTransctionsByLentUser(id);;
+    return await this.transactionService.getTransactionsByLentUser(id);
   }
 
   @Patch('status/:id')
@@ -99,11 +106,11 @@ export class TransactionController {
   async reportUser(@Request() req: any, @Param('id') id: string) {
     const transaction = await this.transactionService.getTransactionById(id);
     if (transaction.borrowUserId === req.user.userId) {
-      await this.transactionService.updateStatus(id, {status: TransactionStatus.FINSHED_TRANSACTION}, false);
+      await this.transactionService.updateStatus(id, {status: TransactionStatus.FINISHED_TRANSACTION}, false);
       await this.bookService.rateBook(transaction.userBook.userId, 0);
       return await this.transactionService.updateLentUserRating(id, { lentUserRating: 0 });
     } else if (transaction.userBook.userId === req.user.userId) {
-      await this.transactionService.updateStatus(id, {status: TransactionStatus.FINSHED_TRANSACTION}, false);
+      await this.transactionService.updateStatus(id, {status: TransactionStatus.FINISHED_TRANSACTION}, false);
       await this.bookService.rateBook(transaction.borrowUserId, 0);
       return await this.transactionService.updateBorrowUserRating(id, { borrowUserRating : 0 });
     } else {
@@ -116,7 +123,7 @@ export class TransactionController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateBookRating(@Request() req: any, @Param('id') id: string, @Body() updateBookRatingDto: UpdateBookRatingDto) {
     const transaction = await this.transactionService.getTransactionById(id);
-    if (transaction && transaction.status !== TransactionStatus.FINSHED_TRANSACTION){
+    if (transaction && transaction.status !== TransactionStatus.FINISHED_TRANSACTION){
       throw new HttpException("Can't rate The Book if Transaction has'nt finished successfuly", HttpStatus.BAD_REQUEST);
     }
     if (transaction && (transaction.borrowUserId === req.user.userId )) {
@@ -131,7 +138,7 @@ export class TransactionController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateBorrowUserRating(@Request() req: any, @Param('id') id: string, @Body() updateBorrowUserRatingDto: UpdateBorrowUserRatingDto) {
     const transaction = await this.transactionService.getTransactionById(id);
-    if (transaction && transaction.status !== TransactionStatus.FINSHED_TRANSACTION){
+    if (transaction && transaction.status !== TransactionStatus.FINISHED_TRANSACTION){
       throw new HttpException("Can't rate The User if Transaction hasn't finished successfuly", HttpStatus.BAD_REQUEST);
     }
     if (transaction && transaction.userBook.userId === req.user.userId) {
@@ -146,7 +153,7 @@ export class TransactionController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateLentUserRating(@Request() req: any, @Param('id') id: string, @Body() updateLentUserRatingDto : UpdatelentUserRatingDto) {
     const transaction = await this.transactionService.getTransactionById(id);
-    if (transaction && transaction.status !== TransactionStatus.FINSHED_TRANSACTION){
+    if (transaction && transaction.status !== TransactionStatus.FINISHED_TRANSACTION){
       throw new HttpException("Can't rate The User if Transaction hasn't finished successfuly", HttpStatus.BAD_REQUEST);
     }
     if (transaction && transaction.borrowUserId === req.user.userId) {
