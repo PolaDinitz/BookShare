@@ -10,6 +10,13 @@ import { UpdateUserBookAvailabilityDto } from './dto/update-user-book-availabili
 export class UserBookController {
   constructor(private readonly userBookService: UserBookService) {}
 
+  @Get()
+  @Roles(Role.ADMIN, Role.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async getUserBooks(@Request() req: any){
+    return this.userBookService.getUserBooks();
+  }
+
   @Get('user/:id')
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)

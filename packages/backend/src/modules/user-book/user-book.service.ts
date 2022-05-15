@@ -1,17 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CreateBookDto } from 'src/modules/book/dto/create-book.dto';
-import { Repository } from 'typeorm';
-import { UpdateUserBookAvailabilityDto } from './dto/update-user-book-availability.dto';
-import { UserBook } from './entities/user-book.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { CreateBookDto } from "src/modules/book/dto/create-book.dto";
+import { Repository } from "typeorm";
+import { UpdateUserBookAvailabilityDto } from "./dto/update-user-book-availability.dto";
+import { UserBook } from "./entities/user-book.entity";
 
 @Injectable()
 export class UserBookService {
 
   constructor(
     @InjectRepository(UserBook)
-    private userBookRepository: Repository<UserBook>,
-  ) {}
+    private userBookRepository: Repository<UserBook>
+  ) {
+  }
+
+  public async getUserBooks(): Promise<UserBook[]> {
+    return await this.userBookRepository.find();
+  }
 
   public async create(createBookDto: CreateBookDto) {
     return await this.userBookRepository.save(this.userBookRepository.create({
@@ -20,12 +25,12 @@ export class UserBookService {
       available: createBookDto.available
     }));
   }
-  
+
   public async delete(id: string) {
     return await this.userBookRepository.delete(id);
   }
 
-  public async getUserBooksByUser(userId : string) {
+  public async getUserBooksByUser(userId: string) {
     return await this.userBookRepository.find({
       where: {
         userId: userId
@@ -36,7 +41,7 @@ export class UserBookService {
     });
   }
 
-  public async getAvailableUserBooksByBook(id : string) {
+  public async getAvailableUserBooksByBook(id: string) {
     return await this.userBookRepository.find({
       where: {
         bookId: id,

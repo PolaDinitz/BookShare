@@ -8,6 +8,18 @@ export const userBooksAdapter = createEntityAdapter<UserBook>({
     selectId: (userBook: UserBook) => userBook.id,
 })
 
+export const fetchUserBooksThunk = createAsyncThunk<{ userBooks: UserBook[] }>(
+    'user-books/fetch',
+    async (payload, thunkApi) => {
+        try {
+            const userBooks: UserBook[] = await BookService.getUserBooks();
+            return {userBooks};
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
 export const addUserBookThunk = createAsyncThunk<{ userBook: UserBook, book: Book }, { bookId: string, userId?: string, isAvailable: boolean }>(
     'user-books/addUserBook',
     async (payload, thunkApi) => {
@@ -20,6 +32,7 @@ export const addUserBookThunk = createAsyncThunk<{ userBook: UserBook, book: Boo
         }
     }
 );
+
 const userBooksSlice = createSlice({
     name: "user-books",
     initialState: userBooksAdapter.getInitialState(),
@@ -28,6 +41,9 @@ const userBooksSlice = createSlice({
         builder
             .addCase(addUserBookThunk.fulfilled, (state, action) => {
                 userBooksAdapter.upsertOne(state, action.payload.userBook);
+            })
+            .addCase(fetchUserBooksThunk.fulfilled, (state, action) => {
+                userBooksAdapter.setAll(state, action.payload.userBooks);
             })
     },
 });

@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./types/types";
 import { newMessageThunk } from "./features/inbox/inbox.slice";
 import { fetchTransactionsThunk } from "./features/transactions/transactions.slice";
+import { fetchBooksThunk } from "./features/books/books.slice";
+import { fetchUserBooksThunk } from "./features/user-books/user-book.slice";
 
 export const socket = socketIOClient(config.apiUrl, {autoConnect: false, transports: ['websocket']});
 
@@ -50,6 +52,13 @@ function App() {
             });
         }
     }, [loggedInUserId]);
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            dispatch(fetchBooksThunk());
+            dispatch(fetchUserBooksThunk());
+        }
+    }, [isLoggedIn]);
 
     return (
         <LocalizationProvider dateAdapter={DateAdapter}>
