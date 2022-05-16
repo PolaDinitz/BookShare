@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import * as React from "react";
+import moment from "moment";
 
 type MessageType = 'primary' | 'secondary';
 
@@ -43,7 +44,7 @@ const inboxMessageStyleMap = new Map<MessageType, MessageStyle>([
 type InboxMessageProps = {
     color: MessageType;
     children?: React.ReactNode;
-    time?: string;
+    time?: Date;
 }
 
 const InboxMessage = (props: InboxMessageProps) => {
@@ -54,7 +55,7 @@ const InboxMessage = (props: InboxMessageProps) => {
                 {props.children}
             </Box>
             <Box sx={{alignSelf: "flex-end"}}>
-                {props.time}
+                {moment(props.time).format('DD/MM/YY HH:mm')}
             </Box>
         </Box>
     );

@@ -1,176 +1,225 @@
 import React, { useEffect, useState } from "react";
 import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  IconButton,
-  Box,
-  TextField,
-  Autocomplete,
-  AutocompleteChangeReason,
-  Typography,
-  Switch,
-  FormControlLabel,
-  DialogProps,
+    Autocomplete,
+    AutocompleteChangeReason,
+    Box,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogProps,
+    DialogTitle,
+    FormControl,
+    FormControlLabel,
+    Grid,
+    IconButton,
+    Stack,
+    Switch,
+    TextField,
+    Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
-
 import RoundedButton from "../../common/rounded-button";
-import { config } from "../../../config/config";
-import { allBooks, BookType } from "../../../utils/books-data";
+import { BookType } from "../../../utils/books-data";
+import bookService from "../../../services/book.service";
+import "./AddBook.css";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../types/types";
+import { toast } from "react-toastify";
+import { addUserBookThunk } from "../../../features/user-books/user-book.slice";
 
 type AddBookProps = {
-  open: boolean;
-  onClose: () => void;
+    open: boolean;
+    onClose: () => void;
 };
 
 const AddBook = (props: AddBookProps) => {
-  const [authorName, setauthorName] = useState("");
-  const [genres, setGenres] = useState([""]);
-  const [description, setDescription] = useState("");
-  const [coverImage, setCoverImage] = useState("");
-  const [isAvailabale, setIsAvailabale] = React.useState(true);
-  const [scroll, setScroll] = React.useState<DialogProps["scroll"]>("paper");
+    const dispatch = useDispatch<AppDispatch>()
+    const {open, onClose} = props;
 
-  const { open, onClose } = props;
+    const userId = useSelector((state: RootState) => state.auth?.user?.id)
 
-  const handleAvailability = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsAvailabale(event.target.checked);
-  };
+    const [bookId, setBookId] = useState("");
+    const [authorName, setAuthorName] = useState("");
+    const [genres, setGenres] = useState([] as string[]);
+    const [description, setDescription] = useState("");
+    const [coverImage, setCoverImage] = useState("");
+    const [isAvailable, setIsAvailable] = React.useState(true);
+    const [scroll, setScroll] = React.useState<DialogProps["scroll"]>("paper");
+    const [searchedBookName, setSearchedBookName] = useState("");
+    const [searchedBookResults, setSearchedBookResults] = useState([] as BookType[]);
 
-  const resetForm = () => {
-    setauthorName("");
-    setGenres([""]);
-    setDescription("");
-    setCoverImage("");
-  };
+    useEffect(() => {
+        const fetchBookList = async () => {
+            if (searchedBookName !== "")
+                return await bookService.getBooksByTitle(searchedBookName);
+            return [] as BookType[];
+        }
+        fetchBookList()
+            .then((bookList: BookType[]) => {
+                setSearchedBookResults(bookList);
+            });
+    }, [searchedBookName])
 
-  const fillPost = (
-    event: React.SyntheticEvent<Element, Event>,
-    value: BookType | null,
-    reason: AutocompleteChangeReason
-  ) => {
-    if (value) {
-      setauthorName(value.author);
-      setGenres(value.genres);
-      setDescription(value.description);
-      setCoverImage(value.cover_img);
-    } else {
-      resetForm();
+    const toggleAvailability = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsAvailable(event.target.checked);
+    };
+
+    const resetForm = () => {
+        setBookId("");
+        setAuthorName("");
+        setGenres([]);
+        setDescription("");
+        setCoverImage("");
+        setSearchedBookName("");
+        setSearchedBookResults([]);
+    };
+
+    const fillPost = (
+        event: React.SyntheticEvent<Element, Event>,
+        value: BookType | null,
+        reason: AutocompleteChangeReason
+    ) => {
+        if (value) {
+            setBookId(value.id);
+            setSearchedBookName(value.title);
+            setAuthorName(value.author || "No Author Provided");
+            setGenres(value.genres || ["No Genres Provided"]);
+            setDescription(value.description || "No Description Provided");
+            setCoverImage(value?.imageUrl);
+        } else {
+            resetForm();
+        }
+    };
+
+    const closeAndReset = () => {
+        resetForm();
+        onClose();
+    };
+
+    function postBook() {
+        dispatch(addUserBookThunk({bookId, userId, isAvailable})).unwrap()
+            .then(() => {
+                closeAndReset();
+            })
+            .catch((errorMessage: string) => {
+                toast.error(errorMessage);
+            });
     }
-  };
 
-  const closeAndReset = () => {
-    resetForm();
-    onClose();
-  };
-
-  return (
-    <Dialog
-      open={open}
-      onClose={closeAndReset}
-      fullWidth
-      maxWidth="md"
-      scroll={scroll}
-    >
-      <DialogTitle>
-        <Box display="flex" alignItems="center">
-          <Box>
-            <IconButton onClick={closeAndReset}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Typography>Post A Book</Typography>
-        </Box>
-      </DialogTitle>
-      <DialogContent>
-        <Grid container spacing={1}>
-          <Grid item xs={6} container rowSpacing={0}>
-            <Autocomplete
-              size="small"
-              disablePortal
-              id="combo-box-demo"
-              options={allBooks}
-              onChange={fillPost}
-              getOptionLabel={(option) => option.title}
-              sx={{ width: 300, paddingTop: "10px" }}
-              renderInput={(params) => (
-                <TextField {...params} label="Book Name" />
-              )}
-            />
-            <TextField
-              size="small"
-              disabled
-              id="authorName"
-              label="Author Name"
-              defaultValue=""
-              variant="outlined"
-              value={authorName}
-              sx={{ width: 300 }}
-            />
-            <div style={{ width: 300 }}>
-              <ReactTagInput
-                tags={genres}
-                onChange={(newTags) => setGenres(newTags)}
-                editable={false}
-                readOnly={true}
-                placeholder="Genres"
-              />
-            </div>
-            <TextField
-              disabled
-              id="description"
-              label="Description"
-              multiline
-              minRows={4}
-              defaultValue=""
-              value={description}
-              sx={{ width: 300 }}
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  defaultChecked
-                  value={isAvailabale}
-                  onChange={handleAvailability}
-                />
-              }
-              label="Make availabale for landing"
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <img
-              style={{
-                width: "90%",
-                height: "90%",
-                objectFit: "fill",
-              }}
-              src={coverImage ? coverImage : "/Placeholder-Portrait.png"}
-              alt="Book Cover"
-            />
-          </Grid>
-        </Grid>
-      </DialogContent>
-      <DialogActions
-        sx={{
-          flexDirection: "row",
-        }}
-      >
-        <RoundedButton
-          style={{ backgroundColor: "#313131" }}
-          onClick={closeAndReset}
+    return (
+        <Dialog
+            open={open}
+            onClose={closeAndReset}
+            fullWidth
+            maxWidth="lg"
+            scroll={scroll}
         >
-          Cancel
-        </RoundedButton>
-        {/* TODO: replace with publish function */}
-        <RoundedButton onClick={closeAndReset}>Post Book</RoundedButton>
-      </DialogActions>
-    </Dialog>
-  );
+            <DialogTitle>
+                <Box display="flex" alignItems="center" justifyContent="space-between">
+                    <Typography fontSize={24} fontWeight="bold">
+                        Add A Book
+                    </Typography>
+                    <Box>
+                        <IconButton onClick={closeAndReset}>
+                            <CloseIcon/>
+                        </IconButton>
+                    </Box>
+                </Box>
+            </DialogTitle>
+            <DialogContent>
+                <Grid container spacing={3}>
+                    <Grid item xs={6}>
+                        <Stack spacing={3}>
+                            <Autocomplete
+                                size="small"
+                                disablePortal
+                                options={searchedBookResults}
+                                onChange={fillPost}
+                                renderOption={(props, option) => {
+                                    return (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    );
+                                }}
+                                getOptionLabel={(option) => option.title}
+                                inputValue={searchedBookName}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Book Name" variant="filled"
+                                               onChange={event => setSearchedBookName(event.target.value)}/>
+                                )}
+                                fullWidth
+                            />
+                            <TextField
+                                size="small"
+                                disabled
+                                id="authorName"
+                                label="Author Name"
+                                variant="filled"
+                                value={authorName}
+                                fullWidth
+                            />
+                            <FormControl fullWidth disabled>
+                                <ReactTagInput
+                                    tags={genres}
+                                    onChange={(newTags) => setGenres(newTags)}
+                                    readOnly={false}
+                                    placeholder="Genres"
+                                />
+                            </FormControl>
+                            <TextField
+                                disabled
+                                id="description"
+                                label="Description"
+                                multiline
+                                minRows={20}
+                                maxRows={20}
+                                value={description}
+                                variant="filled"
+                                fullWidth
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        defaultChecked
+                                        value={isAvailable}
+                                        onChange={toggleAvailability}
+                                    />
+                                }
+                                label="Make available for lending"
+                            />
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <img
+                            style={{
+                                height: "auto",
+                                width: "100%",
+                                objectFit: "cover"
+                            }}
+                            src={coverImage ? coverImage : "/Placeholder-Portrait.png"}
+                            alt="Book Cover"
+                        />
+                    </Grid>
+                </Grid>
+            </DialogContent>
+            <DialogActions
+                sx={{
+                    flexDirection: "row",
+                }}
+            >
+                <RoundedButton
+                    style={{backgroundColor: "#313131"}}
+                    onClick={closeAndReset}
+                >
+                    Cancel
+                </RoundedButton>
+                <RoundedButton onClick={postBook}>Post Book</RoundedButton>
+            </DialogActions>
+        </Dialog>
+    );
 };
 
 export default AddBook;

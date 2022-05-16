@@ -1,7 +1,7 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { Chat, ChatMessage } from "./inbox.model";
 import { RootState } from "../../types/types";
-import moment from "moment";
+import { fetchTransactionsThunk } from "../transactions/transactions.slice";
 
 export const inboxAdapter = createEntityAdapter<Chat>({
     selectId: (chat) => chat.transactionId,
@@ -11,12 +11,10 @@ export const newMessageThunk = createAsyncThunk<{ transactionId: string, chatMes
     'inbox/newMessage',
     async (payload: { transactionId: string, chatMessage: ChatMessage }, thunkApi) => {
         try {
-            // TODO: Add new message to DB
             return {
                 ...payload,
                 chatMessage: {
-                    ...payload.chatMessage,
-                    time: moment(new Date()).format('DD/MM/YY HH:mm')
+                    ...payload.chatMessage
                 }
             };
         } catch (error: any) {
@@ -29,10 +27,7 @@ const inboxSlice = createSlice({
     name: "inbox",
     initialState: inboxAdapter.getInitialState(),
     reducers: {
-        transactionCreated: inboxAdapter.addOne,
-        transactionReceived(state, action: { payload: Chat[] }) {
-            inboxAdapter.setAll(state, action.payload);
-        }
+        transactionCreated: inboxAdapter.addOne
     },
     extraReducers: (builder) => {
         builder
@@ -44,12 +39,14 @@ const inboxSlice = createSlice({
                     }
                 });
             })
+            .addCase(fetchTransactionsThunk.fulfilled, (state, action) => {
+                inboxAdapter.setAll(state, action.payload.chats);
+            })
     },
 });
 
 export const {
     transactionCreated,
-    transactionReceived,
 } = inboxSlice.actions
 
 export const inboxSelectors = inboxAdapter.getSelectors((state: RootState) => state.inbox);

@@ -1,6 +1,6 @@
 export interface ChatMessage {
     content: string;
-    time?: string;
+    time: Date;
     fromSelf: boolean;
 }
 

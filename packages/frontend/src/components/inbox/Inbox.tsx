@@ -24,6 +24,7 @@ import { socket } from "../../App";
 import InboxMessage from "./inboxMessage/InboxMessage";
 import { inboxSelectors } from "../../features/inbox/inbox.slice";
 import { Chat, ChatMessage } from "../../features/inbox/inbox.model";
+import _ from "lodash";
 
 const Inbox = () => {
     const chatSection = {
@@ -40,13 +41,13 @@ const Inbox = () => {
         overflowY: "hidden" as "hidden",
         '&:hover': {
             overflowY: "auto" as "auto"
-        }
+        },
     }));
 
     const loggedInUser = useSelector((state: RootState) => state.auth.user);
     const [selectedChatRoom, setSelectedChatRoom] = useState("");
     const [chatMessage, setChatMessage] = useState("");
-    const transactions: Chat[] = useSelector(inboxSelectors.selectAll);
+    const chats: Chat[] = useSelector(inboxSelectors.selectAll);
 
     const submitNewMessage = () => {
         const message: { transactionId: string, content: string } = {
@@ -85,12 +86,13 @@ const Inbox = () => {
                         fullWidth
                     />
                     <ListScrolledArea>
-                        {transactions.map((transaction: Chat) => (
-                            <InboxItem key={transaction.transactionId}
-                                       onCLick={() => setSelectedChatRoom(transaction.transactionId)}
+                        {chats.map((chat: Chat) => (
+                            <InboxItem key={chat.transactionId}
+                                       onCLick={() => setSelectedChatRoom(chat.transactionId)}
                                        primary="Ran Biderman"
-                                       secondary="The Witcher" status="Lend Request"
-                                       selected={selectedChatRoom === transaction.transactionId}/>
+                                       secondary="The Witcher"
+                                       status="Lend Request"
+                                       selected={selectedChatRoom === chat.transactionId}/>
                         ))}
                     </ListScrolledArea>
                 </Box>
@@ -137,8 +139,8 @@ const Inbox = () => {
                             </Box>
                             <Divider/>
                             <ListScrolledArea sx={{flex: 2}}>
-                                {transactions.find((transaction: Chat) => transaction.transactionId === selectedChatRoom)
-                                    ?.messages.map((message: ChatMessage, index) => (
+                                {_.sortBy(chats.find((chat: Chat) => chat.transactionId === selectedChatRoom)?.messages, ['time'])
+                                    .map((message: ChatMessage, index) => (
                                         <InboxMessage key={index} time={message?.time}
                                                       color={message.fromSelf ? "secondary" : "primary"}>
                                             {message.content}
@@ -155,6 +157,12 @@ const Inbox = () => {
                                     label="Type a message..."
                                     onChange={event => setChatMessage(event.target.value)}
                                     fullWidth
+                                    onKeyDown={event => {
+                                        if (event.key === 'Enter') {
+                                            event.preventDefault();
+                                            submitNewMessage();
+                                        }
+                                    }}
                                 />
                                 <IconButton onClick={submitNewMessage} color="primary" component="button">
                                     <SendIcon/>
