@@ -32,6 +32,12 @@ export class BookService {
     });
   }
 
+  public async getBooksByRating(rating: number): Promise<Book[]> {
+    return await this.booksRepository.createQueryBuilder()
+      .where("bookRating > :rating", { rating: rating })
+      .getMany();
+  }
+
   public async rateBook(id: string, rating: number) {
     const bookToRate = await this.getBookById(id);
 
