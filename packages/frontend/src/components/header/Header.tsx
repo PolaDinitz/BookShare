@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Avatar, Box, Grid, Typography } from "@mui/material";
+import { Avatar, Box, Grid, IconButton, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/types";
 import { config } from "../../config/config";
@@ -56,9 +56,9 @@ const Header = () => {
                     {headerPagesToDisplay.map((page: HeaderPage, index: number) => {
                         return (
                             <Link key={index} to={page.path}>
-                                <Avatar sx={{backgroundColor: "#12263A"}}>
+                                <IconButton sx={{backgroundColor: "#12263A", color:"white"}}>
                                     {page.icon}
-                                </Avatar>
+                                </IconButton>
                             </Link>
                         )
                     })}
