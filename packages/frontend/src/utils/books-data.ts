@@ -65,13 +65,3 @@ export type UserType = {
     distance: number,
     rating: number,
 }
-
-export type BookType = {
-    id: string;
-    title: string,
-    author: string,
-    description: string,
-    imageUrl: string,
-    genres: string[],
-    rating: number,
-}

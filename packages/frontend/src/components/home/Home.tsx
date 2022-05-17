@@ -4,10 +4,13 @@ import { useReducer, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Fab, Grid } from "@mui/material";
 
-import { allBooks, BookType } from "../../utils/books-data";
 import BooksCollection from "./BooksCollection";
 import { MultipleChoiceFilter, SearchFilter, SliderFilter, } from "./BookFilters";
 import AddBook from "./AddBook";
+import { Book } from "../../features/books/book.model";
+import { booksSelectors } from "../../features/books/books.slice";
+import store from "../../features/store";
+import { useSelector } from "react-redux";
 
 type State = {
     searchText: string;
@@ -60,6 +63,7 @@ const fabStyle = {
 const Home = () => {
     const [open, setOpen] = useState(false);
 
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -69,7 +73,11 @@ const Home = () => {
 
     const [state, dispatch] = useReducer(filterReducer, initialState);
 
-    const filteredBooks = allBooks.filter((book: BookType) => {
+    const allBooks = useSelector(booksSelectors.selectAll);
+
+    console.log({ allBooks });
+
+    const filteredBooks = allBooks.filter((book: Book) => {
         return (
             (book.title
                     .toLocaleLowerCase()
@@ -80,9 +88,11 @@ const Home = () => {
             (!_.isEmpty(state.genres)
                 ? book.genres.some((item) => state.genres.includes(item))
                 : true) &&
-            book.rating >= state.bookRating
+            book.bookRating >= state.bookRating
         );
     });
+
+    console.log({ filteredBooks });
 
     return (
         <>
