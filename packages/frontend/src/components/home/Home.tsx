@@ -9,7 +9,6 @@ import { MultipleChoiceFilter, SearchFilter, SliderFilter, } from "./BookFilters
 import AddBook from "./AddBook";
 import { Book } from "../../features/books/book.model";
 import { booksSelectors } from "../../features/books/books.slice";
-import store from "../../features/store";
 import { useSelector } from "react-redux";
 
 type State = {

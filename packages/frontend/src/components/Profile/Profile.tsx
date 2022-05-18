@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   ButtonBase,
   Grid,
@@ -6,10 +6,11 @@ import {
   Paper,
   Rating,
   TextField,
+  Typography,
 } from "@mui/material";
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import EditIcon from "@mui/icons-material/Edit";
 import { useSelector } from "react-redux";
 
@@ -19,6 +20,7 @@ import CustomPaper from "../common/custom-paper";
 import RoundedButton from "../common/rounded-button";
 import userService from "../../services/user.service";
 import { User } from "../../features/user/user.model";
+import { Box } from "@mui/system";
 
 type ProfileProps = {};
 
@@ -35,7 +37,13 @@ const Profile = (props: ProfileProps) => {
     fetchUser().then((user: User) => {
       setUser(user);
     });
-  }, [user]);
+  }, []);
+
+  const { firstName, lastName, email, gender, phoneNumber, address, dateOfBirth } = user;
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setUser({ ...user, [event.target.name]: event.target.value });
+  };
 
   return (
     <CustomPaper
@@ -61,50 +69,91 @@ const Profile = (props: ProfileProps) => {
             <TextField
               id="first-name-textfield"
               label="First Name"
-              defaultValue={user?.firstName}
+              value={firstName}
+              InputLabelProps={{ shrink: true }}
               InputProps={{
                 readOnly: !isEditMode,
               }}
+              onChange={handleChange}
+              name="firstName"
             />
           </Grid>
           <Grid item>
             <TextField
               id="last-name-textfield"
               label="Last Name"
-              defaultValue={user?.lastName}
+              value={lastName}
+              InputLabelProps={{ shrink: true }}
               InputProps={{
                 readOnly: !isEditMode,
               }}
-            />
-          </Grid>
-          {/* <Grid item>
-            <DatePicker
-              id="birth-date-textfield"
-              label="Date of Birth"
-              defaultValue={user?.dateOfBirth}
-              InputProps={{
-                readOnly: !isEditMode,
-              }}
-            />
-          </Grid> */}
-          <Grid item>
-            <TextField
-              id="email-textfield"
-              label="Email"
-              defaultValue={user?.email}
-              InputProps={{
-                readOnly: !isEditMode,
-              }}
+              onChange={handleChange}
+              name="lastName"
             />
           </Grid>
           <Grid item>
             <TextField
               id="geder-textfield"
               label="Gender"
-              defaultValue={user?.gender}
+              value={gender}
+              InputLabelProps={{ shrink: true }}
               InputProps={{
                 readOnly: !isEditMode,
               }}
+              onChange={handleChange}
+              name="gender"
+            />
+          </Grid>
+          {/* <Grid item>
+            <DatePicker
+              // id="birth-date-textfield"
+              label="Date of Birth"
+              value={dateOfBirth}
+              InputProps={{
+                readOnly: !isEditMode,
+              }}
+              // InputLabelProps={{ shrink: true }}
+              onChange={handleChange}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </Grid> */}
+          <Grid item>
+            <TextField
+              id="email-textfield"
+              label="Email"
+              value={email}
+              InputLabelProps={{ shrink: true }}
+              InputProps={{
+                readOnly: !isEditMode,
+              }}
+              onChange={handleChange}
+              name="email"
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              id="phone-textfield"
+              label="Phone Number"
+              value={phoneNumber}
+              InputLabelProps={{ shrink: true }}
+              InputProps={{
+                readOnly: !isEditMode,
+              }}
+              onChange={handleChange}
+              name="phoneNumber"
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              id="adress-textfield"
+              label="Adress"
+              value={address}
+              InputLabelProps={{ shrink: true }}
+              InputProps={{
+                readOnly: !isEditMode,
+              }}
+              onChange={handleChange}
+              name="address"
             />
           </Grid>
           {isEditMode ? (
@@ -114,12 +163,14 @@ const Profile = (props: ProfileProps) => {
               display="flex"
               justifyContent="space-between"
             >
+              {/* TODO: return original user details on cancel */}
               <RoundedButton
                 style={{ backgroundColor: "#313131" }}
                 onClick={() => setIsEditMode(false)}
               >
                 Cancel
               </RoundedButton>
+              {/* TODO: save functionality - connect to redux */}
               <RoundedButton>Save</RoundedButton>
             </Grid>
           ) : (
@@ -137,18 +188,27 @@ const Profile = (props: ProfileProps) => {
         >
           <Grid container direction="row" columnSpacing={2}>
             <Grid item xs={4}>
-              <Paper elevation={3} sx={{ backgroundColor: "#2FAC90" }}>
-                Read Books
+              <Paper elevation={3} sx={{ backgroundColor: "#2FAC90", height: "100%", padding: "10px"}}>
+                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignSelf: "center", textAlign: "center"}}>
+                <Typography>Read Books</Typography>
+                <Typography>14</Typography>
+                </Box>
               </Paper>
             </Grid>
             <Grid item xs={4}>
-              <Paper elevation={3} sx={{ backgroundColor: "#2FAC90" }}>
-                Borrowed Books
+            <Paper elevation={3} sx={{ backgroundColor: "#2FAC90", height: "100%", padding: "10px"}}>
+                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignSelf: "center", textAlign: "center"}}>
+                <Typography>Borrowed Books</Typography>
+                <Typography>3</Typography>
+                </Box>
               </Paper>
             </Grid>
             <Grid item xs={4}>
-              <Paper elevation={3} sx={{ backgroundColor: "#2FAC90" }}>
-                Lent Books
+            <Paper elevation={3} sx={{ backgroundColor: "#2FAC90", height: "100%", padding: "10px"}}>
+                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignSelf: "center", textAlign: "center"}}>
+                <Typography>Lent Books</Typography>
+                <Typography>5</Typography>
+              </Box>
               </Paper>
             </Grid>
           </Grid>
