@@ -52,12 +52,23 @@ const getBookById = (id: string) => {
         })
 }
 
+const getBookByRating = (rating: number) => {
+    return axiosInstance.get(`${config.apiUrl}/book/rating` + rating)
+        .then((response: AxiosResponse) => {
+            return response.data;
+        }).catch((error: AxiosError) => {
+            throw new Error(`Something went wrong while trying to get books by rating, 
+                            ${(error.response ? error.response?.data?.message : error.message)}`);
+        })
+}
+
 const bookService = {
     getUserBooks,
     getBooks,
     getBooksByTitle,
     addBookToLibrary,
-    getBookById
+    getBookById,
+    getBookByRating,
 };
 
 export default bookService;

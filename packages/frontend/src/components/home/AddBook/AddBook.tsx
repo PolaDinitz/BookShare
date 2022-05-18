@@ -21,13 +21,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 import RoundedButton from "../../common/rounded-button";
-import { BookType } from "../../../utils/books-data";
 import bookService from "../../../services/book.service";
 import "./AddBook.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../types/types";
 import { toast } from "react-toastify";
 import { addUserBookThunk } from "../../../features/user-books/user-book.slice";
+import { Book } from "../../../features/books/book.model";
 
 type AddBookProps = {
     open: boolean;
@@ -48,16 +48,16 @@ const AddBook = (props: AddBookProps) => {
     const [isAvailable, setIsAvailable] = React.useState(true);
     const [scroll, setScroll] = React.useState<DialogProps["scroll"]>("paper");
     const [searchedBookName, setSearchedBookName] = useState("");
-    const [searchedBookResults, setSearchedBookResults] = useState([] as BookType[]);
+    const [searchedBookResults, setSearchedBookResults] = useState([] as Book[]);
 
     useEffect(() => {
         const fetchBookList = async () => {
             if (searchedBookName !== "")
                 return await bookService.getBooksByTitle(searchedBookName);
-            return [] as BookType[];
+            return [] as Book[];
         }
         fetchBookList()
-            .then((bookList: BookType[]) => {
+            .then((bookList: Book[]) => {
                 setSearchedBookResults(bookList);
             });
     }, [searchedBookName])
@@ -78,7 +78,7 @@ const AddBook = (props: AddBookProps) => {
 
     const fillPost = (
         event: React.SyntheticEvent<Element, Event>,
-        value: BookType | null,
+        value: Book | null,
         reason: AutocompleteChangeReason
     ) => {
         if (value) {

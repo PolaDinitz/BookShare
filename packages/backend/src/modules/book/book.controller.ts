@@ -57,6 +57,13 @@ export class BookController {
       return await this.bookService.getBooksByAuthor(authorName);
   }
 
+  @Get('rating/:rating')
+  @Roles(Role.ADMIN, Role.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async getBooksByRating(@Request() req: any, @Param('rating') rating: number) {
+      return await this.bookService.getBooksByRating(rating);
+  }
+
   @Post()
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
