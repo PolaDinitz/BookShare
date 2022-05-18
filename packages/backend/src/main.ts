@@ -13,10 +13,10 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'images'));
 
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('BookShare API')
+    .setDescription('The API for the BookShare app')
     .setVersion('1.0')
-    .addTag('cats')
+    .addTag('BookShare')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
