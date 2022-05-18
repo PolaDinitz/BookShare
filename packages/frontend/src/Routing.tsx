@@ -8,6 +8,7 @@ import PrivateRoute from "./utils/PrivateRouter";
 import Logout from "./components/logout/Logout";
 import Library from "./components/library/Library";
 import Inbox from "./components/inbox/Inbox";
+import Profile from "./components/Profile";
 
 const Routing = () => {
     return (
@@ -19,6 +20,9 @@ const Routing = () => {
                     <Route path="/register" element={<Register/>}/>
                     <Route path='/' element={<PrivateRoute/>}>
                         <Route path='/' element={<Home/>}/>
+                    </Route>
+                    <Route path='/profile' element={<PrivateRoute/>}>
+                        <Route path='/profile' element={<Profile/>}/>
                     </Route>
                     <Route path='/library' element={<PrivateRoute/>}>
                         <Route path='/library' element={<Library/>}/>
