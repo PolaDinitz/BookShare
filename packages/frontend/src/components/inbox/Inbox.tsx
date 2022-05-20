@@ -12,7 +12,7 @@ import {
     Typography
 } from "@mui/material";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Search } from "@mui/icons-material";
 import SendIcon from '@mui/icons-material/Send';
@@ -25,6 +25,7 @@ import InboxMessage from "./inboxMessage/InboxMessage";
 import { inboxSelectors } from "../../features/inbox/inbox.slice";
 import { Chat, ChatMessage } from "../../features/inbox/inbox.model";
 import _ from "lodash";
+import { ChatRoom, selectChatRooms } from "../../features/inbox/inbox.selectors";
 
 const Inbox = () => {
     const chatSection = {
@@ -48,6 +49,7 @@ const Inbox = () => {
     const [selectedChatRoom, setSelectedChatRoom] = useState("");
     const [chatMessage, setChatMessage] = useState("");
     const chats: Chat[] = useSelector(inboxSelectors.selectAll);
+    const chatRooms = useSelector(selectChatRooms);
 
     const submitNewMessage = () => {
         const message: { transactionId: string, content: string } = {
@@ -86,14 +88,22 @@ const Inbox = () => {
                         fullWidth
                     />
                     <ListScrolledArea>
-                        {chats.map((chat: Chat) => (
+                        {chatRooms.map((chatRoom: ChatRoom) => (
+                            <InboxItem key={chatRoom.id}
+                                       onCLick={() => setSelectedChatRoom(chatRoom.id)}
+                                       primary={chatRoom.name}
+                                       secondary={chatRoom.subName}
+                                       status={chatRoom.status}
+                                       selected={selectedChatRoom === chatRoom.id}/>
+                        ))}
+                        {/*{chats.map((chat: Chat) => (
                             <InboxItem key={chat.transactionId}
                                        onCLick={() => setSelectedChatRoom(chat.transactionId)}
                                        primary="Ran Biderman"
                                        secondary="The Witcher"
                                        status="Lend Request"
                                        selected={selectedChatRoom === chat.transactionId}/>
-                        ))}
+                        ))}*/}
                     </ListScrolledArea>
                 </Box>
                 <Box sx={{
