@@ -32,16 +32,14 @@ const buildChatRoomsArray = (transactions: Transaction[],
     return chatRooms;
 }
 
-const buildChatRoomObject = async (transaction: Transaction,
+const buildChatRoomObject = (transaction: Transaction,
                                    userBooksDictionary: Dictionary<UserBook>,
                                    booksDictionary: Dictionary<Book>,
                                    loggedInUserId: string | undefined): ChatRoom | null => {
     const userBook: UserBook | undefined = userBooksDictionary[transaction.userBookId];
     const book: Book | undefined = userBook ? booksDictionary[userBook.bookId] : undefined;
     if (userBook && book) {
-        let userId: string | undefined;
-        (transaction.borrowUserId === loggedInUserId) ? userId = userBook?.id : userId = transaction.borrowUserId;
-        let user: User = await UserService.getUserById(userId);
+        let user: User = (transaction.borrowUser.id === loggedInUserId) ? userBook?.user : transaction.borrowUser;
         return {
             id: transaction.id,
             name: user.firstName + " " + user.lastName,
