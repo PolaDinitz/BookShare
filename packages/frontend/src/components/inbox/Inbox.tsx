@@ -12,7 +12,7 @@ import {
     Typography
 } from "@mui/material";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Search } from "@mui/icons-material";
 import SendIcon from '@mui/icons-material/Send';
@@ -24,8 +24,10 @@ import { socket } from "../../App";
 import InboxMessage from "./inboxMessage/InboxMessage";
 import { inboxSelectors } from "../../features/inbox/inbox.slice";
 import { Chat, ChatMessage } from "../../features/inbox/inbox.model";
-import _ from "lodash";
 import { ChatRoom, selectChatRooms } from "../../features/inbox/inbox.selectors";
+import ChatStatusEnum from "../../enums/ChatStatusEnum";
+import _ from "lodash";
+import InboxRequestMessage from "./inboxMessage/InboxRequestMessage";
 
 const Inbox = () => {
     const chatSection = {
@@ -91,19 +93,12 @@ const Inbox = () => {
                         {chatRooms.map((chatRoom: ChatRoom) => (
                             <InboxItem key={chatRoom.id}
                                        onCLick={() => setSelectedChatRoom(chatRoom.id)}
+                                       imageUrl={`${config.apiUrl}/${chatRoom.imageUrl}`}
                                        primary={chatRoom.name}
                                        secondary={chatRoom.subName}
-                                       status={chatRoom.status}
+                                       status={chatRoom.status ? chatRoom.status : "Unknown Status"}
                                        selected={selectedChatRoom === chatRoom.id}/>
                         ))}
-                        {/*{chats.map((chat: Chat) => (
-                            <InboxItem key={chat.transactionId}
-                                       onCLick={() => setSelectedChatRoom(chat.transactionId)}
-                                       primary="Ran Biderman"
-                                       secondary="The Witcher"
-                                       status="Lend Request"
-                                       selected={selectedChatRoom === chat.transactionId}/>
-                        ))}*/}
                     </ListScrolledArea>
                 </Box>
                 <Box sx={{
@@ -136,26 +131,30 @@ const Inbox = () => {
                                 padding: "5px"
                             }}>
                                 <Avatar sx={{width: 70, height: 70, marginRight: 3}}
-                                        alt="Ran Biderman"
-                                        src="https://material-ui.com/static/images/avatar/1.jpg"/>
+                                        alt={chatRooms.find((chatRoom: ChatRoom) => chatRoom.id === selectedChatRoom)?.name}
+                                        src={`${config.apiUrl}/${chatRooms.find((chatRoom: ChatRoom) => chatRoom.id === selectedChatRoom)?.imageUrl}`}/>
                                 <Box sx={{alignSelf: "center"}}>
                                     <Typography variant="h6" fontWeight={500}>
-                                        Ran Biderman
+                                        {chatRooms.find((chatRoom: ChatRoom) => chatRoom.id === selectedChatRoom)?.name}
                                     </Typography>
                                     <Typography variant="subtitle2" fontWeight={300}>
-                                        The Witcher
+                                        {chatRooms.find((chatRoom: ChatRoom) => chatRoom.id === selectedChatRoom)?.subName}
                                     </Typography>
                                 </Box>
                             </Box>
                             <Divider/>
                             <ListScrolledArea sx={{flex: 2}}>
-                                {_.sortBy(chats.find((chat: Chat) => chat.transactionId === selectedChatRoom)?.messages, ['time'])
-                                    .map((message: ChatMessage, index) => (
-                                        <InboxMessage key={index} time={message?.time}
-                                                      color={message.fromSelf ? "secondary" : "primary"}>
-                                            {message.content}
-                                        </InboxMessage>
-                                    ))}
+                                {chatRooms.find((chatRoom: ChatRoom) => chatRoom.id === selectedChatRoom)?.status === ChatStatusEnum.BORROW_REQUEST || ChatStatusEnum.LEND_REQUEST ?
+                                    <InboxRequestMessage chatRoom={chatRooms.find((chatRoom: ChatRoom) => chatRoom.id === selectedChatRoom)}/>
+                                    :
+                                    _.sortBy(chats.find((chat: Chat) => chat.transactionId === selectedChatRoom)?.messages, ['time'])
+                                        .map((message: ChatMessage, index) => (
+                                            <InboxMessage key={index} time={message?.time}
+                                                          color={message.fromSelf ? "secondary" : "primary"}>
+                                                {message.content}
+                                            </InboxMessage>
+                                        ))
+                                }
                             </ListScrolledArea>
                             <Divider/>
                             <Box padding={1} sx={{display: "flex"}}>

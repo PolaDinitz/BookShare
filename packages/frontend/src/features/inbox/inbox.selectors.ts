@@ -8,15 +8,15 @@ import { UserBook } from "../user-books/user-book.model";
 import { booksSelectors } from "../books/books.slice";
 import { Book } from "../books/book.model";
 import { selectLoggedInUserId } from "../auth/auth.selectors";
-import UserService from "../../services/user.service";
 import { User } from "../user/user.model";
+import ChatStatusEnum, { transactionStatusToChatStatusMap } from "../../enums/ChatStatusEnum";
 
 export interface ChatRoom {
     id: string;
     name: string;
     subName: string;
     imageUrl: string;
-    status: string;
+    status?: ChatStatusEnum;
 }
 
 const buildChatRoomsArray = (transactions: Transaction[],
@@ -33,19 +33,21 @@ const buildChatRoomsArray = (transactions: Transaction[],
 }
 
 const buildChatRoomObject = (transaction: Transaction,
-                                   userBooksDictionary: Dictionary<UserBook>,
-                                   booksDictionary: Dictionary<Book>,
-                                   loggedInUserId: string | undefined): ChatRoom | null => {
+                             userBooksDictionary: Dictionary<UserBook>,
+                             booksDictionary: Dictionary<Book>,
+                             loggedInUserId: string | undefined): ChatRoom | null => {
     const userBook: UserBook | undefined = userBooksDictionary[transaction.userBookId];
     const book: Book | undefined = userBook ? booksDictionary[userBook.bookId] : undefined;
     if (userBook && book) {
-        let user: User = (transaction.borrowUser.id === loggedInUserId) ? userBook?.user : transaction.borrowUser;
+        const isBorrower: boolean = transaction.borrowUser.id === loggedInUserId;
+        const user: User = isBorrower ? userBook?.user : transaction.borrowUser;
         return {
             id: transaction.id,
             name: user.firstName + " " + user.lastName,
             subName: book.title,
             imageUrl: user.imageUrl,
-            status: "test"
+            status: transactionStatusToChatStatusMap
+                .get(Array.from(transactionStatusToChatStatusMap.keys()).find((k) => k?.transactionStatus === transaction.status && k?.isBorrower === isBorrower))
         }
     }
     return null;
