@@ -40,6 +40,28 @@ export const approveTransactionChatThunk = createAsyncThunk<Transaction, { trans
     }
 );
 
+export const declineTransactionChatThunk = createAsyncThunk<Transaction, { transactionId: string }>(
+    'transactions/decline-chat',
+    async (payload: { transactionId: string }, thunkApi) => {
+        try {
+            return await TransactionService.declineTransactionChat(payload.transactionId);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
+export const cancelTransactionChatThunk = createAsyncThunk<Transaction, { transactionId: string }>(
+    'transactions/cancel-chat',
+    async (payload: { transactionId: string }, thunkApi) => {
+        try {
+            return await TransactionService.cancelTransactionChat(payload.transactionId);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
 const transactionsSlice = createSlice({
     name: "transactions",
     initialState: transactionsAdapter.getInitialState(),
@@ -49,14 +71,19 @@ const transactionsSlice = createSlice({
             .addCase(fetchTransactionsThunk.fulfilled, (state, action) => {
                 transactionsAdapter.setAll(state, action.payload.transactions);
             })
-            .addMatcher(isAnyOf(approveTransactionChatThunk.fulfilled), (state, action) => {
-                transactionsAdapter.updateOne(state, {
-                    id: action.payload.id,
-                    changes: {
-                        status: action.payload.status
-                    }
+            .addMatcher(
+                isAnyOf(
+                    approveTransactionChatThunk.fulfilled,
+                    declineTransactionChatThunk.fulfilled,
+                    cancelTransactionChatThunk.fulfilled
+                ), (state, action) => {
+                    transactionsAdapter.updateOne(state, {
+                        id: action.payload.id,
+                        changes: {
+                            status: action.payload.status
+                        }
+                    })
                 })
-            })
     },
 });
 

@@ -37,9 +37,19 @@ const approveTransactionChat = (id: string) => {
     return updateTransaction(TransactionStatus.WAITING_FOR_LEND, id);
 }
 
+const declineTransactionChat = (id: string) => {
+    return updateTransaction(TransactionStatus.CHAT_DECLINED, id);
+}
+
+const cancelTransactionChat = (id: string) => {
+    return updateTransaction(TransactionStatus.CHAT_CANCELED, id);
+}
+
 const transactionService = {
     getTransactionsByUserId,
-    approveTransactionChat
+    approveTransactionChat,
+    declineTransactionChat,
+    cancelTransactionChat
 };
 
 export default transactionService;

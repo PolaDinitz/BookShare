@@ -5,11 +5,18 @@ enum ChatStatusEnum {
     AWAIT_BORROWING = "Await Borrowing",
     BORROW_IN_PROGRESS = "Borrow In Progress",
     BORROW_FINISHED = "Borrow Finished",
+    BORROW_LENDER_DECLINED = "Lender Declined",
+    BORROW_BORROWER_CANCELED = "Chat Canceled",
+
     LEND_REQUEST = "Lend Request",
     AWAIT_LENDING = "Await Lending",
     LEND_IN_PROGRESS = "Lend In Progress",
     LEND_FINISHED = "Lend Finished",
+    LEND_LENDER_DECLINED = "Chat Declined",
+    LEND_BORROWER_CANCELED = "Borrower Canceled"
 }
+
+export const enableChatForStatusArray = [ChatStatusEnum.AWAIT_BORROWING, ChatStatusEnum.AWAIT_LENDING, ChatStatusEnum.BORROW_IN_PROGRESS, ChatStatusEnum.LEND_IN_PROGRESS];
 
 export const transactionStatusToChatStatusMap = new Map<{ transactionStatus: string, isBorrower: boolean } | undefined, ChatStatusEnum>([
     [
@@ -82,6 +89,34 @@ export const transactionStatusToChatStatusMap = new Map<{ transactionStatus: str
         },
         ChatStatusEnum.LEND_FINISHED
     ],
+    [
+        {
+            transactionStatus: TransactionStatus.CHAT_DECLINED,
+            isBorrower: true
+        },
+        ChatStatusEnum.BORROW_LENDER_DECLINED
+    ],
+    [
+        {
+            transactionStatus: TransactionStatus.CHAT_DECLINED,
+            isBorrower: false
+        },
+        ChatStatusEnum.LEND_LENDER_DECLINED
+    ],
+    [
+        {
+            transactionStatus: TransactionStatus.CHAT_CANCELED,
+            isBorrower: true
+        },
+        ChatStatusEnum.BORROW_BORROWER_CANCELED
+    ],
+    [
+        {
+            transactionStatus: TransactionStatus.CHAT_DECLINED,
+            isBorrower: false
+        },
+        ChatStatusEnum.LEND_BORROWER_CANCELED
+    ]
 ]);
 
 export default ChatStatusEnum;

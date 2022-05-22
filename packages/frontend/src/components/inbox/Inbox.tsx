@@ -28,6 +28,13 @@ import { ChatRoom, selectChatRooms } from "../../features/inbox/inbox.selectors"
 import _ from "lodash";
 import InboxRequestMessage from "./inboxMessage/InboxRequestMessage";
 import InboxActions from "./inboxActions/InboxActions";
+import { enableChatForStatusArray } from "../../enums/ChatStatusEnum";
+import {
+    approveTransactionChatThunk, cancelTransactionChatThunk,
+    declineTransactionChatThunk
+} from "../../features/transactions/transactions.slice";
+import { Transaction } from "../../features/transactions/transaction.model";
+import { toast } from "react-toastify";
 
 const chatSection = {
     width: "100%",
@@ -173,6 +180,7 @@ const Inbox = () => {
                                     label="Type a message..."
                                     onChange={event => setChatMessage(event.target.value)}
                                     fullWidth
+                                    disabled={selectedChatRoom?.status ? !(enableChatForStatusArray.includes(selectedChatRoom.status)) : false}
                                     onKeyDown={event => {
                                         if (event.key === 'Enter') {
                                             event.preventDefault();
@@ -180,7 +188,9 @@ const Inbox = () => {
                                         }
                                     }}
                                 />
-                                <IconButton onClick={submitNewMessage} color="primary" component="button">
+                                <IconButton onClick={submitNewMessage} color="primary"
+                                            disabled={selectedChatRoom?.status ? !(enableChatForStatusArray.includes(selectedChatRoom.status)) : false}
+                                            component="button">
                                     <SendIcon/>
                                 </IconButton>
                             </Box>
