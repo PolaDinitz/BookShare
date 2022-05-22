@@ -37,7 +37,8 @@ export class TransactionService {
     }
 
     public async updateStatus(id: string, updateTransactionStatusDto: UpdateTransactionStatusDto, active: boolean) {
-        return this.transactionRepository.update(id, {
+        return this.transactionRepository.save( {
+            id: id,
             ...updateTransactionStatusDto,
             active: active
         });

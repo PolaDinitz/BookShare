@@ -1,23 +1,14 @@
-import { Dictionary } from "@reduxjs/toolkit";
+import { TransactionStatus } from "../services/transaction.service";
 
 enum ChatStatusEnum {
     BORROW_REQUEST = "Borrow Request",
+    AWAIT_BORROWING = "Await Borrowing",
     BORROW_IN_PROGRESS = "Borrow In Progress",
     BORROW_FINISHED = "Borrow Finished",
     LEND_REQUEST = "Lend Request",
+    AWAIT_LENDING = "Await Lending",
     LEND_IN_PROGRESS = "Lend In Progress",
     LEND_FINISHED = "Lend Finished",
-}
-
-enum TransactionStatus {
-    WAITING_CHAT_APPROVAL = "Waiting Chat Approval",
-    CHAT_CANCELED = "Canceled chat",
-    WAITING_FOR_LEND = "Waiting For Lend",
-    CHAT_DECLINED = "Chat Declined",
-    LEND_DECLINED = "Lend Declined",
-    WAITING_FOR_BOOK_RETURNED = "Waiting for book return",
-    WAITING_FOR_RETURN_APPROVAL = "Waiting for return approval",
-    FINISHED_TRANSACTION = "Finished Transaction"
 }
 
 export const transactionStatusToChatStatusMap = new Map<{ transactionStatus: string, isBorrower: boolean } | undefined, ChatStatusEnum>([
@@ -40,14 +31,14 @@ export const transactionStatusToChatStatusMap = new Map<{ transactionStatus: str
             transactionStatus: TransactionStatus.WAITING_FOR_LEND,
             isBorrower: true
         },
-        ChatStatusEnum.BORROW_REQUEST
+        ChatStatusEnum.AWAIT_BORROWING
     ],
     [
         {
             transactionStatus: TransactionStatus.WAITING_FOR_LEND,
             isBorrower: false
         },
-        ChatStatusEnum.LEND_REQUEST
+        ChatStatusEnum.AWAIT_LENDING
     ],
     [
         {
