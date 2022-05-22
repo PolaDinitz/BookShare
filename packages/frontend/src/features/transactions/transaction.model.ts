@@ -1,6 +1,8 @@
+import { User } from "../user/user.model";
+
 export interface Transaction {
     id: string;
-    borrowUserId: string;
+    borrowUser: User;
     userBookId: string;
     startDate: Date;
     status: string;

@@ -6,7 +6,7 @@ const transactionsResponseToTransactionModel = (transactionsResponse: any[]) : T
         return {
             id: transactionResponse.id,
             bookRating: transactionResponse.bookRating,
-            borrowUserId: transactionResponse.borrowUserId,
+            borrowUser: transactionResponse.borrowUser,
             borrowUserRating: transactionResponse.borrowUserRating,
             isActive: transactionResponse.active,
             lentUserRating: transactionResponse.lentUserRating,

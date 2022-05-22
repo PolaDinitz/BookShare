@@ -9,7 +9,7 @@ import { UserBook } from "src/modules/user-book/entities/user-book.entity";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()
@@ -20,52 +20,52 @@ export class User {
 
   @Column({ unique: true })
   @IsEmail()
-  email: string
+  email: string;
 
   @Column({
     type: "enum",
     enum: Gender
   })
-  gender: Gender
-  
+  gender: Gender;
+
   @Column({
     type: "enum",
     enum: Role
   })
-  role: Role
+  role: Role;
 
   @Column()
   @IsPhoneNumber("IL")
-  phoneNumber: string
+  phoneNumber: string;
 
   @IsDate()
   @Type(() => Date)
   @Column()
-  dateOfBirth: Date
+  dateOfBirth: Date;
 
   @Column()
-  address: string
+  address: string;
 
   @Column()
-  password: string
+  password: string;
 
-  @Column({default: `${IMAGES_USER_ASSETS_PATH}/${DEFAULT_USER_IMAGE_FILE_NAME}`})
-  imageUrl: string
+  @Column({ default: `${IMAGES_USER_ASSETS_PATH}/${DEFAULT_USER_IMAGE_FILE_NAME}` })
+  imageUrl: string;
 
   @Column({ nullable: true })
-  refreshToken: string
+  refreshToken: string;
 
   @OneToMany(type => Transaction, transaction => transaction.borrowUser)
-  borrowTransactions: Transaction[]
-  
-  @OneToMany(type => UserBook, userBook => userBook.user)
-  userBook: UserBook[]
+  borrowTransactions: Transaction[];
 
-  @Column({default: 0})
+  @OneToMany(type => UserBook, userBook => userBook.user)
+  userBook: UserBook[];
+
+  @Column({ default: 0 })
   @Min(0)
   @Max(5)
   rating: number;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   count: number;
 }
