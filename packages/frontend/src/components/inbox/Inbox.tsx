@@ -13,14 +13,13 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Search } from "@mui/icons-material";
 import SendIcon from '@mui/icons-material/Send';
-import { RootState } from "../../types/types";
+import { AppDispatch, RootState } from "../../types/types";
 import { config } from "../../config/config";
 import InboxItem from "./inboxItem/InboxItem";
 import CustomPaper from "../common/custom-paper";
-import { socket } from "../../App";
 import InboxMessage from "./inboxMessage/InboxMessage";
 import { inboxSelectors } from "../../features/inbox/inbox.slice";
 import { Chat, ChatMessage } from "../../features/inbox/inbox.model";
@@ -28,13 +27,15 @@ import { ChatRoom, selectChatRooms } from "../../features/inbox/inbox.selectors"
 import _ from "lodash";
 import InboxRequestMessage from "./inboxMessage/InboxRequestMessage";
 import InboxActions from "./inboxActions/InboxActions";
-import { enableChatForStatusArray } from "../../enums/ChatStatusEnum";
+import ChatStatusEnum, { enableChatForStatusArray } from "../../enums/ChatStatusEnum";
 import {
-    approveTransactionChatThunk, cancelTransactionChatThunk,
-    declineTransactionChatThunk
+    approveTransactionChatThunk,
+    cancelTransactionChatThunk,
+    declineTransactionChatThunk,
+    finishTransactionChatThunk
 } from "../../features/transactions/transactions.slice";
-import { Transaction } from "../../features/transactions/transaction.model";
 import { toast } from "react-toastify";
+import { socket } from "../../index";
 
 const chatSection = {
     width: "100%",
@@ -54,6 +55,8 @@ const ListScrolledArea = styled(List)<ListProps>(({theme}) => ({
 }));
 
 const Inbox = () => {
+    const dispatch = useDispatch<AppDispatch>();
+
     const loggedInUser = useSelector((state: RootState) => state.auth.user);
     const [selectedChatRoomId, setSelectedChatRoomId] = useState("");
     const [selectedChatRoom, setSelectedChatRoom] = useState({} as ChatRoom | undefined);
@@ -72,6 +75,34 @@ const Inbox = () => {
         }
         socket.emit("newMessage", message);
         setChatMessage("");
+    }
+
+    const approveTransactionChat = (transactionId: string) => {
+        dispatch(approveTransactionChatThunk({transactionId: transactionId})).unwrap()
+            .catch((errorMessage: string) => {
+                toast.error(errorMessage);
+            });
+    }
+
+    const declineTransactionChat = (transactionId: string) => {
+        dispatch(declineTransactionChatThunk({transactionId: transactionId})).unwrap()
+            .catch((errorMessage: string) => {
+                toast.error(errorMessage);
+            });
+    }
+
+    const cancelTransactionChat = (transactionId: string) => {
+        dispatch(cancelTransactionChatThunk({transactionId: transactionId})).unwrap()
+            .catch((errorMessage: string) => {
+                toast.error(errorMessage);
+            });
+    }
+
+    const finishTransactionChat = (transactionId: string) => {
+        dispatch(finishTransactionChatThunk({transactionId: transactionId})).unwrap()
+            .catch((errorMessage: string) => {
+                toast.error(errorMessage);
+            });
     }
 
     return (
@@ -159,7 +190,16 @@ const Inbox = () => {
                             </Box>
                             <Divider/>
                             <ListScrolledArea sx={{flex: 2}}>
-                                <InboxRequestMessage chatRoom={selectedChatRoom}/>
+                                <InboxRequestMessage
+                                    chatRoom={selectedChatRoom}
+                                    borrowerStatus={ChatStatusEnum.BORROW_REQUEST}
+                                    lenderStatus={ChatStatusEnum.LEND_REQUEST}
+                                    borrowerTitle={`You want to chat about ${selectedChatRoom?.name}'s book`}
+                                    lenderTitle={`${selectedChatRoom?.name}'s wants to chat about your book`}
+                                    approveCallback={() => approveTransactionChat(selectedChatRoomId)}
+                                    declineCallback={() => declineTransactionChat(selectedChatRoomId)}
+                                    cancelCallback={() => cancelTransactionChat(selectedChatRoomId)}
+                                />
                                 {
                                     _.sortBy(chats.find((chat: Chat) => chat.transactionId === selectedChatRoomId)?.messages, ['time'])
                                         .map((message: ChatMessage, index) => (
@@ -169,6 +209,17 @@ const Inbox = () => {
                                             </InboxMessage>
                                         ))
                                 }
+                                <InboxRequestMessage
+                                    chatRoom={selectedChatRoom}
+                                    borrowerStatus={ChatStatusEnum.BORROW_AWAIT_RETURN_APPROVE}
+                                    lenderStatus={ChatStatusEnum.LEND_APPROVE_RETURN}
+                                    borrowerTitle={`You returned ${selectedChatRoom?.name}'s book`}
+                                    lenderTitle={`${selectedChatRoom?.name}'s has returned the book`}
+                                    approveCallback={() => finishTransactionChat(selectedChatRoomId)}
+                                    approveButtonTitle={"I have the book"}
+                                    declineCallback={() => finishTransactionChat(selectedChatRoomId)}
+                                    declineButtonTitle={"I don't have the book"}
+                                />
                             </ListScrolledArea>
                             <Divider/>
                             <Box padding={1} sx={{display: "flex"}}>

@@ -29,6 +29,20 @@ export const fetchTransactionsThunk = createAsyncThunk<{ transactions: Transacti
     }
 );
 
+export const fetchTransactionByIdThunk = createAsyncThunk<{ transaction: Transaction }, { transactionId: string }>(
+    'transactions/fetch-by-id',
+    async (payload: { transactionId: string }, thunkApi) => {
+        try {
+            const transactionFromResponse: any = await TransactionService.getTransactionsById(payload.transactionId);
+            return {
+                transaction: Mapper.singleTransactionResponseToTransactionModel(transactionFromResponse)
+            }
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
 export const approveTransactionChatThunk = createAsyncThunk<Transaction, { transactionId: string }>(
     'transactions/approve-chat',
     async (payload: { transactionId: string }, thunkApi) => {
@@ -62,6 +76,39 @@ export const cancelTransactionChatThunk = createAsyncThunk<Transaction, { transa
     }
 );
 
+export const finishTransactionChatThunk = createAsyncThunk<Transaction, { transactionId: string }>(
+    'transactions/finish',
+    async (payload: { transactionId: string }, thunkApi) => {
+        try {
+            return await TransactionService.finishTransactionChat(payload.transactionId);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
+export const lendBookThunk = createAsyncThunk<Transaction, { transactionId: string }>(
+    'transactions/lend-book',
+    async (payload: { transactionId: string }, thunkApi) => {
+        try {
+            return await TransactionService.lendBook(payload.transactionId);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
+export const returnBookThunk = createAsyncThunk<Transaction, { transactionId: string }>(
+    'transactions/return-book',
+    async (payload: { transactionId: string }, thunkApi) => {
+        try {
+            return await TransactionService.returnBook(payload.transactionId);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
 const transactionsSlice = createSlice({
     name: "transactions",
     initialState: transactionsAdapter.getInitialState(),
@@ -71,11 +118,17 @@ const transactionsSlice = createSlice({
             .addCase(fetchTransactionsThunk.fulfilled, (state, action) => {
                 transactionsAdapter.setAll(state, action.payload.transactions);
             })
+            .addCase(fetchTransactionByIdThunk.fulfilled, (state, action) => {
+                transactionsAdapter.upsertOne(state, action.payload.transaction);
+            })
             .addMatcher(
                 isAnyOf(
                     approveTransactionChatThunk.fulfilled,
                     declineTransactionChatThunk.fulfilled,
-                    cancelTransactionChatThunk.fulfilled
+                    cancelTransactionChatThunk.fulfilled,
+                    finishTransactionChatThunk.fulfilled,
+                    lendBookThunk.fulfilled,
+                    returnBookThunk.fulfilled
                 ), (state, action) => {
                     transactionsAdapter.updateOne(state, {
                         id: action.payload.id,

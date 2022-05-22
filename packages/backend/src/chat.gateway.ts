@@ -42,18 +42,34 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   }
 
+  @SubscribeMessage("joinTransaction")
+  handleJoinTransaction(@MessageBody() message: { transactionId: string }, @ConnectedSocket() client: Socket): void {
+    client.join(message.transactionId);
+  }
+
   @SubscribeMessage("newTransaction")
   handleNewTransaction(@MessageBody() message: { transactionId: string }, @ConnectedSocket() client: Socket): void {
-    console.log("Client join transaction id: " + message.transactionId);
-    client.join(message.transactionId);
+    const userId = client.handshake.auth.userId;
+    this.transactionService.getTransactionById(message.transactionId)
+      .then((transaction: Transaction) => {
+        client.join(message.transactionId);
+        this.webSocketServer.emit("newTransaction", {
+          ...message,
+          userId: userId === transaction.borrowUserId ? transaction.borrowUserId : transaction.userBook.userId
+        });
+      })
+  }
+
+  @SubscribeMessage("transactionChanged")
+  handleTransactionStatusChanged(@MessageBody() message: { transactionId: string }, @ConnectedSocket() client: Socket): void {
+    this.webSocketServer.to(message.transactionId).emit("transactionChanged", message);
   }
 
   handleConnection(@ConnectedSocket() client: Socket, ...args: any[]): any {
     const userId = client.handshake.auth.userId;
-    this.transactionService.getTransactionsWithChatAvailableByUserId(userId)
+    this.transactionService.getTransactionsByUserId(userId)
       .then((transactions: Transaction[]) => {
         const transactionsIds: string[] = transactions.map((transaction) => transaction.id);
-        console.log("Client join transaction id: " + transactionsIds);
         client.join(transactionsIds);
       })
       .catch(reason => {
