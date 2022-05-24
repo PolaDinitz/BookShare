@@ -43,6 +43,28 @@ export const fetchTransactionByIdThunk = createAsyncThunk<{ transaction: Transac
     }
 );
 
+export const rateBookTransactionThunk = createAsyncThunk<Transaction, { transactionId: string, rateValue: number }>(
+    'transactions/rate-book',
+    async (payload: { transactionId: string, rateValue: number }, thunkApi) => {
+        try {
+            return await TransactionService.rateTransactionBook(payload.transactionId, payload.rateValue);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
+export const rateUserTransactionThunk = createAsyncThunk<Transaction, { transactionId: string, rateValue: number }>(
+    'transactions/rate-user',
+    async (payload: { transactionId: string, rateValue: number }, thunkApi) => {
+        try {
+            return await TransactionService.rateTransactionUser(payload.transactionId, payload.rateValue);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
 export const approveTransactionChatThunk = createAsyncThunk<Transaction, { transactionId: string }>(
     'transactions/approve-chat',
     async (payload: { transactionId: string }, thunkApi) => {
@@ -123,6 +145,14 @@ const transactionsSlice = createSlice({
             })
             .addMatcher(
                 isAnyOf(
+                    rateBookTransactionThunk.fulfilled,
+                    rateUserTransactionThunk.fulfilled
+                ), (state, action) => {
+                    transactionsAdapter.upsertOne(state, action.payload);
+                }
+            )
+            .addMatcher(
+                isAnyOf(
                     approveTransactionChatThunk.fulfilled,
                     declineTransactionChatThunk.fulfilled,
                     cancelTransactionChatThunk.fulfilled,
@@ -136,7 +166,8 @@ const transactionsSlice = createSlice({
                             status: action.payload.status
                         }
                     })
-                })
+                }
+            )
     },
 });
 

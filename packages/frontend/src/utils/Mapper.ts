@@ -27,7 +27,8 @@ const singleChatMessagesResponseToChatMessagesModel = (chatMessagesResponse: any
     return {
         content: chatMessagesResponse.content,
         time: chatMessagesResponse.creationTimestamp,
-        fromSelf: userId === chatMessagesResponse.userId
+        fromSelf: userId === chatMessagesResponse.userId,
+        isSystemMessage: chatMessagesResponse.isSystemMessage
     } as ChatMessage;
 }
 

@@ -7,14 +7,14 @@ enum ChatStatusEnum {
     BORROW_AWAIT_RETURN_APPROVE = "Await Return Approve",
     BORROW_FINISHED = "Borrow Finished",
     BORROW_LENDER_DECLINED = "Lender Declined",
-    BORROW_BORROWER_CANCELED = "Chat Canceled",
+    BORROW_BORROWER_CANCELED = "Borrowing Canceled",
 
     LEND_REQUEST = "Lend Request",
     AWAIT_LENDING = "Await Lending",
     LEND_IN_PROGRESS = "Lend In Progress",
     LEND_APPROVE_RETURN = "Approve Book Return",
     LEND_FINISHED = "Lend Finished",
-    LEND_LENDER_DECLINED = "Chat Declined",
+    LEND_LENDER_DECLINED = "Lending Declined",
     LEND_BORROWER_CANCELED = "Borrower Canceled"
 }
 
@@ -114,7 +114,7 @@ export const transactionStatusToChatStatusMap = new Map<{ transactionStatus: str
     ],
     [
         {
-            transactionStatus: TransactionStatus.CHAT_DECLINED,
+            transactionStatus: TransactionStatus.CHAT_CANCELED,
             isBorrower: false
         },
         ChatStatusEnum.LEND_BORROWER_CANCELED

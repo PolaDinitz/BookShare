@@ -17,7 +17,8 @@ export class ChatService {
             transactionId: createChatMessageDto.transactionId,
             userId: createChatMessageDto.userId,
             content: createChatMessageDto.content,
-            creationTimestamp: new Date()
+            creationTimestamp: new Date(),
+            isSystemMessage: createChatMessageDto.isSystemMessage
         });
         return await this.chatMessageRepository.save(chatMessageEntity);
     }

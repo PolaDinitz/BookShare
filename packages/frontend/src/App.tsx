@@ -36,14 +36,15 @@ function App() {
 
     useEffect(() => {
         if (loggedInUserId) {
-            socket.on("newMessage", (message: { transactionId: string, from: string, content: string, time: Date }) => {
+            socket.on("newMessage", (message: { transactionId: string, from: string, content: string, time: Date, isSystemMessage: boolean }) => {
                 const fromSelf = (message.from === loggedInUserId);
                 dispatch(newMessageThunk({
                     transactionId: message.transactionId,
                     chatMessage: {
                         content: message.content,
                         fromSelf,
-                        time: message.time
+                        time: message.time,
+                        isSystemMessage: message.isSystemMessage
                     }
                 }));
             });

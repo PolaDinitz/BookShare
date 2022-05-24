@@ -36,6 +36,7 @@ import {
 } from "../../features/transactions/transactions.slice";
 import { toast } from "react-toastify";
 import { socket } from "../../index";
+import InboxReviewMessage from "./inboxMessage/InboxReviewMessage";
 
 const chatSection = {
     width: "100%",
@@ -204,6 +205,7 @@ const Inbox = () => {
                                     _.sortBy(chats.find((chat: Chat) => chat.transactionId === selectedChatRoomId)?.messages, ['time'])
                                         .map((message: ChatMessage, index) => (
                                             <InboxMessage key={index} time={message?.time}
+                                                          isSystemMessage={message.isSystemMessage}
                                                           color={message.fromSelf ? "secondary" : "primary"}>
                                                 {message.content}
                                             </InboxMessage>
@@ -220,6 +222,7 @@ const Inbox = () => {
                                     declineCallback={() => finishTransactionChat(selectedChatRoomId)}
                                     declineButtonTitle={"I don't have the book"}
                                 />
+                                <InboxReviewMessage chatRoom={selectedChatRoom}/>
                             </ListScrolledArea>
                             <Divider/>
                             <Box padding={1} sx={{display: "flex"}}>

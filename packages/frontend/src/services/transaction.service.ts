@@ -24,6 +24,26 @@ const getTransactionsById = (id: string) => {
         })
 }
 
+const rateTransactionBook = (id: string, rateValue: number) => {
+    return axiosInstance.patch(`${config.apiUrl}/transaction/bookRate/` + id, {bookRating: rateValue})
+        .then((response: AxiosResponse) => {
+            return response.data;
+        }).catch((error: AxiosError) => {
+            throw new Error(`Something went wrong while trying to rate the transaction book, 
+                            ${(error.response ? error.response?.data?.message : error.message)}`);
+        })
+}
+
+const rateTransactionUser = (id: string, rateValue: number) => {
+    return axiosInstance.patch(`${config.apiUrl}/transaction/userRate/` + id, {userRating: rateValue})
+        .then((response: AxiosResponse) => {
+            return response.data;
+        }).catch((error: AxiosError) => {
+            throw new Error(`Something went wrong while trying to rate the user, 
+                            ${(error.response ? error.response?.data?.message : error.message)}`);
+        })
+}
+
 const updateTransaction = (transactionStatus: TransactionStatus, id: string) => {
     return axiosInstance.patch(`${config.apiUrl}/transaction/status/` + id, {status: transactionStatus})
         .then((response: AxiosResponse) => {
@@ -67,7 +87,9 @@ const transactionService = {
     finishTransactionChat,
     lendBook,
     returnBook,
-    getTransactionsById
+    getTransactionsById,
+    rateTransactionBook,
+    rateTransactionUser
 };
 
 export default transactionService;
