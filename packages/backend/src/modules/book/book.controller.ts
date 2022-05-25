@@ -7,12 +7,14 @@ import { BookService } from './book.service';
 import { UserBookService } from 'src/modules/user-book/user-book.service';
 import { BooksApiService } from 'src/modules/books-api/books-api.service';
 import { CreateBookDto } from './dto/create-book.dto';
+import { BookCategoryService } from '../book-category/book-category.service';
 
 @Controller('book')
 export class BookController {
   constructor(private readonly bookService: BookService, 
               private readonly booksApiService: BooksApiService,
-              private readonly userBookService: UserBookService) {}
+              private readonly userBookService: UserBookService,
+              private readonly bookCategoryService: BookCategoryService) {}
 
   @Get()
   @Roles(Role.USER,Role.ADMIN)
@@ -71,7 +73,12 @@ export class BookController {
     let book =  await this.bookService.getBookById(createBookDto.bookId);
     if (!book) {
       const apiBook = await this.booksApiService.getBookById(createBookDto.bookId);
-      return await this.bookService.create(apiBook).then(async () => await this.userBookService.create(createBookDto));
+      return await this.bookService.create(apiBook).then(async () => {
+        for (const category of apiBook.categories) {
+          await this.bookCategoryService.create(apiBook.id, category);
+        }
+        return await this.userBookService.create(createBookDto);
+      });
     }
     return await this.userBookService.create(createBookDto);
   }
