@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-import BookLocationTable from "./BookLocationTable";
+import BookLocationTab from "./BookLocationTable/BookLocationTabs";
 import RoundedButton from "../../common/rounded-button";
 import { Book } from "../../../features/books/book.model";
 
@@ -54,7 +54,7 @@ const BookDetails = (props: BookDetailsProps) => {
               {author}
             </Typography>
             <Typography mt={2}>{description}</Typography>
-            <BookLocationTable />
+            <BookLocationTab />
             <DialogActions
               sx={{
                 flexDirection: "column",
