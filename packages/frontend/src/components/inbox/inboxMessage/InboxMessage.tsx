@@ -45,17 +45,18 @@ type InboxMessageProps = {
     color: MessageType;
     children?: React.ReactNode;
     time?: Date;
+    width?: string;
 }
 
 const InboxMessage = (props: InboxMessageProps) => {
     const style = inboxMessageStyleMap.get(props.color);
     return (
         <Box sx={{display: "flex", flexDirection: style?.flexDirection, whiteSpace: "initial"}}>
-            <Box style={style?.message} m={1} sx={{padding: "10px 20px 10px 20px"}}>
+            <Box style={style?.message} m={1} sx={{padding: "10px 20px 10px 20px", width: props?.width}}>
                 {props.children}
             </Box>
             <Box sx={{alignSelf: "flex-end"}}>
-                {moment(props.time).format('DD/MM/YY HH:mm')}
+                {props.time && moment(props.time).format('DD/MM/YY HH:mm')}
             </Box>
         </Box>
     );

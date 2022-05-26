@@ -15,7 +15,9 @@ export class UserBookService {
   }
 
   public async getUserBooks(): Promise<UserBook[]> {
-    return await this.userBookRepository.find();
+    return await this.userBookRepository.find({
+      relations: ["user"]
+    });
   }
 
   public async create(createBookDto: CreateBookDto) {

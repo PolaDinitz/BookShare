@@ -2,35 +2,42 @@ import React from "react";
 import { Button } from "@mui/material";
 
 type RoundedButtonStyle = {
-  backgroundColor: string;
+    backgroundColor: string;
 };
 
 type RoundedButtonProps = {
-  children?: React.ReactNode;
-  style?: RoundedButtonStyle;
-  onClick?: () => void;
+    children?: React.ReactNode;
+    style?: RoundedButtonStyle;
+    onClick?: () => void;
 };
 
-const CustomPaper = (props: RoundedButtonProps) => {
-  const { style, onClick, children } = props;
+const RoundedButton = (props: RoundedButtonProps) => {
+    const {style, onClick, children} = props;
 
-  return (
-    <Button
-    disableElevation
-      variant="contained"
-      onClick={onClick}
-      sx={{
-        borderRadius: "16px",
-        fontWeight: "bold",
-        backgroundColor: style?.backgroundColor || "#3164F4",
-        '&:hover': {
-          background: "#5780f2",
-       },
-      }}
-    >
-      {children}
-    </Button>
-  );
+    return (
+        <Button
+            disableElevation
+            variant="contained"
+            onClick={onClick}
+            sx={{
+                borderRadius: "50px",
+                fontWeight: "bold",
+                paddingLeft: "20px",
+                paddingRight: "20px",
+                paddingTop: "10px",
+                paddingBottom: "10px",
+                transition: "0.5s",
+                backgroundColor: style?.backgroundColor || "#3164F4",
+                '&:hover': {
+                    backgroundColor: style?.backgroundColor || "#3164F4",
+                    opacity: "0.7",
+                    transition: "0.5s"
+                },
+            }}
+        >
+            {children}
+        </Button>
+    );
 };
 
-export default CustomPaper;
+export default RoundedButton;
