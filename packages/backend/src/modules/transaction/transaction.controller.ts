@@ -1,27 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Request, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
-import { TransactionService } from './transaction.service';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionStatusDto } from './dto/update-transaction-status.dto';
-import { UpdateBookRatingDto } from './dto/update-book-rating.dto';
-import { UpdateBorrowUserRatingDto } from './dto/update-borrow-user-rating.dto';
-import { UpdatelentUserRatingDto } from './dto/update-lent-user-rating.dto';
-import { Role } from '../../enums/role.enum';
-import { Roles } from '../authorization/roles.decorator';
-import { JwtAuthGuard } from '../authentication/jwt/jwt-auth.guard';
-import { RolesGuard } from '../authorization/roles.guard';
-import { TransactionStatus } from '../../enums/transaction-status.enum';
-import { UserBookService } from '../user-book/user-book.service';
-import { handleChangeStatusFromWaitingForBookReturn, handleChangeStatusFromWaitingForChat, handleChangeStatusFromWaitingForLend, handleChangeStatusFromWaitingForReturnApproval } from './transactionStatus.handlers';
-import { UsersService } from '../user/user.service';
-import { BookService } from '../book/book.service';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Request,
+  UseGuards
+} from "@nestjs/common";
+import { TransactionService } from "./transaction.service";
+import { CreateTransactionDto } from "./dto/create-transaction.dto";
+import { UpdateTransactionStatusDto } from "./dto/update-transaction-status.dto";
+import { UpdateBookRatingDto } from "./dto/update-book-rating.dto";
+import { UpdateUserRatingDto } from "./dto/update-user-rating.dto";
+import { Role } from "../../enums/role.enum";
+import { Roles } from "../authorization/roles.decorator";
+import { JwtAuthGuard } from "../authentication/jwt/jwt-auth.guard";
+import { RolesGuard } from "../authorization/roles.guard";
+import { TransactionStatus } from "../../enums/transaction-status.enum";
+import { UserBookService } from "../user-book/user-book.service";
+import {
+  handleChangeStatusFromWaitingForBookReturn,
+  handleChangeStatusFromWaitingForChat,
+  handleChangeStatusFromWaitingForLend,
+  handleChangeStatusFromWaitingForReturnApproval
+} from "./transactionStatus.handlers";
+import { UsersService } from "../user/user.service";
+import { BookService } from "../book/book.service";
 
-@Controller('transaction')
+@Controller("transaction")
 export class TransactionController {
   constructor(
     private readonly transactionService: TransactionService,
     private readonly userBookService: UserBookService,
-    private readonly userService: UsersService, 
-    private readonly bookService: BookService) {}
+    private readonly userService: UsersService,
+    private readonly bookService: BookService) {
+  }
 
   @Post()
   @Roles(Role.USER, Role.ADMIN)
@@ -40,10 +56,10 @@ export class TransactionController {
     return await this.transactionService.getTransactions();
   }
 
-  @Get(':id')
+  @Get(":id")
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async getTransactionById(@Request() req: any, @Param('id') id: string) {
+  async getTransactionById(@Request() req: any, @Param("id") id: string) {
     const tran = await this.transactionService.getTransactionById(id);
     if (req.user.role !== Role.ADMIN && req.user.userId !== tran.borrowUserId && req.user.userId !== tran.userBook.userId) {
       throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
@@ -51,32 +67,32 @@ export class TransactionController {
     return tran;
   }
 
-  @Get('user/:id')
+  @Get("user/:id")
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async getTransactionsByUserId(@Param('id') id: string) {
+  async getTransactionsByUserId(@Param("id") id: string) {
     return await this.transactionService.getTransactionsByUserId(id);
   }
 
-  @Get('borrowUser/:id')
+  @Get("borrowUser/:id")
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async getTransactionsByBorrowUserId(@Param('id') id: string) {
+  async getTransactionsByBorrowUserId(@Param("id") id: string) {
     return await this.transactionService.getTransactionsByBorrowUser(id);
   }
 
-  
-  @Get('lentUser/:id')
+
+  @Get("lentUser/:id")
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async getTransactionsByLentUserId(@Param('id') id: string) {
+  async getTransactionsByLentUserId(@Param("id") id: string) {
     return await this.transactionService.getTransactionsByLentUser(id);
   }
 
-  @Patch('status/:id')
+  @Patch("status/:id")
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async updateTransactionStatus(@Request() req: any, @Param('id') id: string, @Body() updateTransactionStatusDto: UpdateTransactionStatusDto) {
+  async updateTransactionStatus(@Request() req: any, @Param("id") id: string, @Body() updateTransactionStatusDto: UpdateTransactionStatusDto) {
     const transaction = await this.transactionService.getTransactionById(id);
     if (!transaction || (transaction.borrowUserId !== req.user.userId && transaction.userBook.userId !== req.user.userId)) {
       throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
@@ -87,79 +103,71 @@ export class TransactionController {
     let newActive = true;
     if (transaction.status === TransactionStatus.WAITING_CHAT_APPROVAL) {
       newActive = handleChangeStatusFromWaitingForChat(transaction, req.user.userId, updateTransactionStatusDto.status);
-    }
-    else if (transaction.status === TransactionStatus.WAITING_FOR_LEND) {
+    } else if (transaction.status === TransactionStatus.WAITING_FOR_LEND) {
       newActive = await handleChangeStatusFromWaitingForLend(transaction, req.user.userId, updateTransactionStatusDto.status, this.userBookService, this.transactionService);
-    }
-    else if (transaction.status === TransactionStatus.WAITING_FOR_BOOK_RETURNED) {
+    } else if (transaction.status === TransactionStatus.WAITING_FOR_BOOK_RETURNED) {
       newActive = await handleChangeStatusFromWaitingForBookReturn(transaction, req.user.userId, updateTransactionStatusDto.status, this.userBookService);
-    }
-    else if (transaction.status === TransactionStatus.WAITING_FOR_RETURN_APPROVAL) {
+    } else if (transaction.status === TransactionStatus.WAITING_FOR_RETURN_APPROVAL) {
       newActive = await handleChangeStatusFromWaitingForReturnApproval(transaction, req.user.userId, updateTransactionStatusDto.status, this.userBookService);
     }
     return await this.transactionService.updateStatus(id, updateTransactionStatusDto, newActive);
   }
 
-  @Patch('report/:id')
+  @Patch("report/:id")
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async reportUser(@Request() req: any, @Param('id') id: string) {
+  async reportUser(@Request() req: any, @Param("id") id: string) {
     const transaction = await this.transactionService.getTransactionById(id);
     if (transaction.borrowUserId === req.user.userId) {
-      await this.transactionService.updateStatus(id, {status: TransactionStatus.FINISHED_TRANSACTION}, false);
+      await this.transactionService.updateStatus(id, { status: TransactionStatus.FINISHED_TRANSACTION }, false);
       await this.bookService.rateBook(transaction.userBook.userId, 0);
-      return await this.transactionService.updateLentUserRating(id, { lentUserRating: 0 });
+      return await this.transactionService.updateLentUserRating(id, { userRating: 0 });
     } else if (transaction.userBook.userId === req.user.userId) {
-      await this.transactionService.updateStatus(id, {status: TransactionStatus.FINISHED_TRANSACTION}, false);
+      await this.transactionService.updateStatus(id, { status: TransactionStatus.FINISHED_TRANSACTION }, false);
       await this.bookService.rateBook(transaction.borrowUserId, 0);
-      return await this.transactionService.updateBorrowUserRating(id, { borrowUserRating : 0 });
+      return await this.transactionService.updateBorrowUserRating(id, { userRating: 0 });
     } else {
       throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
     }
   }
 
-  @Patch('bookRate/:id')
+  @Patch("bookRate/:id")
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async updateBookRating(@Request() req: any, @Param('id') id: string, @Body() updateBookRatingDto: UpdateBookRatingDto) {
+  async updateBookRating(@Request() req: any, @Param("id") id: string, @Body() updateBookRatingDto: UpdateBookRatingDto) {
     const transaction = await this.transactionService.getTransactionById(id);
-    if (transaction && transaction.status !== TransactionStatus.FINISHED_TRANSACTION){
-      throw new HttpException("Can't rate The Book if Transaction has'nt finished successfuly", HttpStatus.BAD_REQUEST);
+    if (!transaction)
+      throw new HttpException("Couldn't find transaction with id: " + id, HttpStatus.BAD_REQUEST);
+
+    if (transaction.status !== TransactionStatus.FINISHED_TRANSACTION) {
+      throw new HttpException("Can't rate The Book if Transaction hasn't finished successfully", HttpStatus.BAD_REQUEST);
     }
-    if (transaction && (transaction.borrowUserId === req.user.userId )) {
+    if (transaction.borrowUserId === req.user.userId) {
       await this.bookService.rateBook(transaction.userBook.bookId, updateBookRatingDto.bookRating);
       return await this.transactionService.updateBookRating(id, updateBookRatingDto);
     }
     throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
   }
 
-  @Patch('/borrowUserRate/:id')
+  @Patch("/userRate/:id")
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async updateBorrowUserRating(@Request() req: any, @Param('id') id: string, @Body() updateBorrowUserRatingDto: UpdateBorrowUserRatingDto) {
+  async updateUserRating(@Request() req: any, @Param("id") id: string, @Body() updateUserRatingDto: UpdateUserRatingDto) {
     const transaction = await this.transactionService.getTransactionById(id);
-    if (transaction && transaction.status !== TransactionStatus.FINISHED_TRANSACTION){
-      throw new HttpException("Can't rate The User if Transaction hasn't finished successfuly", HttpStatus.BAD_REQUEST);
+    if (!transaction)
+      throw new HttpException("Couldn't find transaction with id: " + id, HttpStatus.BAD_REQUEST);
+
+    if (transaction.status !== TransactionStatus.FINISHED_TRANSACTION)
+      throw new HttpException("Can't rate The User if Transaction hasn't finished successfully", HttpStatus.BAD_REQUEST);
+
+    await this.userService.rateUser(transaction.userBook.userId, updateUserRatingDto.userRating);
+
+    if (transaction.borrowUserId === req.user.userId) {
+      return await this.transactionService.updateLentUserRating(id, updateUserRatingDto);
+    } else if (transaction.userBook.userId === req.user.userId) {
+      return await this.transactionService.updateBorrowUserRating(id, updateUserRatingDto);
     }
-    if (transaction && transaction.userBook.userId === req.user.userId) {
-      await this.userService.rateUser(transaction.borrowUserId, updateBorrowUserRatingDto.borrowUserRating);
-      return await this.transactionService.updateBorrowUserRating(id, updateBorrowUserRatingDto);
-    }
-    throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
-  }
-  
-  @Patch('/lentUserRate/:id')
-  @Roles(Role.USER, Role.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  async updateLentUserRating(@Request() req: any, @Param('id') id: string, @Body() updateLentUserRatingDto : UpdatelentUserRatingDto) {
-    const transaction = await this.transactionService.getTransactionById(id);
-    if (transaction && transaction.status !== TransactionStatus.FINISHED_TRANSACTION){
-      throw new HttpException("Can't rate The User if Transaction hasn't finished successfuly", HttpStatus.BAD_REQUEST);
-    }
-    if (transaction && transaction.borrowUserId === req.user.userId) {
-      await this.userService.rateUser(transaction.userBook.userId, updateLentUserRatingDto.lentUserRating);
-      return await this.transactionService.updateLentUserRating(id, updateLentUserRatingDto);
-    }
+
     throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
   }
 }

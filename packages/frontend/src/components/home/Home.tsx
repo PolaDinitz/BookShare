@@ -3,7 +3,6 @@ import _ from "lodash";
 import { useReducer, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Fab, Grid } from "@mui/material";
-
 import BooksCollection from "./BooksCollection";
 import { MultipleChoiceFilter, SearchFilter, SliderFilter, } from "./BookFilters";
 import AddBook from "./AddBook";
@@ -62,7 +61,6 @@ const fabStyle = {
 const Home = () => {
     const [open, setOpen] = useState(false);
 
-
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -73,8 +71,6 @@ const Home = () => {
     const [state, dispatch] = useReducer(filterReducer, initialState);
 
     const allBooks = useSelector(booksSelectors.selectAll);
-
-    console.log({ allBooks });
 
     const filteredBooks = allBooks.filter((book: Book) => {
         return (
@@ -91,13 +87,11 @@ const Home = () => {
         );
     });
 
-    console.log({ filteredBooks });
-
     return (
         <>
             <Box sx={{flexGrow: 10, margin: "30px 15px 15px 15px"}}>
                 <Grid container spacing={3}>
-                    <Grid item xs={3}>
+                    <Grid item alignSelf="center" justifyContent="center" xs={3}>
                         <SearchFilter
                             searchText={state.searchText}
                             onTextChange={(event) =>

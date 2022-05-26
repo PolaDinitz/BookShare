@@ -22,10 +22,6 @@ const RoundedButton = (props: RoundedButtonProps) => {
             sx={{
                 borderRadius: "50px",
                 fontWeight: "bold",
-                paddingLeft: "20px",
-                paddingRight: "20px",
-                paddingTop: "10px",
-                paddingBottom: "10px",
                 transition: "0.5s",
                 backgroundColor: style?.backgroundColor || "#3164F4",
                 '&:hover': {
