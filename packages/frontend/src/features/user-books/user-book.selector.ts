@@ -29,6 +29,7 @@ export interface LibraryTransactionbBook {
     isActive: boolean
     borrowedUserId: string
     lentUserId: string
+    transactionId: string
     borrowedUserName?: string
     lentUserName?: string
     borrowUserRating?: number | null
@@ -79,7 +80,8 @@ const getLibraryLentBooks = (transactions: Transaction[],
                     lentUserId: loggedInUserId,
                     borrowedUserId: transaction.borrowUser.id,
                     borrowedUserName: `${transaction.borrowUser.firstName}  ${transaction.borrowUser.lastName}`,
-                    lentUserRating: transaction.lentUserRating
+                    lentUserRating: transaction.lentUserRating,
+                    transactionId: transaction.id
                 });
             }
         }
@@ -107,7 +109,8 @@ const getLibraryBorrowedBooks = (transactions: Transaction[],
                         lentUserId: userBook.user.id,
                         borrowedUserId: loggedInUserId,
                         lentUserName: `${userBook.user.firstName} ${userBook.user.lastName}`,
-                        borrowUserRating: transaction.borrowUserRating
+                        borrowUserRating: transaction.borrowUserRating,
+                        transactionId: transaction.id
                     });
                 }
             }

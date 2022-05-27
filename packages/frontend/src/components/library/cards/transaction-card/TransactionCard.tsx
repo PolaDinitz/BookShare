@@ -16,6 +16,7 @@ interface ITransactionCard {
     lentUserId: string
     active: boolean
     imageUrl: string
+    transactionId: string
     borrowedUserName?: string
     lentUserName?: string
     borrowUserRating?: number|null
@@ -23,13 +24,29 @@ interface ITransactionCard {
 }
 
 const TransactionCard = (props: ITransactionCard) => {
-    const {category, name, author, borrowedUserId, lentUserId, active, imageUrl, borrowedUserName, lentUserRating,lentUserName, borrowUserRating} = props;
+    const {category,
+           name,
+           author, 
+           borrowedUserId, 
+           lentUserId, 
+           active, 
+           imageUrl, 
+           borrowedUserName, 
+           lentUserRating,
+           lentUserName, 
+           borrowUserRating,
+           transactionId
+        } = props;
     const navigate = useNavigate();
 
     const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
     if (Object.keys(currentUser).length === 0) {
         navigate("/login")
+    }
+
+    const onChatClick = () => {
+        navigate(`/inbox/${transactionId}`);
     }
 
     return (
@@ -69,7 +86,7 @@ const TransactionCard = (props: ITransactionCard) => {
                                 </Box>
                                 {active &&
                                     <Stack spacing={1} direction="row">
-                                        <RoundedButton>
+                                        <RoundedButton onClick={onChatClick}>
                                             <Typography variant="subtitle2" fontWeight="bold">
                                                 Chat
                                             </Typography>
@@ -108,7 +125,7 @@ const TransactionCard = (props: ITransactionCard) => {
                                 </Box>
                                 {active &&
                                     <Box sx={{display: 'flex'}}>
-                                        <RoundedButton>
+                                        <RoundedButton onClick={onChatClick}>
                                             <Typography variant="subtitle2" fontWeight="bold">
                                                 Chat
                                             </Typography>

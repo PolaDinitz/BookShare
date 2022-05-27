@@ -31,7 +31,10 @@ const Routing = () => {
                         <Route path="/logout" element={<Logout/>}/>
                     </Route>
                     <Route path='/inbox' element={<PrivateRoute/>}>
-                        <Route path='/inbox' element={<Inbox/>}/>
+                        <Route path='/inbox/' element={<Inbox/>}/>
+                    </Route>
+                    <Route path='/inbox/:id' element={<PrivateRoute/>}>
+                        <Route path='/inbox/:id' element={<Inbox/>}/>
                     </Route>
                 </Routes>
             </>

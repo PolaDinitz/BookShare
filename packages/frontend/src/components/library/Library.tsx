@@ -127,6 +127,7 @@ const Library = () => {
                             borrowedUserId={libraryBook.borrowedUserId}
                             borrowUserRating={libraryBook.borrowUserRating}
                             lentUserName={libraryBook.lentUserName}
+                            transactionId={libraryBook.transactionId}
                         />
                     })
                 )}
@@ -143,6 +144,7 @@ const Library = () => {
                             borrowedUserId={libraryBook.borrowedUserId}
                             borrowedUserName={libraryBook.borrowedUserName}
                             lentUserRating={libraryBook.lentUserRating}
+                            transactionId={libraryBook.transactionId}
                         />
                     })
                 )}
