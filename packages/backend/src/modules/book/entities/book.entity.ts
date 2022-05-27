@@ -26,7 +26,7 @@ export class Book {
   @Column()
   count: number;
 
-  @ManyToOne(type => BookCategory, bookCategory => bookCategory.book)
+  @OneToMany(type => BookCategory, bookCategory => bookCategory.book)
   categories: BookCategory[];
 
   @OneToMany(type => UserBook, userBook => userBook.book)
