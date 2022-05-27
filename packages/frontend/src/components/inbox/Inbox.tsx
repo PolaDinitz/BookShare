@@ -64,10 +64,29 @@ const Inbox = () => {
     const [chatMessage, setChatMessage] = useState("");
     const chats: Chat[] = useSelector(inboxSelectors.selectAll);
     const chatRooms = useSelector(selectChatRooms);
+    const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
         setSelectedChatRoom(chatRooms.find((chatRoom: ChatRoom) => chatRoom.id === selectedChatRoomId));
     }, [selectedChatRoomId, chatRooms])
+
+    const handleSearch = (event: any) => {
+        setSearchText(event.target.value);
+    };
+
+    const filteredChatRooms = chatRooms.filter((chatRoom: ChatRoom) => {
+        return (
+            chatRoom.name
+                .toLocaleLowerCase()
+                .includes(searchText.toLocaleLowerCase()) ||
+            chatRoom.status
+                ?.toLocaleLowerCase()
+                .includes(searchText.toLocaleLowerCase()) ||
+            chatRoom.subName
+                .toLocaleLowerCase()
+                .includes(searchText.toLocaleLowerCase())
+        );
+    });
 
     const submitNewMessage = () => {
         const message: { transactionId: string, content: string } = {
@@ -131,10 +150,11 @@ const Inbox = () => {
                         }}
                         placeholder="Search"
                         variant="filled"
+                        onChange={handleSearch}
                         fullWidth
                     />
                     <ListScrolledArea>
-                        {chatRooms.map((chatRoom: ChatRoom) => (
+                        {filteredChatRooms.map((chatRoom: ChatRoom) => (
                             <InboxItem key={chatRoom.id}
                                        onCLick={() => setSelectedChatRoomId(chatRoom.id)}
                                        imageUrl={`${config.apiUrl}/${chatRoom.imageUrl}`}
