@@ -8,5 +8,5 @@ export class CreateBookDto {
     userId: string;
 
     @IsNotEmpty()
-    available: boolean;
+    isAvailable: boolean;
 }

@@ -26,7 +26,7 @@ export class UserBook {
     isLent: boolean;
 
     @Column()
-    available: boolean;
+    isAvailable: boolean;
 
     @OneToMany(type => Transaction, transaction => transaction.userBook)
     transactions: Transaction[]    

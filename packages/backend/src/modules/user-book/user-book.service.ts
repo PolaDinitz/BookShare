@@ -24,7 +24,7 @@ export class UserBookService {
     return await this.userBookRepository.save(this.userBookRepository.create({
       userId: createBookDto.userId,
       bookId: createBookDto.bookId,
-      available: createBookDto.available
+      isAvailable: createBookDto.isAvailable
     }));
   }
 
@@ -47,7 +47,7 @@ export class UserBookService {
     return await this.userBookRepository.find({
       where: {
         bookId: id,
-        available: true,
+        isAvailable: true,
         isLent: false
       },
       relations: [
@@ -58,7 +58,7 @@ export class UserBookService {
 
   public async updateUserBookAvailability(id: string, updateUserBookAvailabilityDto: UpdateUserBookAvailabilityDto) {
     return await this.userBookRepository.update(id, {
-      available: updateUserBookAvailabilityDto.isAvailable
+      isAvailable: updateUserBookAvailabilityDto.isAvailable
     });
   }
 
