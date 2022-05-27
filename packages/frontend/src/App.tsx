@@ -1,18 +1,15 @@
 import React, { useEffect } from 'react';
 import DateAdapter from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider/LocalizationProvider';
-import socketIOClient from "socket.io-client";
 import './App.css';
 import Routing from './Routing';
-import { config } from "./config/config";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./types/types";
 import { newMessageThunk } from "./features/inbox/inbox.slice";
-import { fetchTransactionsThunk } from "./features/transactions/transactions.slice";
+import { fetchTransactionByIdThunk, fetchTransactionsThunk } from "./features/transactions/transactions.slice";
 import { fetchBooksThunk } from "./features/books/books.slice";
 import { fetchUserBooksThunk } from "./features/user-books/user-book.slice";
-
-export const socket = socketIOClient(config.apiUrl, {autoConnect: false, transports: ['websocket']});
+import { socket } from '.';
 
 function App() {
     const dispatch = useDispatch<AppDispatch>()
@@ -39,16 +36,30 @@ function App() {
 
     useEffect(() => {
         if (loggedInUserId) {
-            socket.on("newMessage", (message: { transactionId: string, from: string, content: string, time: Date }) => {
+            socket.on("newMessage", (message: { transactionId: string, from: string, content: string, time: Date, isSystemMessage: boolean }) => {
                 const fromSelf = (message.from === loggedInUserId);
                 dispatch(newMessageThunk({
                     transactionId: message.transactionId,
                     chatMessage: {
                         content: message.content,
                         fromSelf,
-                        time: message.time
+                        time: message.time,
+                        isSystemMessage: message.isSystemMessage
                     }
                 }));
+            });
+            socket.on("transactionChanged", (message: { transactionId: string }) => {
+                dispatch(fetchTransactionByIdThunk({
+                    transactionId: message.transactionId,
+                }));
+            });
+            socket.on("newTransaction", (message: { transactionId: string, userId: string }) => {
+                if (message.userId === loggedInUserId) {
+                    socket.emit("joinTransaction", {transactionId: message.transactionId})
+                    dispatch(fetchTransactionByIdThunk({
+                        transactionId: message.transactionId,
+                    }));
+                }
             });
         }
     }, [loggedInUserId]);

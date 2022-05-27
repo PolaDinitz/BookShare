@@ -9,4 +9,7 @@ export class CreateChatMessageDto {
 
     @IsNotEmpty()
     content: string;
+
+    @IsNotEmpty()
+    isSystemMessage: boolean
 }

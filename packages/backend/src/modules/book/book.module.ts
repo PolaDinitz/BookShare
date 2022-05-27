@@ -15,4 +15,5 @@ import { BookCategoryModule } from '../book-category/book-category.module';
   providers: [BookService],
   exports: [BookService]
 })
-export class BookModule {}
+export class BookModule {
+}

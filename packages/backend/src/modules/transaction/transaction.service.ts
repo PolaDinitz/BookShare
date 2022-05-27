@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
 import { UpdateBookRatingDto } from "./dto/update-book-rating.dto";
-import { UpdatelentUserRatingDto } from "./dto/update-lent-user-rating.dto";
+import { UpdateUserRatingDto } from "./dto/update-user-rating.dto";
 import { UpdateTransactionStatusDto } from "./dto/update-transaction-status.dto";
 import { Transaction } from "./entities/transaction.entity";
 import { TransactionStatus } from "../../enums/transaction-status.enum";
@@ -46,15 +46,24 @@ export class TransactionService {
   }
 
   public async updateBookRating(id: string, updateBookRatingDto: UpdateBookRatingDto) {
-    return this.transactionRepository.update(id, updateBookRatingDto);
+    return this.transactionRepository.save({
+      id: id,
+      bookRating: updateBookRatingDto.bookRating
+    });
   }
 
-  public async updateBorrowUserRating(id: string, updateBorrowUserRatingDto) {
-    return this.transactionRepository.update(id, updateBorrowUserRatingDto);
+  public async updateBorrowUserRating(id: string, updateUserRatingDto: UpdateUserRatingDto) {
+    return this.transactionRepository.save({
+      id: id,
+      borrowUserRating: updateUserRatingDto.userRating
+    });
   }
 
-  public async updateLentUserRating(id: string, updateLentUserRatingDto: UpdatelentUserRatingDto) {
-    return this.transactionRepository.update(id, updateLentUserRatingDto);
+  public async updateLentUserRating(id: string, updateUserRatingDto: UpdateUserRatingDto) {
+    return this.transactionRepository.save({
+      id: id,
+      lentUserRating: updateUserRatingDto.userRating
+    });
   }
 
   public async getTransactionsByBorrowUser(id: string) {

@@ -23,6 +23,9 @@ export class ChatMessage {
     @Column("varchar", {length: 255})
     content: string;
 
+    @Column()
+    isSystemMessage: boolean;
+
     @Column({type: "timestamp without time zone"})
     creationTimestamp: Date;
 
