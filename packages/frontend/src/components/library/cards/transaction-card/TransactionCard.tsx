@@ -7,6 +7,10 @@ import LibraryBook from '../library-book/LibraryBook';
 import { useNavigate } from 'react-router-dom';
 import { Rating, Stack } from '@mui/material';
 import RoundedButton from "../../../common/rounded-button";
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../../types/types';
+import { returnBookThunk } from '../../../../features/transactions/transactions.slice';
+import { toast } from 'react-toastify';
 
 interface ITransactionCard {
     category: string
@@ -38,7 +42,7 @@ const TransactionCard = (props: ITransactionCard) => {
            transactionId
         } = props;
     const navigate = useNavigate();
-
+    const dispatch = useDispatch<AppDispatch>();
     const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
     if (Object.keys(currentUser).length === 0) {
@@ -85,18 +89,13 @@ const TransactionCard = (props: ITransactionCard) => {
                                     </Typography>
                                 </Box>
                                 {active &&
-                                    <Stack spacing={1} direction="row">
-                                        <RoundedButton onClick={onChatClick}>
-                                            <Typography variant="subtitle2" fontWeight="bold">
-                                                Chat
-                                            </Typography>
-                                        </RoundedButton>
-                                        <RoundedButton style={{backgroundColor: "gray"}}>
-                                            <Typography variant="subtitle2" fontWeight="bold">
-                                                Return
-                                            </Typography>
-                                        </RoundedButton>
-                                    </Stack>
+                                    <Box sx={{display: 'flex'}}>
+                                    <RoundedButton onClick={onChatClick}>
+                                        <Typography variant="subtitle2" fontWeight="bold">
+                                            Chat
+                                        </Typography>
+                                    </RoundedButton>
+                                </Box>
                                 }
                             </Box>
                         }
