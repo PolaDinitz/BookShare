@@ -13,7 +13,7 @@ const BooksCollection = (props: BooksCollectionProps) => {
 
   return (
     <>
-      <Grid container rowSpacing={3} columnSpacing={3} sx={{ padding: "15px" }}>
+      <Grid container rowSpacing={3} columnSpacing={3}>
         {!_.isEmpty(books) ? (
           books.map((book) => (
             <Grid key={book.id} item xs={3}>
@@ -26,9 +26,9 @@ const BooksCollection = (props: BooksCollectionProps) => {
           </h3>
         )}
       </Grid>
-      <Stack spacing={2} display="flex" alignItems="center">
+      {/*<Stack spacing={2} display="flex" alignItems="center">
         <Pagination count={10} />
-      </Stack>
+      </Stack>*/}
     </>
   );
 };

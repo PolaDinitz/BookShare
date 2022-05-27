@@ -88,7 +88,7 @@ const Home = () => {
     });
 
     return (
-        <>
+        <Box sx={{ marginLeft: "30px", marginRight: "30px" }}>
             <Box sx={{flexGrow: 10, margin: "30px 15px 15px 15px"}}>
                 <Grid container spacing={3}>
                     <Grid item alignSelf="center" justifyContent="center" xs={3}>
@@ -173,7 +173,7 @@ const Home = () => {
                 <AddIcon/>
             </Fab>
             <AddBook open={open} onClose={handleClose}/>
-        </>
+        </Box>
     );
 };
 
