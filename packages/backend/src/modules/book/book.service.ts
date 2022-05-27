@@ -25,13 +25,11 @@ export class BookService {
     });
   }
 
-  public async getBooksByTitle(title: string): Promise<Book[]> {
-    return await this.booksRepository.find({
-      where: {
-        title: Like(`${title}%`)
-      },
-      relations: ["categories"]
-    });
+  public async getBooksByTitle(title: string) : Promise<Book[]> {
+    return await this.booksRepository.createQueryBuilder('book')
+        .leftJoinAndSelect("book.categories", "category")
+        .where("LOWER(title) like LOWER(:search)", {search: `${title}%`})
+        .getMany();
   }
 
   public async getBooksByAuthor(author: string): Promise<Book[]> {
