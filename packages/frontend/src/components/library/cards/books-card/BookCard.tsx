@@ -6,9 +6,14 @@ import Typography from '@mui/material/Typography';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import LibraryBook from '../library-book/LibraryBook';
+import { deleteUserBookThunk, setUserBooksAvilabilityThunk } from '../../../../features/user-books/user-book.slice';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../../types/types';
 
 interface IBookCard {
-    catagory: string
+    userBookId: string
+    category: string
     name: string
     author: string
     available: boolean
@@ -17,7 +22,8 @@ interface IBookCard {
 }
 
 const BookCard = (props: IBookCard) => {
-    const { catagory, name, author, available, lent, imageUrl } = props;
+    const dispatch = useDispatch<AppDispatch>()
+    const { userBookId, category, name, author, available, lent, imageUrl } = props;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const open = Boolean(anchorEl);
@@ -30,6 +36,25 @@ const BookCard = (props: IBookCard) => {
         setAnchorEl(null);
     };
 
+    const changeUserBookAvailability = (isAvailable : boolean) => {
+        dispatch(setUserBooksAvilabilityThunk({isAvailable, userBookId})).unwrap()
+            .then(() => {
+                handleClose();
+            })
+            .catch((errorMessage: string) => {
+                toast.error(errorMessage);
+            });
+    }
+
+    const deleteUserBook = () => {
+        dispatch(deleteUserBookThunk({ userBookId })).unwrap()
+            .then(() => {
+                handleClose();
+            })
+            .catch((errorMessage: string) => {
+                toast.error(errorMessage);
+            })
+    }
     return (
         <Card sx={{ minWidth: "100%", background: "none" }} style={{ border: "none", boxShadow: "none" }}>
             <CardContent sx={{
@@ -39,7 +64,7 @@ const BookCard = (props: IBookCard) => {
             }} >
                 <Box sx={{ display: 'flex' }} >
                     <Box sx={{ display: 'flex', flex: 4 }}>
-                        <LibraryBook imageUrl={imageUrl} author={author} name={name} category={catagory} />
+                        <LibraryBook imageUrl={imageUrl} author={author} name={name} category={category} />
                     </Box>
                     <Box sx={{ display: 'flex', flex: 2 }}>
                         {!available && !lent &&
@@ -78,11 +103,11 @@ const BookCard = (props: IBookCard) => {
                             }}
                         >
                             {!available ?
-                                <MenuItem onClick={handleClose}>Make Available</MenuItem>
+                                <MenuItem onClick={() => changeUserBookAvailability(true)}>Make Available</MenuItem>
                                 :
-                                <MenuItem onClick={handleClose}>Make Unavailable</MenuItem>
+                                <MenuItem onClick={() => changeUserBookAvailability(false)}>Make Unavailable</MenuItem>
                             }
-                            <MenuItem onClick={handleClose} color="red">Delete</MenuItem>
+                            <MenuItem onClick={deleteUserBook} color="red">Delete</MenuItem>
                         </Menu>
                     </Box>
                 </Box>

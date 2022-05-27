@@ -35,8 +35,9 @@ export class UserBookController {
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateUserBookAvailability(@Request() req: any, @Param('id') id: string, @Body() updateUserBookAvailabilityDto : UpdateUserBookAvailabilityDto){
-    if (req.user.role !== Role.ADMIN && req.user.userId !== id) {
-      return UnauthorizedException;
+    const userBook = await this.userBookService.getUserBookById(id);
+    if (req.user.role !== Role.ADMIN && req.user.userId !== userBook.user.id) {
+      throw UnauthorizedException;
     }
     return this.userBookService.updateUserBookAvailability(id ,updateUserBookAvailabilityDto)
   }
@@ -45,8 +46,9 @@ export class UserBookController {
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteUserBook(@Request() req: any, @Param('id') id: string){
-    if (req.user.role !== Role.ADMIN && req.user.userId !== id) {
-      return UnauthorizedException;
+    const userBook = await this.userBookService.getUserBookById(id);
+    if (req.user.role !== Role.ADMIN && req.user.userId !== userBook.user.id) {
+      throw UnauthorizedException;
     }
     return this.userBookService.delete(id);
   }

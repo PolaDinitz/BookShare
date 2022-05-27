@@ -15,7 +15,7 @@ const LibraryBook = (props: ILibraryBook) => {
 
     return (
         <>
-            <img alt="" style={{ width: "25%", height: "auto", objectFit: "fill", borderRadius: 20 }} src={imageUrl} />
+            <img alt="" style={{ width: "25%", height: "120px", objectFit: "cover", borderRadius: 20 }} src={imageUrl} />
             <Box sx={{ display: 'flex', flexDirection: "column", m: 2 }}>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                     {category}

@@ -33,7 +33,7 @@ const getBooksByTitle = (title: string) => {
 }
 
 const addBookToLibrary = (bookId: string, userId: string | undefined, isAvailable: boolean) => {
-    return axiosInstance.post(`${config.apiUrl}/book`, {userId, bookId, available: isAvailable})
+    return axiosInstance.post(`${config.apiUrl}/book`, {userId, bookId, isAvailable: isAvailable})
         .then((response: AxiosResponse) => {
             return response.data;
         }).catch((error: AxiosError) => {

@@ -1,0 +1,136 @@
+import { Category } from "@mui/icons-material";
+import { createSelector, Dictionary } from "@reduxjs/toolkit";
+import { Selector } from "react-redux";
+import { RootState } from "../../types/types";
+import { selectLoggedInUserId } from "../auth/auth.selectors";
+import { Book } from "../books/book.model";
+import { booksSelectors } from "../books/books.slice";
+import { Transaction } from "../transactions/transaction.model";
+import { transactionsSelectors } from "../transactions/transactions.slice";
+import { UserBook } from "./user-book.model";
+import { userBooksSelectors } from "./user-book.slice";
+
+export interface LibraryBook {
+    userBookId: string,
+    book: string,
+    author: string,
+    genres: string[]
+    imageUrl: string,
+    isAvailable: boolean,
+    isLent: boolean,
+}
+
+export interface LibraryTransactionbBook {
+    book: string,
+    author: string,
+    genres: string[]
+    imageUrl: string,
+    isActive: boolean,
+    borrowedUserId: string,
+    lentUserId: string
+}
+
+const getLibraryMyBooks = (userBooks: UserBook[],
+                           booksDictionary: Dictionary<Book>,
+                           loggedInUserId: string | undefined): LibraryBook[] => {
+    const libraryMyBooks : LibraryBook[] = [];
+    userBooks.forEach((userBook) => {
+        if (userBook.user.id === loggedInUserId) {
+            const book = booksDictionary[userBook.bookId];
+            if (book) {
+                let libraryBook = {   
+                    userBookId: userBook.id, 
+                    book: book.title,
+                    author: book.author,
+                    genres: book.genres,
+                    imageUrl: book.imageUrl,
+                    isAvailable: userBook.isAvailable,
+                    isLent: userBook.isLent,
+                } as LibraryBook;
+                libraryMyBooks.push(libraryBook);         
+            }
+        }
+    });
+    return libraryMyBooks;
+}
+
+const getLibraryLentBooks = (transactions: Transaction[],
+                               userBooks: Dictionary<UserBook>,
+                               booksDictionary: Dictionary<Book>,
+                               loggedInUserId: string | undefined): LibraryTransactionbBook[] => {
+    const libraryLentBooks : LibraryTransactionbBook[] = [];
+    transactions.forEach((transaction) => {
+        const userBook = userBooks[transaction.userBookId];
+        if (userBook && userBook.user.id === loggedInUserId) {
+            const book = booksDictionary[userBook.bookId];
+            if (book) {
+                libraryLentBooks.push({
+                    book: book.title,
+                    author: book.author,
+                    imageUrl: book.imageUrl,
+                    genres: book.genres,
+                    isActive: transaction.isActive,
+                    lentUserId: loggedInUserId,
+                    borrowedUserId: transaction.borrowUser.id
+                });
+            }
+        }
+    });
+    return libraryLentBooks;
+}
+
+const getLibraryBorrowedBooks = (transactions: Transaction[],
+                               userBooks: Dictionary<UserBook>,
+                               booksDictionary: Dictionary<Book>,
+                               loggedInUserId: string | undefined): LibraryTransactionbBook[] => {
+    const libraryBorrowedBooks : LibraryTransactionbBook[] = [];
+    transactions.forEach((transaction) => {
+        if (transaction.borrowUser.id === loggedInUserId) {
+            const userBook = userBooks[transaction.userBookId];
+            if (userBook) {
+                const book = booksDictionary[userBook.bookId];
+                if (book) {
+                    libraryBorrowedBooks.push({
+                        book: book.title,
+                        author: book.author,
+                        imageUrl: book.imageUrl,
+                        genres: book.genres,
+                        isActive: transaction.isActive,
+                        lentUserId: userBook.user.id,
+                        borrowedUserId: loggedInUserId
+                    });
+                }
+            }
+        }
+    });
+    return libraryBorrowedBooks;
+}
+
+export const selectLibraryMyBooks: Selector<RootState, LibraryBook[]> = createSelector(
+    [
+        userBooksSelectors.selectAll,
+        booksSelectors.selectEntities,
+        selectLoggedInUserId
+    ],
+    getLibraryMyBooks
+);
+
+export const selectLibraryLentBooks: Selector<RootState, LibraryTransactionbBook[]> = createSelector(
+    [
+        transactionsSelectors.selectAll,
+        userBooksSelectors.selectEntities,
+        booksSelectors.selectEntities,
+        selectLoggedInUserId
+    ],
+    getLibraryLentBooks
+);
+
+export const selectLibraryBorrowedBooks: Selector<RootState, LibraryTransactionbBook[]> = createSelector(
+    [
+        transactionsSelectors.selectAll,
+        userBooksSelectors.selectEntities,
+        booksSelectors.selectEntities,
+        selectLoggedInUserId
+    ],
+    getLibraryBorrowedBooks
+);

@@ -20,6 +20,12 @@ export class UserBookService {
     });
   }
 
+  public async getUserBookById(id : string): Promise<UserBook> {
+    return await this.userBookRepository.findOne(id, {
+      relations: ["user"]
+    });
+  }
+
   public async create(createBookDto: CreateBookDto) {
     return await this.userBookRepository.save(this.userBookRepository.create({
       userId: createBookDto.userId,
@@ -57,13 +63,15 @@ export class UserBookService {
   }
 
   public async updateUserBookAvailability(id: string, updateUserBookAvailabilityDto: UpdateUserBookAvailabilityDto) {
-    return await this.userBookRepository.update(id, {
+    return await this.userBookRepository.save({
+      id: id,
       isAvailable: updateUserBookAvailabilityDto.isAvailable
     });
   }
 
   public async updateUserBookLent(id: string, isLent: boolean) {
-    return await this.userBookRepository.update(id, {
+    return await this.userBookRepository.save({
+      id: id,
       isLent: isLent
     });
   }
