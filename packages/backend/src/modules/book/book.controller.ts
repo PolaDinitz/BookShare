@@ -8,6 +8,7 @@ import { UserBookService } from 'src/modules/user-book/user-book.service';
 import { BooksApiService } from 'src/modules/books-api/books-api.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { BookCategoryService } from '../book-category/book-category.service';
+import { Book } from './entities/book.entity';
 
 @Controller('book')
 export class BookController {
@@ -16,18 +17,36 @@ export class BookController {
               private readonly userBookService: UserBookService,
               private readonly bookCategoryService: BookCategoryService) {}
 
+  
+  private formatBook(book : Book) {
+    const newCategories = [];
+    book.categories.forEach((category) => {
+      newCategories.push(category.category);
+    });
+    return {
+      ...book,
+      categories: newCategories
+    };
+  }
+
   @Get()
   @Roles(Role.USER,Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getBooks(@Request() req: any) {
-    return await this.bookService.getBooks();
+    const books: Book[] = await this.bookService.getBooks();
+    const formatedBooks = [];
+    books.forEach((book) => {
+      formatedBooks.push(this.formatBook(book));
+    });
+    return formatedBooks;
   }
 
   @Get(':id')
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getBook(@Request() req: any, @Param('id') id: string) {
-      return await this.bookService.getBookById(id);
+      const book : Book = await this.bookService.getBookById(id);
+      return this.formatBook(book);
   }
 
   @Get('title/:title')
@@ -36,10 +55,14 @@ export class BookController {
   async getBooksByTitle(@Request() req: any, @Param('title') title: string) : Promise<BookApi[]> {
     let bookOptions = [];
     const books = await this.bookService.getBooksByTitle(title);
-    if(books.length === 0) {
+    const formatedBooks = [];
+    books.forEach((book) => {
+      formatedBooks.push(this.formatBook(book))
+    });
+    if(formatedBooks.length === 0) {
       bookOptions = await this.booksApiService.getBooksByTitle(title);
     } else {
-      books.map((book) => {
+      formatedBooks.map((book) => {
         bookOptions.push({
           id: book.id,
           description: book.description,
@@ -56,14 +79,24 @@ export class BookController {
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getBooksByAuthor(@Request() req: any, @Param('name') authorName: string) {
-      return await this.bookService.getBooksByAuthor(authorName);
+      const books = await this.bookService.getBooksByAuthor(authorName);
+      const formatedBooks = [];
+      books.forEach((book) => {
+        formatedBooks.push(this.formatBook(book));
+      });
+      return formatedBooks;
   }
 
   @Get('rating/:rating')
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getBooksByRating(@Request() req: any, @Param('rating') rating: number) {
-      return await this.bookService.getBooksByRating(rating);
+      const books = await this.bookService.getBooksByRating(rating);
+      const formatedBooks = [];
+      books.forEach((book) => {
+        formatedBooks.push(this.formatBook(book));
+      });
+      return formatedBooks;
   }
 
   @Post()
