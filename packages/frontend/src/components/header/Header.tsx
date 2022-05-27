@@ -1,10 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Avatar, Box, Grid, IconButton, Typography } from "@mui/material";
+import { Avatar, Box, Grid, IconButton, IconButtonProps, styled, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/types";
 import { config } from "../../config/config";
 import HeaderPage, { guestHeaderPages, userHeaderPages } from "./HeaderPage";
+
+const HeaderButton = styled(IconButton)<IconButtonProps>(({theme}) => ({
+    backgroundColor: "#12263A",
+    color: "white",
+    transition: "0.5s",
+    '&:hover': {
+        backgroundColor: "#12263A",
+        opacity: 0.8,
+        transition: "0.5s"
+    }
+}));
 
 const Header = () => {
 
@@ -56,9 +67,9 @@ const Header = () => {
                     {headerPagesToDisplay.map((page: HeaderPage, index: number) => {
                         return (
                             <Link key={index} to={page.path}>
-                                <IconButton sx={{backgroundColor: "#12263A", color:"white"}}>
+                                <HeaderButton>
                                     {page.icon}
-                                </IconButton>
+                                </HeaderButton>
                             </Link>
                         )
                     })}
