@@ -1,6 +1,7 @@
 import { Category } from "@mui/icons-material";
 import { createSelector, Dictionary } from "@reduxjs/toolkit";
 import { Selector } from "react-redux";
+import TransactionStatus from "../../enums/TransactionStatusEnum";
 import { RootState } from "../../types/types";
 import { selectLoggedInUserId } from "../auth/auth.selectors";
 import { Book } from "../books/book.model";
@@ -11,23 +12,27 @@ import { UserBook } from "./user-book.model";
 import { userBooksSelectors } from "./user-book.slice";
 
 export interface LibraryBook {
-    userBookId: string,
-    book: string,
-    author: string,
+    userBookId: string
+    book: string
+    author: string
     genres: string[]
-    imageUrl: string,
-    isAvailable: boolean,
-    isLent: boolean,
+    imageUrl: string
+    isAvailable: boolean
+    isLent: boolean
 }
 
 export interface LibraryTransactionbBook {
-    book: string,
-    author: string,
+    book: string
+    author: string
     genres: string[]
-    imageUrl: string,
-    isActive: boolean,
-    borrowedUserId: string,
+    imageUrl: string
+    isActive: boolean
+    borrowedUserId: string
     lentUserId: string
+    borrowedUserName?: string
+    lentUserName?: string
+    borrowUserRating?: number | null
+    lentUserRating?: number | null
 }
 
 const getLibraryMyBooks = (userBooks: UserBook[],
@@ -61,7 +66,8 @@ const getLibraryLentBooks = (transactions: Transaction[],
     const libraryLentBooks : LibraryTransactionbBook[] = [];
     transactions.forEach((transaction) => {
         const userBook = userBooks[transaction.userBookId];
-        if (userBook && userBook.user.id === loggedInUserId) {
+        console.log(transaction.isActive);
+        if (userBook && userBook.user.id === loggedInUserId && (transaction.status === TransactionStatus.FINISHED_TRANSACTION || (transaction.isActive && userBook.isLent) )) {
             const book = booksDictionary[userBook.bookId];
             if (book) {
                 libraryLentBooks.push({
@@ -69,9 +75,11 @@ const getLibraryLentBooks = (transactions: Transaction[],
                     author: book.author,
                     imageUrl: book.imageUrl,
                     genres: book.genres,
-                    isActive: transaction.isActive,
+                    isActive: transaction.status !== TransactionStatus.FINISHED_TRANSACTION && userBook.isLent,
                     lentUserId: loggedInUserId,
-                    borrowedUserId: transaction.borrowUser.id
+                    borrowedUserId: transaction.borrowUser.id,
+                    borrowedUserName: `${transaction.borrowUser.firstName}  ${transaction.borrowUser.lastName}`,
+                    lentUserRating: transaction.lentUserRating
                 });
             }
         }
@@ -97,7 +105,9 @@ const getLibraryBorrowedBooks = (transactions: Transaction[],
                         genres: book.genres,
                         isActive: transaction.isActive,
                         lentUserId: userBook.user.id,
-                        borrowedUserId: loggedInUserId
+                        borrowedUserId: loggedInUserId,
+                        lentUserName: `${userBook.user.firstName} ${userBook.user.lastName}`,
+                        borrowUserRating: transaction.borrowUserRating
                     });
                 }
             }

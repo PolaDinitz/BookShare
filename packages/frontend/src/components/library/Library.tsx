@@ -125,11 +125,13 @@ const Library = () => {
                             active={libraryBook.isActive}
                             lentUserId={libraryBook.lentUserId}
                             borrowedUserId={libraryBook.borrowedUserId}
+                            borrowUserRating={libraryBook.borrowUserRating}
+                            lentUserName={libraryBook.lentUserName}
                         />
                     })
                 )}
                 {buttonSelected === LibraryTabs.LENT_BOOKS && (
-                    borrowedBooks.map((libraryBook : LibraryTransactionbBook, index) => {
+                    lentBooks.map((libraryBook : LibraryTransactionbBook, index) => {
                         return <TransactionCard
                             key={index}
                             imageUrl={libraryBook.imageUrl}
@@ -139,6 +141,8 @@ const Library = () => {
                             active={libraryBook.isActive}
                             lentUserId={libraryBook.lentUserId}
                             borrowedUserId={libraryBook.borrowedUserId}
+                            borrowedUserName={libraryBook.borrowedUserName}
+                            lentUserRating={libraryBook.lentUserRating}
                         />
                     })
                 )}

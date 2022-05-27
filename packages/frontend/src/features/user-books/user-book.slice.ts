@@ -4,6 +4,7 @@ import { RootState } from "../../types/types";
 import { UserBook } from "./user-book.model";
 import { Book } from "../books/book.model";
 import userBookService from "../../services/user-book.service";
+import { finishTransactionChatThunk, lendBookThunk } from "../transactions/transactions.slice";
 
 export const userBooksAdapter = createEntityAdapter<UserBook>({
     selectId: (userBook: UserBook) => userBook.id,
@@ -77,6 +78,22 @@ const userBooksSlice = createSlice({
             })
             .addCase(deleteUserBookThunk.fulfilled, (state, action) => {
                 userBooksAdapter.removeOne(state, action.payload.userBookId);
+            })
+            .addCase(lendBookThunk.fulfilled, (state, action) => {
+                userBooksAdapter.updateOne(state, {
+                    id: action.payload.userBookId,
+                    changes: {
+                        isLent: true
+                    }
+                })
+            })
+            .addCase(finishTransactionChatThunk.fulfilled, (state, action) => {
+                userBooksAdapter.updateOne(state, {
+                    id: action.payload.userBookId,
+                    changes: {
+                        isLent: false
+                    }
+                })
             })
     },
 });
