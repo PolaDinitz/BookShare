@@ -8,7 +8,7 @@ import PrivateRoute from "./utils/PrivateRouter";
 import Logout from "./components/logout/Logout";
 import Library from "./components/library/Library";
 import Inbox from "./components/inbox/Inbox";
-import Profile from "./components/Profile";
+import Profile from "./components/profile";
 
 const Routing = () => {
     return (

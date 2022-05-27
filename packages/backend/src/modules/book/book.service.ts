@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Like, MoreThanOrEqual, Repository } from "typeorm";
+import { BookCategory } from "../book-category/entities/book-category.entity";
 import { Book } from "./entities/book.entity";
 
 @Injectable()
@@ -12,33 +13,40 @@ export class BookService {
     ) {
     }
 
-    public async getBooks(): Promise<Book[]> {
-        return await this.booksRepository.find({
-            relations: ["categories"]
-        });
-    }
+  public async getBooks(): Promise<Book[]> {
+    return await this.booksRepository.find({
+      relations: ["categories"],   
+    });
+  }
 
-    public async getBookById(id: string): Promise<Book> {
-        return await this.booksRepository.findOne(id);
-    }
+  public async getBookById(id: string): Promise<Book> {
+    return await this.booksRepository.findOne(id, {
+      relations: ["categories"]
+    });
+  }
 
-    public async getBooksByTitle(title: string): Promise<Book[]> {
-        return await this.booksRepository.createQueryBuilder()
-            .where("title like :search", {search: `${title}%`})
-            .getMany();
-    }
+  public async getBooksByTitle(title: string) : Promise<Book[]> {
+    return await this.booksRepository.createQueryBuilder('book')
+        .leftJoinAndSelect("book.categories", "category")
+        .where("LOWER(title) like LOWER(:search)", {search: `${title}%`})
+        .getMany();
+  }
 
-    public async getBooksByAuthor(author: string): Promise<Book[]> {
-        return await this.booksRepository.find({
-            where: {author: author}
-        });
-    }
+  public async getBooksByAuthor(author: string): Promise<Book[]> {
+    return await this.booksRepository.find({
+      where: { author: author },
+      relations: ["categories"]
+    });
+  }
 
-    public async getBooksByRating(rating: number): Promise<Book[]> {
-        return await this.booksRepository.createQueryBuilder()
-            .where("bookRating > :rating", {rating: rating})
-            .getMany();
-    }
+  public async getBooksByRating(rating: number): Promise<Book[]> {
+    return await this.booksRepository.find({
+      where: {
+        bookRating: MoreThanOrEqual(rating)
+      },
+      relations: ["categories"]
+    });
+  }
 
     public async rateBook(id: string, rating: number) {
         const bookToRate = await this.getBookById(id);
