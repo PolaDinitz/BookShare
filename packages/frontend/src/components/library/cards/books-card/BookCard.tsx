@@ -39,20 +39,20 @@ const BookCard = (props: IBookCard) => {
             }} >
                 <Box sx={{ display: 'flex' }} >
                     <Box sx={{ display: 'flex', flex: 4 }}>
-                        <LibraryBook imageUrl={imageUrl} author={author} name={name} catagory={catagory} />
+                        <LibraryBook imageUrl={imageUrl} author={author} name={name} category={catagory} />
                     </Box>
                     <Box sx={{ display: 'flex', flex: 2 }}>
                         {!available && !lent &&
-                            <Typography sx={{ alignSelf: "center", fontSize: 22 }} fontWeight="bold">
+                            <Typography sx={{ alignSelf: "center" }} variant="body1" fontWeight="bold">
                                 Book In Library
                             </Typography>
                         }
                         {available && !lent &&
-                            <Typography sx={{ alignSelf: "center", fontSize: 22 }} color="#4BB543" fontWeight="bold">
+                            <Typography sx={{ alignSelf: "center" }} variant="body1" color="#4BB543" fontWeight="bold">
                                 Available For Lending
                             </Typography>
                         }
-                        {lent ? <Typography sx={{ alignSelf: "center", fontSize: 22 }} fontWeight="bold">
+                        {lent ? <Typography sx={{ alignSelf: "center" }} variant="body1" fontWeight="bold">
                             Book is Lent
                         </Typography> :
                             <Typography sx={{  alignSelf: "center" }}>

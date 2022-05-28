@@ -1,7 +1,8 @@
 export interface ChatMessage {
     content: string;
-    time?: string;
+    time: Date;
     fromSelf: boolean;
+    isSystemMessage: boolean;
 }
 
 export interface Chat {

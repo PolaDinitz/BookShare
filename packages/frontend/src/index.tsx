@@ -9,6 +9,10 @@ import mainTheme from "./theme/Theme";
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import socketIOClient from "socket.io-client";
+import { config } from "./config/config";
+
+export const socket = socketIOClient(config.apiUrl, {autoConnect: false, transports: ['websocket']});
 
 ReactDOM.render(
     <React.StrictMode>

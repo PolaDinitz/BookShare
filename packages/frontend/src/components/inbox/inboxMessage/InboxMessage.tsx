@@ -1,5 +1,6 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import * as React from "react";
+import moment from "moment";
 
 type MessageType = 'primary' | 'secondary';
 
@@ -43,20 +44,37 @@ const inboxMessageStyleMap = new Map<MessageType, MessageStyle>([
 type InboxMessageProps = {
     color: MessageType;
     children?: React.ReactNode;
-    time?: string;
+    time?: Date;
+    width?: string;
+    isSystemMessage?: boolean;
 }
 
 const InboxMessage = (props: InboxMessageProps) => {
     const style = inboxMessageStyleMap.get(props.color);
     return (
-        <Box sx={{display: "flex", flexDirection: style?.flexDirection, whiteSpace: "initial"}}>
-            <Box style={style?.message} m={1} sx={{padding: "10px 20px 10px 20px"}}>
-                {props.children}
-            </Box>
-            <Box sx={{alignSelf: "flex-end"}}>
-                {props.time}
-            </Box>
-        </Box>
+        <>
+            {props?.isSystemMessage ?
+                <Box sx={{ margin: "5px" }}>
+                    <Typography align="center" color="gray" variant="subtitle2" fontWeight={300}>
+                        {props.children}
+                    </Typography>
+                </Box>
+                :
+                <Box sx={{display: "flex", flexDirection: style?.flexDirection, whiteSpace: "initial"}}>
+                    <Box style={style?.message} m={1} sx={{padding: "10px 20px 10px 20px", width: props?.width}}>
+                        {props.children}
+                    </Box>
+                    <Box sx={{alignSelf: "flex-end"}}>
+                        <Typography color="gray" variant="subtitle2" fontWeight={300}>
+                            {moment(props.time).isSame(new Date(), 'day') ?
+                                moment(props.time).format('HH:mm') :
+                                moment(props.time).format('DD/MM/YY HH:mm')
+                            }
+                        </Typography>
+                    </Box>
+                </Box>
+            }
+        </>
     );
 }
 

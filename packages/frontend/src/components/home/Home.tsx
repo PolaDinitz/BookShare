@@ -3,11 +3,12 @@ import _ from "lodash";
 import { useReducer, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Fab, Grid } from "@mui/material";
-
-import { allBooks, BookType } from "../../utils/books-data";
 import BooksCollection from "./BooksCollection";
 import { MultipleChoiceFilter, SearchFilter, SliderFilter, } from "./BookFilters";
 import AddBook from "./AddBook";
+import { Book } from "../../features/books/book.model";
+import { booksSelectors } from "../../features/books/books.slice";
+import { useSelector } from "react-redux";
 
 type State = {
     searchText: string;
@@ -69,7 +70,9 @@ const Home = () => {
 
     const [state, dispatch] = useReducer(filterReducer, initialState);
 
-    const filteredBooks = allBooks.filter((book: BookType) => {
+    const allBooks = useSelector(booksSelectors.selectAll);
+
+    const filteredBooks = allBooks.filter((book: Book) => {
         return (
             (book.title
                     .toLocaleLowerCase()
@@ -80,15 +83,15 @@ const Home = () => {
             (!_.isEmpty(state.genres)
                 ? book.genres.some((item) => state.genres.includes(item))
                 : true) &&
-            book.rating >= state.bookRating
+            book.bookRating >= state.bookRating
         );
     });
 
     return (
-        <>
+        <Box sx={{ marginLeft: "30px", marginRight: "30px" }}>
             <Box sx={{flexGrow: 10, margin: "30px 15px 15px 15px"}}>
                 <Grid container spacing={3}>
-                    <Grid item xs={3}>
+                    <Grid item alignSelf="center" justifyContent="center" xs={3}>
                         <SearchFilter
                             searchText={state.searchText}
                             onTextChange={(event) =>
@@ -170,7 +173,7 @@ const Home = () => {
                 <AddIcon/>
             </Fab>
             <AddBook open={open} onClose={handleClose}/>
-        </>
+        </Box>
     );
 };
 

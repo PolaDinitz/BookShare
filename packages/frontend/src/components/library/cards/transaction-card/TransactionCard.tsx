@@ -5,10 +5,11 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import LibraryBook from '../library-book/LibraryBook';
 import { useNavigate } from 'react-router-dom';
-import { Button, Rating } from '@mui/material';
+import { Rating, Stack } from '@mui/material';
+import RoundedButton from "../../../common/rounded-button";
 
 interface ITransactionCard {
-    catagory: string
+    category: string
     name: string
     author: string
     borrowedUserId: string
@@ -18,7 +19,7 @@ interface ITransactionCard {
 }
 
 const TransactionCard = (props: ITransactionCard) => {
-    const { catagory, name, author, borrowedUserId, lentUserId, active, imageUrl } = props;
+    const {category, name, author, borrowedUserId, lentUserId, active, imageUrl} = props;
     const navigate = useNavigate();
 
     const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -28,104 +29,84 @@ const TransactionCard = (props: ITransactionCard) => {
     }
 
     return (
-        <Card sx={{ minWidth: "100%", background: "none" }} style={{ border: "none", boxShadow: "none" }}>
+        <Card sx={{minWidth: "100%", background: "none"}} style={{border: "none", boxShadow: "none"}}>
             <CardContent sx={{
                 padding: 0, "&:last-child": {
                     paddingBottom: 0
                 }
-            }} >
-                <Box sx={{ display: 'flex' }} >
-                    <Box sx={{ display: 'flex', flex: 4 }}>
-                        <LibraryBook imageUrl={imageUrl} author={author} name={name} catagory={catagory} />
+            }}>
+                <Box sx={{display: 'flex'}}>
+                    <Box sx={{display: 'flex', flex: 4}}>
+                        <LibraryBook imageUrl={imageUrl} author={author} name={name} category={category}/>
                     </Box>
-                    <Box sx={{ display: 'flex', flex: 2 }}>
+                    <Box sx={{display: 'flex', flex: 2}}>
                         {currentUser.id === borrowedUserId &&
-                            <Box sx={{ display: 'flex', flexDirection: "column", m: 2 }}>
+                            <Box sx={{display: 'flex', flexDirection: "column", m: 2}}>
                                 {active ?
-                                    <Typography sx={{ fontSize: 20 }} color="green" fontWeight="bold">
+                                    <Typography variant="body1" color="green" fontWeight="bold">
                                         Active Borrow
                                     </Typography>
                                     :
-                                    <Box sx={{ display: 'flex' }}>
-                                        <Typography sx={{ fontSize: 20 }} color="black" fontWeight="bold">
+                                    <Box sx={{display: 'flex'}}>
+                                        <Typography variant="body1" color="black" fontWeight="bold">
                                             Returned Book
                                         </Typography>
-                                        <Rating sx={{ marginX: 1 }} name="half-rating-read" value={2.5} precision={0.5} readOnly />
+                                        <Rating sx={{marginX: 1}} name="half-rating-read" value={2} precision={1}
+                                                readOnly/>
                                     </Box>}
-                                <Box sx={{ display: 'flex', flex: 2 }} >
-                                    <Typography sx={{ mb: 1.5 }} color="black">
+                                <Box sx={{display: 'flex', flex: 2}}>
+                                    <Typography variant="body1" sx={{mb: 1.5}} color="black">
                                         Borrowed from&nbsp;
                                     </Typography>
-                                    <Typography sx={{ mb: 1.5 }} color="black" fontWeight="bold">
+                                    <Typography variant="body1" sx={{mb: 1.5}} color="black" fontWeight="bold">
                                         Gal Gadot
                                     </Typography>
                                 </Box>
                                 {active &&
-                                    <Box sx={{ display: 'flex', flex: 2 }}>
-                                        <Button sx={{
-                                            borderRadius: 20,
-                                            backgroundColor: "#1F45FC",
-                                            flex: 1,
-                                            marginX: 0.5,
-                                            textTransform: "none"
-                                        }}
-                                            variant="contained"
-                                            size="small">
-                                            <Typography variant="subtitle2" fontSize={14} fontWeight="bold">
+                                    <Stack spacing={1} direction="row">
+                                        <RoundedButton>
+                                            <Typography variant="subtitle2" fontWeight="bold">
                                                 Chat
                                             </Typography>
-                                        </Button>
-                                        <Button sx={{
-                                            borderRadius: 20,
-                                            backgroundColor: "#818589",
-                                            flex: 1,
-                                            textTransform: "none"
-                                        }}
-                                            variant="contained"
-                                            size="small">
-                                            <Typography variant="subtitle2" fontSize={14} fontWeight="bold">
+                                        </RoundedButton>
+                                        <RoundedButton style={{backgroundColor: "gray"}}>
+                                            <Typography variant="subtitle2" fontWeight="bold">
                                                 Return
                                             </Typography>
-                                        </Button>
-                                    </Box>}
+                                        </RoundedButton>
+                                    </Stack>
+                                }
                             </Box>
                         }
                         {currentUser.id === lentUserId &&
-                            <Box sx={{ display: 'flex', flexDirection: "column", m: 2 }}>
+                            <Box sx={{display: 'flex', flexDirection: "column", m: 2}}>
                                 {active ?
-                                    <Typography sx={{ fontSize: 20 }} color="green" fontWeight="bold">
+                                    <Typography variant="body1" color="green" fontWeight="bold">
                                         Active Lending
                                     </Typography>
                                     :
-                                    <Box sx={{ display: 'flex' }}>
-                                        <Typography sx={{ fontSize: 20 }} color="black" fontWeight="bold">
+                                    <Box sx={{display: 'flex'}}>
+                                        <Typography variant="body1" color="black" fontWeight="bold">
                                             Returned Book
                                         </Typography>
-                                        <Rating sx={{ marginX: 1 }} name="half-rating-read" value={3.5} precision={0.5} readOnly />
+                                        <Rating sx={{marginX: 1}} name="half-rating-read" value={3} precision={1}
+                                                readOnly/>
                                     </Box>}
-                                <Box sx={{ display: 'flex', flex: 2 }} >
-                                    <Typography sx={{ mb: 1.5 }} color="black">
+                                <Box sx={{display: 'flex', flex: 2}}>
+                                    <Typography sx={{mb: 1.5}} color="black">
                                         Lent to&nbsp;
                                     </Typography>
-                                    <Typography  color="black" fontWeight="bold">
+                                    <Typography color="black" fontWeight="bold">
                                         Gal Gadot
                                     </Typography>
                                 </Box>
                                 {active &&
-                                    <Box sx={{ display: 'flex' }}>
-                                        <Button sx={{
-                                            borderRadius: 20,
-                                            backgroundColor: "#1F45FC",
-                                            flex: 1,
-                                            marginX: 0.5,
-                                            textTransform: "none"
-                                        }}
-                                            variant="contained"
-                                            size="small">
-                                            <Typography variant="subtitle2" fontSize={14} fontWeight="bold">
+                                    <Box sx={{display: 'flex'}}>
+                                        <RoundedButton>
+                                            <Typography variant="subtitle2" fontWeight="bold">
                                                 Chat
                                             </Typography>
-                                        </Button>
+                                        </RoundedButton>
                                     </Box>}
                             </Box>
                         }

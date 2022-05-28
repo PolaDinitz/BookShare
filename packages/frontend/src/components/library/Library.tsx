@@ -35,7 +35,7 @@ const Library = () => {
     return (
         <CustomPaper
             img="/page-headers/library-header-image.jpg"
-            contentWidth="75%"
+            contentWidth="85%"
             size="large"
             avatarImg={`${config.apiUrl}/${user?.imageUrl}`}
         >
@@ -43,7 +43,7 @@ const Library = () => {
                 <Typography variant="h4" mt={2} fontWeight={600}>
                     {user?.firstName} {user?.lastName}'s Library
                 </Typography>
-                <Box sx={{display: "flex", justifyContent: "flex-end"}}>
+                <Box>
                     <Button sx={{borderRadius: 10}} variant="contained" onClick={handleClickOpen}>
                         <Typography variant="subtitle2" fontWeight="bold">
                             + Add a Book to Library
@@ -53,12 +53,10 @@ const Library = () => {
                 <List
                     sx={{
                         display: "flex",
-                        flexDirection: "row",
-                        padding: 5,
                         width: "100%",
                     }}
                 >
-                    <ListItem>
+                    <ListItem sx={{padding: "5px"}}>
                         <LibraryTab
                             headline={LibraryTabs.MY_BOOKS.toString()}
                             amount={30}
@@ -69,7 +67,7 @@ const Library = () => {
                         </LibraryTab>
                     </ListItem>
                     <Divider orientation="vertical" variant="middle" flexItem/>
-                    <ListItem>
+                    <ListItem sx={{padding: "5px"}}>
                         <LibraryTab
                             headline={LibraryTabs.BORROWED_BOOKS.toString()}
                             amount={10}
@@ -83,7 +81,7 @@ const Library = () => {
                         </LibraryTab>
                     </ListItem>
                     <Divider orientation="vertical" variant="middle" flexItem/>
-                    <ListItem>
+                    <ListItem sx={{padding: "5px"}}>
                         <LibraryTab
                             headline={LibraryTabs.LENT_BOOKS.toString()}
                             amount={20}
@@ -106,7 +104,7 @@ const Library = () => {
                             name="Harry Potter"
                             available={false}
                             lent={false}
-                        ></BookCard>
+                        />
                         <BookCard
                             imageUrl="/page-headers/library-header-image.jpg"
                             catagory="Fantacy"
@@ -114,7 +112,7 @@ const Library = () => {
                             name="Harry Potter"
                             available={true}
                             lent={true}
-                        ></BookCard>
+                        />
                         <BookCard
                             imageUrl="/page-headers/library-header-image.jpg"
                             catagory="Fantacy"
@@ -122,7 +120,7 @@ const Library = () => {
                             name="Harry Potter"
                             available={true}
                             lent={false}
-                        ></BookCard>
+                        />
                     </>
                 )}
                 {buttonSelected === LibraryTabs.BORROWED_BOOKS && (
@@ -130,19 +128,19 @@ const Library = () => {
                         <TransactionCard
                             imageUrl="/page-headers/library-header-image.jpg"
                             active={true}
-                            catagory="Fantacy"
+                            category="Fantacy"
                             author="J.K. Rolling"
                             name="Harry Potter"
                             lentUserId="3639e574-e243-4443-ad5c-e682ede9598d"
-                            borrowedUserId="43230e94-6ae9-4b75-b092-73d94d6286b0"
+                            borrowedUserId="1176e3cd-ca30-4041-9bf1-c146c6931633"
                         />
                         <TransactionCard
                             imageUrl="/page-headers/library-header-image.jpg"
                             active={false}
-                            catagory="Fantacy"
+                            category="Fantacy"
                             author="J.K. Rolling"
                             name="Harry Potter"
-                            lentUserId="3639e574-e243-4443-ad5c-e682ede9598d"
+                            lentUserId="1176e3cd-ca30-4041-9bf1-c146c6931633"
                             borrowedUserId="43230e94-6ae9-4b75-b092-73d94d6286b0"
                         />
                     </>
@@ -152,19 +150,19 @@ const Library = () => {
                         <TransactionCard
                             imageUrl="/page-headers/library-header-image.jpg"
                             active={true}
-                            catagory="Fantacy"
+                            category="Fantacy"
                             author="J.K. Rolling"
                             name="Harry Potter"
-                            lentUserId="43230e94-6ae9-4b75-b092-73d94d6286b0"
+                            lentUserId="1176e3cd-ca30-4041-9bf1-c146c6931633"
                             borrowedUserId="3639e574-e243-4443-ad5c-e682ede9598d"
                         />
                         <TransactionCard
                             imageUrl="/page-headers/library-header-image.jpg"
                             active={false}
-                            catagory="Fantacy"
+                            category="Fantacy"
                             author="J.K. Rolling"
                             name="Harry Potter"
-                            lentUserId="43230e94-6ae9-4b75-b092-73d94d6286b0"
+                            lentUserId="1176e3cd-ca30-4041-9bf1-c146c6931633"
                             borrowedUserId="3639e574-e243-4443-ad5c-e682ede9598d"
                         />
                     </>

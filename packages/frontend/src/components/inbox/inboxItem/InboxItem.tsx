@@ -17,6 +17,7 @@ const Item = styled(Button)<ButtonProps>(({theme}) => ({
 type InboxItemProps = {
     primary: string;
     secondary: string;
+    imageUrl: string;
     status: string;
     onCLick?: MouseEventHandler;
     selected?: boolean;
@@ -41,9 +42,9 @@ const InboxItem = (props: InboxItemProps) => {
                 </Typography>
                 <Box sx={{display: "flex", width: "100%"}}>
                     <Box sx={{display: "flex", flex: 1, justifyContent: "center"}}>
-                        <Avatar sx={{width: 70, height: 70, boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)"}}
+                        <Avatar sx={{width: 70, height: 70, boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.4)"}}
                                 alt={props.primary}
-                                src="https://material-ui.com/static/images/avatar/1.jpg"/>
+                                src={props.imageUrl}/>
                     </Box>
                     <Box sx={{display: "flex", flex: 2, flexDirection: "column"}}>
                         <Typography variant="h6" fontWeight={500}>

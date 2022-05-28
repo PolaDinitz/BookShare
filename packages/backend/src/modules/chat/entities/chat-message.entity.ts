@@ -1,22 +1,32 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "../../../user/entities/user.entity";
+import { Transaction } from "../../transaction/entities/transaction.entity";
+import { User } from "../../user/entities/user.entity";
 
 @Entity()
 export class ChatMessage {
 
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+    @PrimaryGeneratedColumn("uuid")
+    id: string;
 
-  /*@ManyToOne(() => Transaction, (transaction) => transaction.id)
-  transaction: Transaction;*/
+    @Column()
+    transactionId: string
 
-  @ManyToOne(() => User, (user) => user.id)
-  user: User;
+    @ManyToOne(() => Transaction, (transaction) => transaction.id)
+    transaction: Transaction;
 
-  @Column("varchar", { length: 255 })
-  content: string;
+    @Column()
+    userId: string;
 
-  @Column({ type: "timestamp without time zone" })
-  creationTimestamp: Date;
+    @ManyToOne(() => User, (user) => user.id)
+    user: User;
+
+    @Column("varchar", {length: 255})
+    content: string;
+
+    @Column()
+    isSystemMessage: boolean;
+
+    @Column({type: "timestamp without time zone"})
+    creationTimestamp: Date;
 
 }
