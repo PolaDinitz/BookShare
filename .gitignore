@@ -6,3 +6,10 @@
 packages/frontend/.idea/
 packages/recommendationEngine/.idea/
 /**/__pycache__
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/.gitignore
+.idea/BookShare.iml
+.idea/csv-plugin.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
