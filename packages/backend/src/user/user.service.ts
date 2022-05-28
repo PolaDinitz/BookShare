@@ -18,15 +18,20 @@ export class UsersService {
   ) {}
 
   public async getUsers(): Promise<User[]> {
-    return await this.usersRepository.find();
+    return await this.usersRepository.find({
+      relations: ['borrowTransactions']
+    });
   }
 
   public async getUserById(id: string): Promise<User> {
-    return await this.usersRepository.findOne(id);
+    return await this.usersRepository.findOne(id, {
+      relations: ['borrowTransactions']
+    });
   }
 
   public async getUserByEmail(email: string): Promise<User> {
     return await this.usersRepository.findOne({
+      relations: ['borrowTransactions'],
       where: { 
         email : email
       }

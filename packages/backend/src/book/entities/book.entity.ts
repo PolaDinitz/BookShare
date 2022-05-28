@@ -1,33 +1,34 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { DEFAULT_BOOK_IMAGE_FILE_NAME, IMAGES_BOOK_ASSETS_PATH } from "src/consts/images.consts";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import { UserBook } from "src/user-book/entities/user-book.entity";
+import { BookCategory } from "../../book-category/entities/book-category.entity";
+import { DEFAULT_BOOK_IMAGE } from "src/consts/images.consts";
 
 @Entity()
 export class Book {
-  @PrimaryGeneratedColumn('uuid')
-  book_id: string;
+    @PrimaryColumn()
+    id: string;
 
-  @Column()
-  title: string;
+    @Column()
+    title: string;
 
-  @Column()
-  author: string;
+    @Column({nullable: true})
+    author: string;
 
-  @Column()
-  description: string
+    @Column({nullable: true})
+    description: string
 
-  @Column()
-  ganers: string
+    @Column({default: DEFAULT_BOOK_IMAGE})
+    imageUrl: string
 
-  @Column({default: `${IMAGES_BOOK_ASSETS_PATH}/${DEFAULT_BOOK_IMAGE_FILE_NAME}`})
-  imageUrl: string
+    @Column()
+    bookRating: number
 
-  @Column({ nullable: true })
-  book_rating: number
+    @Column()
+    count: number
 
-  @Column()
-  count: number
+    @ManyToOne(type => BookCategory, bookCategory => bookCategory.book)
+    categories: BookCategory[]
 
-  @OneToMany(type => UserBook, userBook => userBook.book)
-  userBook: UserBook[];
+    @OneToMany(type => UserBook, userBook => userBook.book)
+    userBook: UserBook[];
 }

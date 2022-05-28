@@ -12,17 +12,20 @@ import {
     Typography
 } from "@mui/material";
 import * as React from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Search } from "@mui/icons-material";
 import SendIcon from '@mui/icons-material/Send';
 import { RootState } from "../../types/types";
 import { config } from "../../config/config";
 import InboxItem from "./inboxItem/InboxItem";
-import InboxMessage from "./inboxMessage/InboxMessage";
 import CustomPaper from "../common/custom-paper";
+import { socket } from "../../App";
+import InboxMessage from "./inboxMessage/InboxMessage";
+import { inboxSelectors } from "../../features/inbox/inbox.slice";
+import { Chat, ChatMessage } from "../../features/inbox/inbox.model";
 
 const Inbox = () => {
-
     const chatSection = {
         width: "100%",
         height: "70vh"
@@ -41,6 +44,18 @@ const Inbox = () => {
     }));
 
     const loggedInUser = useSelector((state: RootState) => state.auth.user);
+    const [selectedChatRoom, setSelectedChatRoom] = useState("");
+    const [chatMessage, setChatMessage] = useState("");
+    const transactions: Chat[] = useSelector(inboxSelectors.selectAll);
+
+    const submitNewMessage = () => {
+        const message: { transactionId: string, content: string } = {
+            transactionId: selectedChatRoom,
+            content: chatMessage
+        }
+        socket.emit("newMessage", message);
+        setChatMessage("");
+    }
 
     return (
         <CustomPaper size="large" img="/page-headers/inbox-header-image.jpg"
@@ -70,12 +85,13 @@ const Inbox = () => {
                         fullWidth
                     />
                     <ListScrolledArea>
-                        <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Lend Request"/>
-                        <InboxItem primary="Maayna Mordehai" secondary="The Witcher" status="Borrow Request"/>
-                        <InboxItem primary="Pola Dinitz" secondary="The Witcher" status="Lending in Prog."/>
-                        <InboxItem primary="Daniel Beilin" secondary="The Witcher" status="Borrow in Prog."/>
-                        <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Lending Finished"/>
-                        <InboxItem primary="Ran Biderman" secondary="The Witcher" status="Borrowing Finished"/>
+                        {transactions.map((transaction: Chat) => (
+                            <InboxItem key={transaction.transactionId}
+                                       onCLick={() => setSelectedChatRoom(transaction.transactionId)}
+                                       primary="Ran Biderman"
+                                       secondary="The Witcher" status="Lend Request"
+                                       selected={selectedChatRoom === transaction.transactionId}/>
+                        ))}
                     </ListScrolledArea>
                 </Box>
                 <Box sx={{
@@ -91,48 +107,65 @@ const Inbox = () => {
                      square
                      elevation={0}
                 >
-                    <Box sx={{
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        padding: "5px"
-                    }}>
-                        <Avatar sx={{width: 70, height: 70, marginRight: 3}}
-                                alt="Ran Biderman"
-                                src="https://material-ui.com/static/images/avatar/1.jpg"/>
-                        <Box sx={{alignSelf: "center"}}>
-                            <Typography variant="h6" fontWeight={500}>
-                                Ran Biderman
+                    {selectedChatRoom === "" ?
+                        <Box sx={{margin: "auto"}}>
+                            <Typography fontWeight={"bold"} fontSize="24px">
+                                Choose a chat
                             </Typography>
-                            <Typography variant="subtitle2" fontWeight={300}>
-                                The Witcher
+                            <Typography>
+                                To get started choose a chat room from the list on your left!
                             </Typography>
                         </Box>
-                    </Box>
-                    <Divider/>
-                    <ListScrolledArea sx={{flex: 2}}>
-                        <InboxMessage time="09:30" color="primary">Hey Ran, What's up?</InboxMessage>
-                        <InboxMessage time="09:33" color="secondary">Fine!</InboxMessage>
-                        <InboxMessage time="09:34" color="secondary">How are you?</InboxMessage>
-                        <InboxMessage time="09:50" color="primary">Great</InboxMessage>
-                    </ListScrolledArea>
-                    <Divider/>
-                    <Box padding={1} sx={{display: "flex"}}>
-                        <TextField
-                            variant="standard"
-                            InputProps={{disableUnderline: true}}
-                            autoComplete="off"
-                            label="Type a message..."
-                            fullWidth
-                        />
-                        <IconButton color="primary" component="span" disabled>
-                            <SendIcon/>
-                        </IconButton>
-                    </Box>
+                        :
+                        <>
+                            <Box sx={{
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                padding: "5px"
+                            }}>
+                                <Avatar sx={{width: 70, height: 70, marginRight: 3}}
+                                        alt="Ran Biderman"
+                                        src="https://material-ui.com/static/images/avatar/1.jpg"/>
+                                <Box sx={{alignSelf: "center"}}>
+                                    <Typography variant="h6" fontWeight={500}>
+                                        Ran Biderman
+                                    </Typography>
+                                    <Typography variant="subtitle2" fontWeight={300}>
+                                        The Witcher
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Divider/>
+                            <ListScrolledArea sx={{flex: 2}}>
+                                {transactions.find((transaction: Chat) => transaction.transactionId === selectedChatRoom)
+                                    ?.messages.map((message: ChatMessage, index) => (
+                                        <InboxMessage key={index} time={message?.time}
+                                                      color={message.fromSelf ? "secondary" : "primary"}>
+                                            {message.content}
+                                        </InboxMessage>
+                                    ))}
+                            </ListScrolledArea>
+                            <Divider/>
+                            <Box padding={1} sx={{display: "flex"}}>
+                                <TextField
+                                    variant="standard"
+                                    value={chatMessage}
+                                    InputProps={{disableUnderline: true}}
+                                    autoComplete="off"
+                                    label="Type a message..."
+                                    onChange={event => setChatMessage(event.target.value)}
+                                    fullWidth
+                                />
+                                <IconButton onClick={submitNewMessage} color="primary" component="button">
+                                    <SendIcon/>
+                                </IconButton>
+                            </Box>
+                        </>
+                    }
                 </Box>
             </Box>
         </CustomPaper>
     )
-
 }
 
 export default Inbox;

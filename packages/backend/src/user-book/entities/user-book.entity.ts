@@ -1,20 +1,33 @@
 import { Book } from "src/book/entities/book.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Transaction } from "src/transaction/entities/transaction.entity";
 
 @Entity()
+@Unique(["bookId", "userId"])
 export class UserBook {
 
-    @ManyToOne(type => Book, book => book.userBook, {primary: true})
+    @PrimaryGeneratedColumn('uuid')
+    id: string
+
+    @Column()
+    bookId: string
+    
+    @ManyToOne(type => Book, book => book.userBook)
     book: Book;
   
-    @ManyToOne(type => User, user => user.userBook, {primary: true})
-    user: User;
-  
     @Column()
-    user_book_rating: number;
-  
+    userId: string;
+
+    @ManyToOne(type => User, user => user.userBook)
+    user: User;
+
+    @Column({default: false})
+    isLent: boolean;
+
     @Column()
     available: boolean;
-  
+
+    @OneToMany(type => Transaction, transaction => transaction.userBook)
+    transactions: Transaction[]    
 }
