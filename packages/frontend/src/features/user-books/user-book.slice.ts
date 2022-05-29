@@ -22,7 +22,7 @@ export const fetchUserBooksThunk = createAsyncThunk<{ userBooks: UserBook[] }>(
     }
 );
 
-export const setUserBooksAvilabilityThunk = createAsyncThunk<{ userBook: UserBook }, { userBookId: string, isAvailable: boolean }>(
+export const setUserBooksAvailabilityThunk = createAsyncThunk<{ userBook: UserBook }, { userBookId: string, isAvailable: boolean }>(
     'user-books/setAvailability',
     async (payload, thunkApi) => {
         try {
@@ -70,7 +70,7 @@ const userBooksSlice = createSlice({
             .addCase(addUserBookThunk.fulfilled, (state, action) => {
                 userBooksAdapter.upsertOne(state, action.payload.userBook);
             })
-            .addCase(setUserBooksAvilabilityThunk.fulfilled, (state, action) => {
+            .addCase(setUserBooksAvailabilityThunk.fulfilled, (state, action) => {
                 userBooksAdapter.upsertOne(state, action.payload.userBook);
             })
             .addCase(fetchUserBooksThunk.fulfilled, (state, action) => {

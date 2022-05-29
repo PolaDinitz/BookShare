@@ -46,7 +46,8 @@ export class TransactionController {
     if (req.user.userId !== createTransactionDto.borrowUserId) {
       throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
     }
-    return await this.transactionService.create(createTransactionDto);
+    const createdTransaction = await this.transactionService.create(createTransactionDto);
+    return await this.transactionService.getTransactionById(createdTransaction.id);
   }
 
   @Get()

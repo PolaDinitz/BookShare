@@ -10,7 +10,7 @@ import BookCard from "./cards/books-card/BookCard";
 import LibraryTab from "./library-tab/LibraryTab";
 import TransactionCard from "./cards/transaction-card/TransactionCard";
 import AddBook from "../home/AddBook";
-import { LibraryBook, LibraryTransactionbBook, selectLibraryBorrowedBooks, selectLibraryLentBooks, selectLibraryMyBooks } from "../../features/user-books/user-book.selector";
+import { LibraryBook, LibraryTransactionBook, selectLibraryBorrowedBooks, selectLibraryLentBooks, selectLibraryMyBooks } from "../../features/user-books/user-book.selector";
 
 enum LibraryTabs {
     MY_BOOKS = "My Books",
@@ -101,8 +101,8 @@ const Library = () => {
                     </ListItem>
                 </List>
                 {buttonSelected === LibraryTabs.MY_BOOKS && (
-                    myBooks.map((libraryBook : LibraryBook) => {
-                        return <BookCard
+                    myBooks.map((libraryBook : LibraryBook) =>
+                        <BookCard
                             key={libraryBook.userBookId}
                             userBookId={libraryBook.userBookId}
                             imageUrl={libraryBook.imageUrl}
@@ -112,11 +112,11 @@ const Library = () => {
                             available={libraryBook.isAvailable}
                             lent={libraryBook.isLent}
                         />
-                    })
+                    )
                 )}
                 {buttonSelected === LibraryTabs.BORROWED_BOOKS && (
-                    borrowedBooks.map((libraryBook : LibraryTransactionbBook, index) => {
-                        return <TransactionCard
+                    borrowedBooks.map((libraryBook : LibraryTransactionBook, index) =>
+                        <TransactionCard
                             key={index}
                             imageUrl={libraryBook.imageUrl}
                             category={libraryBook.genres ? libraryBook.genres.join(', ') : ""}
@@ -129,11 +129,11 @@ const Library = () => {
                             lentUserName={libraryBook.lentUserName}
                             transactionId={libraryBook.transactionId}
                         />
-                    })
+                    )
                 )}
                 {buttonSelected === LibraryTabs.LENT_BOOKS && (
-                    lentBooks.map((libraryBook : LibraryTransactionbBook, index) => {
-                        return <TransactionCard
+                    lentBooks.map((libraryBook : LibraryTransactionBook, index) =>
+                        <TransactionCard
                             key={index}
                             imageUrl={libraryBook.imageUrl}
                             category={libraryBook.genres ? libraryBook.genres.join(', ') : ""}
@@ -146,7 +146,7 @@ const Library = () => {
                             lentUserRating={libraryBook.lentUserRating}
                             transactionId={libraryBook.transactionId}
                         />
-                    })
+                    )
                 )}
                 <AddBook open={open} onClose={handleClose}/>
             </Stack>
