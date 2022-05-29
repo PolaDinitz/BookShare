@@ -66,6 +66,19 @@ export class TransactionService {
     });
   }
 
+  public async getLastTransactionsByBorrowUser(id: string, limit: number) {
+    return this.transactionRepository.find({
+      where: {
+        borrowUserId: id
+      },
+      relations: ["borrowUser", "userBook", "userBook.user", "userBook.book", "chatMessages"],
+      order: {
+        startDate: "DESC"
+      },
+      take: limit,
+    });
+  }
+
   public async getTransactionsByBorrowUser(id: string) {
     return this.transactionRepository.find({
       where: {

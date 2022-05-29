@@ -27,7 +27,7 @@ export class BooksApiService {
     }
 
     public async getBookById(id: string) : Promise<BookApi> {
-      const bookItem = (await firstValueFrom(this.httpService.get(`https://www.googleapis.com/books/v1/volumes?q=isbn+"${id}"`))).data.items[0];
+      const bookItem = (await firstValueFrom(this.httpService.get(`https://www.googleapis.com/books/v1/volumes?q="${id}"`))).data.items[0];
       let book = {
         id: bookItem.id,
         title: bookItem.volumeInfo.title,

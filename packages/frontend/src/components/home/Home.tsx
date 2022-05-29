@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import ToggleFilter from "./BookFilters/ToggleFilter";
 import RecommendIcon from "@mui/icons-material/Recommend";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import BooksRecommendEngineService from "../../services/books-recommend-engine.service";
 
 type State = {
     recommendEngineToggle: boolean;
@@ -82,11 +83,14 @@ const Home = () => {
     const allBooks = useSelector(booksSelectors.selectAll);
 
     useEffect(() => {
-        if (state.recommendEngineToggle === true) {
-            // TODO: Get from server all ids from engine
-            // TODO: Set into SetRecommendedBooksIds
-            SetRecommendedBooksIds(["_kLanQEACAAJ", "2NIpDAAAQBAJ"]);
+        const getRecommendedBooksIds = async () => {
+            if (state.recommendEngineToggle === true) {
+                return await BooksRecommendEngineService.getRecommendedBooks();
+            }
         }
+        getRecommendedBooksIds().then((booksIds: string[]) => {
+            SetRecommendedBooksIds(booksIds);
+        })
     }, [state.recommendEngineToggle]);
 
     const filteredBooks = allBooks.filter((book: Book) => {
@@ -108,7 +112,7 @@ const Home = () => {
                 book.bookRating >= state.bookRating
             ) &&
             (
-                state.recommendEngineToggle ? recommendedBooksIds.includes(book.id) : true
+                state.recommendEngineToggle ? recommendedBooksIds?.includes(book.id) : true
             )
         );
     });
