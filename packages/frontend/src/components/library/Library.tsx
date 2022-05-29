@@ -10,6 +10,7 @@ import BookCard from "./cards/books-card/BookCard";
 import LibraryTab from "./library-tab/LibraryTab";
 import TransactionCard from "./cards/transaction-card/TransactionCard";
 import AddBook from "../home/AddBook";
+import { LibraryBook, LibraryTransactionbBook, selectLibraryBorrowedBooks, selectLibraryLentBooks, selectLibraryMyBooks } from "../../features/user-books/user-book.selector";
 
 enum LibraryTabs {
     MY_BOOKS = "My Books",
@@ -31,6 +32,10 @@ const Library = () => {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const myBooks = useSelector(selectLibraryMyBooks);
+    const lentBooks = useSelector(selectLibraryLentBooks);
+    const borrowedBooks = useSelector(selectLibraryBorrowedBooks);
 
     return (
         <CustomPaper
@@ -59,7 +64,7 @@ const Library = () => {
                     <ListItem sx={{padding: "5px"}}>
                         <LibraryTab
                             headline={LibraryTabs.MY_BOOKS.toString()}
-                            amount={30}
+                            amount={myBooks.length}
                             selected={buttonSelected === LibraryTabs.MY_BOOKS}
                             click={() => changedButtonSelected(LibraryTabs.MY_BOOKS)}
                         >
@@ -70,7 +75,7 @@ const Library = () => {
                     <ListItem sx={{padding: "5px"}}>
                         <LibraryTab
                             headline={LibraryTabs.BORROWED_BOOKS.toString()}
-                            amount={10}
+                            amount={borrowedBooks.length}
                             selected={buttonSelected === LibraryTabs.BORROWED_BOOKS}
                             click={() => changedButtonSelected(LibraryTabs.BORROWED_BOOKS)}
                         >
@@ -84,7 +89,7 @@ const Library = () => {
                     <ListItem sx={{padding: "5px"}}>
                         <LibraryTab
                             headline={LibraryTabs.LENT_BOOKS.toString()}
-                            amount={20}
+                            amount={lentBooks.length}
                             selected={buttonSelected === LibraryTabs.LENT_BOOKS}
                             click={() => changedButtonSelected(LibraryTabs.LENT_BOOKS)}
                         >
@@ -96,76 +101,52 @@ const Library = () => {
                     </ListItem>
                 </List>
                 {buttonSelected === LibraryTabs.MY_BOOKS && (
-                    <>
-                        <BookCard
-                            imageUrl="/page-headers/library-header-image.jpg"
-                            catagory="Fantacy"
-                            author="J.K. Rolling"
-                            name="Harry Potter"
-                            available={false}
-                            lent={false}
+                    myBooks.map((libraryBook : LibraryBook) => {
+                        return <BookCard
+                            key={libraryBook.userBookId}
+                            userBookId={libraryBook.userBookId}
+                            imageUrl={libraryBook.imageUrl}
+                            category={libraryBook.genres ? libraryBook.genres.join(', ') : ""}
+                            author={libraryBook.author}
+                            name={libraryBook.book}
+                            available={libraryBook.isAvailable}
+                            lent={libraryBook.isLent}
                         />
-                        <BookCard
-                            imageUrl="/page-headers/library-header-image.jpg"
-                            catagory="Fantacy"
-                            author="J.K. Rolling"
-                            name="Harry Potter"
-                            available={true}
-                            lent={true}
-                        />
-                        <BookCard
-                            imageUrl="/page-headers/library-header-image.jpg"
-                            catagory="Fantacy"
-                            author="J.K. Rolling"
-                            name="Harry Potter"
-                            available={true}
-                            lent={false}
-                        />
-                    </>
+                    })
                 )}
                 {buttonSelected === LibraryTabs.BORROWED_BOOKS && (
-                    <>
-                        <TransactionCard
-                            imageUrl="/page-headers/library-header-image.jpg"
-                            active={true}
-                            category="Fantacy"
-                            author="J.K. Rolling"
-                            name="Harry Potter"
-                            lentUserId="3639e574-e243-4443-ad5c-e682ede9598d"
-                            borrowedUserId="1176e3cd-ca30-4041-9bf1-c146c6931633"
+                    borrowedBooks.map((libraryBook : LibraryTransactionbBook, index) => {
+                        return <TransactionCard
+                            key={index}
+                            imageUrl={libraryBook.imageUrl}
+                            category={libraryBook.genres ? libraryBook.genres.join(', ') : ""}
+                            author={libraryBook.author}
+                            name={libraryBook.book}
+                            active={libraryBook.isActive}
+                            lentUserId={libraryBook.lentUserId}
+                            borrowedUserId={libraryBook.borrowedUserId}
+                            borrowUserRating={libraryBook.borrowUserRating}
+                            lentUserName={libraryBook.lentUserName}
+                            transactionId={libraryBook.transactionId}
                         />
-                        <TransactionCard
-                            imageUrl="/page-headers/library-header-image.jpg"
-                            active={false}
-                            category="Fantacy"
-                            author="J.K. Rolling"
-                            name="Harry Potter"
-                            lentUserId="1176e3cd-ca30-4041-9bf1-c146c6931633"
-                            borrowedUserId="43230e94-6ae9-4b75-b092-73d94d6286b0"
-                        />
-                    </>
+                    })
                 )}
                 {buttonSelected === LibraryTabs.LENT_BOOKS && (
-                    <>
-                        <TransactionCard
-                            imageUrl="/page-headers/library-header-image.jpg"
-                            active={true}
-                            category="Fantacy"
-                            author="J.K. Rolling"
-                            name="Harry Potter"
-                            lentUserId="1176e3cd-ca30-4041-9bf1-c146c6931633"
-                            borrowedUserId="3639e574-e243-4443-ad5c-e682ede9598d"
+                    lentBooks.map((libraryBook : LibraryTransactionbBook, index) => {
+                        return <TransactionCard
+                            key={index}
+                            imageUrl={libraryBook.imageUrl}
+                            category={libraryBook.genres ? libraryBook.genres.join(', ') : ""}
+                            author={libraryBook.author}
+                            name={libraryBook.book}
+                            active={libraryBook.isActive}
+                            lentUserId={libraryBook.lentUserId}
+                            borrowedUserId={libraryBook.borrowedUserId}
+                            borrowedUserName={libraryBook.borrowedUserName}
+                            lentUserRating={libraryBook.lentUserRating}
+                            transactionId={libraryBook.transactionId}
                         />
-                        <TransactionCard
-                            imageUrl="/page-headers/library-header-image.jpg"
-                            active={false}
-                            category="Fantacy"
-                            author="J.K. Rolling"
-                            name="Harry Potter"
-                            lentUserId="1176e3cd-ca30-4041-9bf1-c146c6931633"
-                            borrowedUserId="3639e574-e243-4443-ad5c-e682ede9598d"
-                        />
-                    </>
+                    })
                 )}
                 <AddBook open={open} onClose={handleClose}/>
             </Stack>

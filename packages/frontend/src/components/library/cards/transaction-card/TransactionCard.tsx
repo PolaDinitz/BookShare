@@ -7,6 +7,10 @@ import LibraryBook from '../library-book/LibraryBook';
 import { useNavigate } from 'react-router-dom';
 import { Rating, Stack } from '@mui/material';
 import RoundedButton from "../../../common/rounded-button";
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../../types/types';
+import { returnBookThunk } from '../../../../features/transactions/transactions.slice';
+import { toast } from 'react-toastify';
 
 interface ITransactionCard {
     category: string
@@ -16,16 +20,37 @@ interface ITransactionCard {
     lentUserId: string
     active: boolean
     imageUrl: string
+    transactionId: string
+    borrowedUserName?: string
+    lentUserName?: string
+    borrowUserRating?: number|null
+    lentUserRating?: number|null
 }
 
 const TransactionCard = (props: ITransactionCard) => {
-    const {category, name, author, borrowedUserId, lentUserId, active, imageUrl} = props;
+    const {category,
+           name,
+           author, 
+           borrowedUserId, 
+           lentUserId, 
+           active, 
+           imageUrl, 
+           borrowedUserName, 
+           lentUserRating,
+           lentUserName, 
+           borrowUserRating,
+           transactionId
+        } = props;
     const navigate = useNavigate();
-
+    const dispatch = useDispatch<AppDispatch>();
     const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
     if (Object.keys(currentUser).length === 0) {
         navigate("/login")
+    }
+
+    const onChatClick = () => {
+        navigate(`/inbox/${transactionId}`);
     }
 
     return (
@@ -51,30 +76,26 @@ const TransactionCard = (props: ITransactionCard) => {
                                         <Typography variant="body1" color="black" fontWeight="bold">
                                             Returned Book
                                         </Typography>
-                                        <Rating sx={{marginX: 1}} name="half-rating-read" value={2} precision={1}
-                                                readOnly/>
+                                        {borrowUserRating !== null &&(
+                                        <Rating sx={{marginX: 1}} name="half-rating-read" value={borrowUserRating} precision={1}
+                                                readOnly/>)}
                                     </Box>}
                                 <Box sx={{display: 'flex', flex: 2}}>
                                     <Typography variant="body1" sx={{mb: 1.5}} color="black">
                                         Borrowed from&nbsp;
                                     </Typography>
                                     <Typography variant="body1" sx={{mb: 1.5}} color="black" fontWeight="bold">
-                                        Gal Gadot
+                                        {lentUserName}
                                     </Typography>
                                 </Box>
                                 {active &&
-                                    <Stack spacing={1} direction="row">
-                                        <RoundedButton>
-                                            <Typography variant="subtitle2" fontWeight="bold">
-                                                Chat
-                                            </Typography>
-                                        </RoundedButton>
-                                        <RoundedButton style={{backgroundColor: "gray"}}>
-                                            <Typography variant="subtitle2" fontWeight="bold">
-                                                Return
-                                            </Typography>
-                                        </RoundedButton>
-                                    </Stack>
+                                    <Box sx={{display: 'flex'}}>
+                                    <RoundedButton onClick={onChatClick}>
+                                        <Typography variant="subtitle2" fontWeight="bold">
+                                            Chat
+                                        </Typography>
+                                    </RoundedButton>
+                                </Box>
                                 }
                             </Box>
                         }
@@ -89,20 +110,21 @@ const TransactionCard = (props: ITransactionCard) => {
                                         <Typography variant="body1" color="black" fontWeight="bold">
                                             Returned Book
                                         </Typography>
-                                        <Rating sx={{marginX: 1}} name="half-rating-read" value={3} precision={1}
-                                                readOnly/>
+                                        {lentUserRating !== null && (
+                                        <Rating sx={{marginX: 1}} name="half-rating-read" value={lentUserRating} precision={1}
+                                                readOnly/>)}
                                     </Box>}
                                 <Box sx={{display: 'flex', flex: 2}}>
                                     <Typography sx={{mb: 1.5}} color="black">
                                         Lent to&nbsp;
                                     </Typography>
                                     <Typography color="black" fontWeight="bold">
-                                        Gal Gadot
+                                        {borrowedUserName}
                                     </Typography>
                                 </Box>
                                 {active &&
                                     <Box sx={{display: 'flex'}}>
-                                        <RoundedButton>
+                                        <RoundedButton onClick={onChatClick}>
                                             <Typography variant="subtitle2" fontWeight="bold">
                                                 Chat
                                             </Typography>

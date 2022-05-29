@@ -37,6 +37,7 @@ import {
 import { toast } from "react-toastify";
 import { socket } from "../../index";
 import InboxReviewMessage from "./inboxMessage/InboxReviewMessage";
+import { useParams } from 'react-router-dom';
 
 const chatSection = {
     width: "100%",
@@ -57,9 +58,9 @@ const ListScrolledArea = styled(List)<ListProps>(({theme}) => ({
 
 const Inbox = () => {
     const dispatch = useDispatch<AppDispatch>();
-
+    const { id } = useParams();
     const loggedInUser = useSelector((state: RootState) => state.auth.user);
-    const [selectedChatRoomId, setSelectedChatRoomId] = useState("");
+    const [selectedChatRoomId, setSelectedChatRoomId] = useState(id ? id : "");
     const [selectedChatRoom, setSelectedChatRoom] = useState({} as ChatRoom | undefined);
     const [chatMessage, setChatMessage] = useState("");
     const chats: Chat[] = useSelector(inboxSelectors.selectAll);
