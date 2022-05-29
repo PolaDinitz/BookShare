@@ -1,6 +1,6 @@
 import { AnyAction } from "@reduxjs/toolkit";
 import _ from "lodash";
-import { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Fab, Grid } from "@mui/material";
 import BooksCollection from "./BooksCollection";
@@ -9,8 +9,12 @@ import AddBook from "./AddBook";
 import { Book } from "../../features/books/book.model";
 import { booksSelectors } from "../../features/books/books.slice";
 import { useSelector } from "react-redux";
+import ToggleFilter from "./BookFilters/ToggleFilter";
+import RecommendIcon from "@mui/icons-material/Recommend";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 
 type State = {
+    recommendEngineToggle: boolean;
     searchText: string;
     genres: string[];
     userRating: number;
@@ -18,7 +22,8 @@ type State = {
     distance: number;
 };
 
-const initialState = {
+const initialState: State = {
+    recommendEngineToggle: false,
     searchText: "",
     genres: [],
     userRating: 0,
@@ -27,6 +32,7 @@ const initialState = {
 };
 
 const filterActionTypes = {
+    byRecommendEngine: "byRecommendEngine",
     byName: "byName",
     byGenres: "byGenres",
     byUserRating: "byUserRating",
@@ -36,6 +42,8 @@ const filterActionTypes = {
 
 function filterReducer(state: State = initialState, action: AnyAction) {
     switch (action.type) {
+        case "byRecommendEngine":
+            return {...state, recommendEngineToggle: action.payload};
         case "byName":
             return {...state, searchText: action.payload};
         case "byGenres":
@@ -60,6 +68,7 @@ const fabStyle = {
 
 const Home = () => {
     const [open, setOpen] = useState(false);
+    const [recommendedBooksIds, SetRecommendedBooksIds] = useState([] as string[]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -72,25 +81,57 @@ const Home = () => {
 
     const allBooks = useSelector(booksSelectors.selectAll);
 
+    useEffect(() => {
+        if (state.recommendEngineToggle === true) {
+            // TODO: Get from server all ids from engine
+            // TODO: Set into SetRecommendedBooksIds
+            SetRecommendedBooksIds(["_kLanQEACAAJ", "2NIpDAAAQBAJ"]);
+        }
+    }, [state.recommendEngineToggle]);
+
     const filteredBooks = allBooks.filter((book: Book) => {
         return (
-            (book.title
+            (
+                book.title
                     .toLocaleLowerCase()
                     .includes(state.searchText.toLocaleLowerCase()) ||
                 book.author
                     .toLocaleLowerCase()
-                    .includes(state.searchText.toLocaleLowerCase())) &&
-            (!_.isEmpty(state.genres)
-                ? book.genres.some((item) => state.genres.includes(item))
-                : true) &&
-            book.bookRating >= state.bookRating
+                    .includes(state.searchText.toLocaleLowerCase())
+            ) &&
+            (
+                !_.isEmpty(state.genres)
+                    ? book.genres.some((item) => state.genres.includes(item))
+                    : true
+            ) &&
+            (
+                book.bookRating >= state.bookRating
+            ) &&
+            (
+                state.recommendEngineToggle ? recommendedBooksIds.includes(book.id) : true
+            )
         );
     });
 
     return (
-        <Box sx={{ marginLeft: "30px", marginRight: "30px" }}>
+        <Box sx={{marginLeft: "30px", marginRight: "30px"}}>
             <Box sx={{flexGrow: 10, margin: "30px 15px 15px 15px"}}>
                 <Grid container spacing={3}>
+                    <Grid item alignSelf="center" justifyContent="center" xs={1}>
+                        <ToggleFilter
+                            toggleValue={state.recommendEngineToggle}
+                            onToggleChange={(event, newValue) => {
+                                if (newValue !== null) {
+                                    return dispatch({
+                                        type: filterActionTypes.byRecommendEngine,
+                                        payload: newValue
+                                    })
+                                }
+                            }}
+                            leftToggleIcon={<RecommendIcon/>}
+                            rightToggleIcon={<TravelExploreIcon/>}
+                        />
+                    </Grid>
                     <Grid item alignSelf="center" justifyContent="center" xs={3}>
                         <SearchFilter
                             searchText={state.searchText}
@@ -103,7 +144,7 @@ const Home = () => {
                             suggestions={_.map(allBooks, "title")}
                         />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         <MultipleChoiceFilter
                             label="Choose Genres"
                             options={_(allBooks).map("genres").flatten().uniq().value()}

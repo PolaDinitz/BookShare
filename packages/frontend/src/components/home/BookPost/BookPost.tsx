@@ -21,7 +21,7 @@ const BookPost = (props: BookPostProps) => {
         setOpen(false);
     };
 
-    const {title, author, genres, imageUrl, bookRating} = props.book;
+    const {title, author, genres, imageUrl, bookRating, count} = props.book;
 
     return (
         <BookCustomPaper img={imageUrl}>
@@ -45,7 +45,7 @@ const BookPost = (props: BookPostProps) => {
                     <Box sx={{display: "flex", alignItems: "center"}}>
                         <FavoriteIcon sx={{color: "#3164F4"}} fontSize="small"/>
                         <Typography variant="subtitle2" color="#3164F4">
-                            {bookRating}
+                            {bookRating ? bookRating / count : 0}
                         </Typography>
                         <Typography sx={{alignSelf: "flex-end"}} variant="caption" fontWeight={300} fontSize={12}
                                     color="gray">
