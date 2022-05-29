@@ -1,4 +1,3 @@
-import { Category } from "@mui/icons-material";
 import { createSelector, Dictionary } from "@reduxjs/toolkit";
 import { Selector } from "react-redux";
 import TransactionStatus from "../../enums/TransactionStatusEnum";
@@ -21,7 +20,7 @@ export interface LibraryBook {
     isLent: boolean
 }
 
-export interface LibraryTransactionbBook {
+export interface LibraryTransactionBook {
     book: string
     author: string
     genres: string[]
@@ -39,13 +38,13 @@ export interface LibraryTransactionbBook {
 const getLibraryMyBooks = (userBooks: UserBook[],
                            booksDictionary: Dictionary<Book>,
                            loggedInUserId: string | undefined): LibraryBook[] => {
-    const libraryMyBooks : LibraryBook[] = [];
+    const libraryMyBooks: LibraryBook[] = [];
     userBooks.forEach((userBook) => {
         if (userBook.user.id === loggedInUserId) {
             const book = booksDictionary[userBook.bookId];
             if (book) {
-                let libraryBook = {   
-                    userBookId: userBook.id, 
+                let libraryBook = {
+                    userBookId: userBook.id,
                     book: book.title,
                     author: book.author,
                     genres: book.genres,
@@ -53,7 +52,7 @@ const getLibraryMyBooks = (userBooks: UserBook[],
                     isAvailable: userBook.isAvailable,
                     isLent: userBook.isLent,
                 } as LibraryBook;
-                libraryMyBooks.push(libraryBook);         
+                libraryMyBooks.push(libraryBook);
             }
         }
     });
@@ -61,14 +60,13 @@ const getLibraryMyBooks = (userBooks: UserBook[],
 }
 
 const getLibraryLentBooks = (transactions: Transaction[],
-                               userBooks: Dictionary<UserBook>,
-                               booksDictionary: Dictionary<Book>,
-                               loggedInUserId: string | undefined): LibraryTransactionbBook[] => {
-    const libraryLentBooks : LibraryTransactionbBook[] = [];
+                             userBooks: Dictionary<UserBook>,
+                             booksDictionary: Dictionary<Book>,
+                             loggedInUserId: string | undefined): LibraryTransactionBook[] => {
+    const libraryLentBooks: LibraryTransactionBook[] = [];
     transactions.forEach((transaction) => {
         const userBook = userBooks[transaction.userBookId];
-        console.log(transaction.isActive);
-        if (userBook && userBook.user.id === loggedInUserId && (transaction.status === TransactionStatus.FINISHED_TRANSACTION || (transaction.isActive && userBook.isLent) )) {
+        if (userBook && userBook.user.id === loggedInUserId && (transaction.status === TransactionStatus.FINISHED_TRANSACTION || (transaction.isActive && userBook.isLent))) {
             const book = booksDictionary[userBook.bookId];
             if (book) {
                 libraryLentBooks.push({
@@ -90,10 +88,10 @@ const getLibraryLentBooks = (transactions: Transaction[],
 }
 
 const getLibraryBorrowedBooks = (transactions: Transaction[],
-                               userBooks: Dictionary<UserBook>,
-                               booksDictionary: Dictionary<Book>,
-                               loggedInUserId: string | undefined): LibraryTransactionbBook[] => {
-    const libraryBorrowedBooks : LibraryTransactionbBook[] = [];
+                                 userBooks: Dictionary<UserBook>,
+                                 booksDictionary: Dictionary<Book>,
+                                 loggedInUserId: string | undefined): LibraryTransactionBook[] => {
+    const libraryBorrowedBooks: LibraryTransactionBook[] = [];
     transactions.forEach((transaction) => {
         if (transaction.borrowUser.id === loggedInUserId) {
             const userBook = userBooks[transaction.userBookId];
@@ -128,7 +126,7 @@ export const selectLibraryMyBooks: Selector<RootState, LibraryBook[]> = createSe
     getLibraryMyBooks
 );
 
-export const selectLibraryLentBooks: Selector<RootState, LibraryTransactionbBook[]> = createSelector(
+export const selectLibraryLentBooks: Selector<RootState, LibraryTransactionBook[]> = createSelector(
     [
         transactionsSelectors.selectAll,
         userBooksSelectors.selectEntities,
@@ -138,7 +136,7 @@ export const selectLibraryLentBooks: Selector<RootState, LibraryTransactionbBook
     getLibraryLentBooks
 );
 
-export const selectLibraryBorrowedBooks: Selector<RootState, LibraryTransactionbBook[]> = createSelector(
+export const selectLibraryBorrowedBooks: Selector<RootState, LibraryTransactionBook[]> = createSelector(
     [
         transactionsSelectors.selectAll,
         userBooksSelectors.selectEntities,

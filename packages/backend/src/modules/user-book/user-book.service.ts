@@ -26,7 +26,7 @@ export class UserBookService {
     });
   }
 
-  public async create(createBookDto: CreateBookDto) {
+  public async create(createBookDto: CreateBookDto): Promise<UserBook> {
     return await this.userBookRepository.save(this.userBookRepository.create({
       userId: createBookDto.userId,
       bookId: createBookDto.bookId,

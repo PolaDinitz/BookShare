@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import LibraryBook from '../library-book/LibraryBook';
-import { deleteUserBookThunk, setUserBooksAvilabilityThunk } from '../../../../features/user-books/user-book.slice';
+import { deleteUserBookThunk, setUserBooksAvailabilityThunk } from '../../../../features/user-books/user-book.slice';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../../../types/types';
@@ -37,7 +37,7 @@ const BookCard = (props: IBookCard) => {
     };
 
     const changeUserBookAvailability = (isAvailable : boolean) => {
-        dispatch(setUserBooksAvilabilityThunk({isAvailable, userBookId})).unwrap()
+        dispatch(setUserBooksAvailabilityThunk({isAvailable, userBookId})).unwrap()
             .then(() => {
                 handleClose();
             })
