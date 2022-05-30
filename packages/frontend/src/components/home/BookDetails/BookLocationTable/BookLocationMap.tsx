@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
 import { useSelector } from "react-redux";
 
 import {
-  getCoordinatesFromAdress,
+  getCoordinatesFromAddress,
   Coordinates,
 } from "../../../../utils/distance-calculation";
 import { User } from "../../../../features/user/user.model";
@@ -27,7 +27,7 @@ const BookLocationMap = () => {
   }, []);
 
   useEffect(() => {
-    getCoordinatesFromAdress(user.address).then((response: Coordinates) => {
+    getCoordinatesFromAddress(user.address).then((response: Coordinates) => {
       setCurrCoordinates(response);
     });
   }, []);
