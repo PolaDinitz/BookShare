@@ -74,8 +74,6 @@ const Home = () => {
 
     const allBooks = useSelector(booksSelectors.selectAll);
 
-    console.log({ allBooks });
-
     const filteredBooks = allBooks.filter((book: Book) => {
         return (
             (book.title
@@ -90,8 +88,6 @@ const Home = () => {
             book.bookRating >= state.bookRating
         );
     });
-
-    console.log({ filteredBooks });
 
     return (
         <>

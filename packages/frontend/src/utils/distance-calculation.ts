@@ -8,12 +8,12 @@ export type Coordinates = {
 };
 
 export const getCoordinatesFromAdress = async (
-  adress: string
+  address: string
 ): Promise<Coordinates> => {
 
   let response = await axios
     .get(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${adress.replace(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${address.replace(
         " ",
         "+"
       )}&key=${API_KEY}`
@@ -23,7 +23,6 @@ export const getCoordinatesFromAdress = async (
         lon: response.data["results"][0]["geometry"]["location"]["lng"],
         lat: response.data["results"][0]["geometry"]["location"]["lat"],
       };
-
 };
 
 export const calcDistanceFromAdress = async (
