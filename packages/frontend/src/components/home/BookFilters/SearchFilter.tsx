@@ -1,6 +1,5 @@
 import React from "react";
-import { IconButton, InputBase } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { InputBase } from "@mui/material";
 
 type SearchFilterProps = {
     searchText: string;
