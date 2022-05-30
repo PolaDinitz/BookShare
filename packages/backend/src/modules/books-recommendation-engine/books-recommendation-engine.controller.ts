@@ -20,8 +20,11 @@ export class BooksRecommendationEngineController {
   async getRecommendedBooks(@Request() req: any) {
     const LastBooksLimit = 1;
     const userId: string = req.user.userId;
+    let recommendedBooksIds: string[] = [];
     const lastBorrowedBooksIds: string[] = (await this.transactionService.getLastTransactionsByBorrowUser(userId, LastBooksLimit)).map((transaction: Transaction) => transaction.userBook.bookId);
-    return this.booksRecommendationEngineService.getRecommendedBooks(lastBorrowedBooksIds);
+    if (lastBorrowedBooksIds.length !== 0)
+      recommendedBooksIds = await this.booksRecommendationEngineService.getRecommendedBooks(lastBorrowedBooksIds);
+    return recommendedBooksIds;
   }
 
 }
