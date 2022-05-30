@@ -4,3 +4,6 @@
 .vscode
 .env
 packages/frontend/.idea/
+packages/recommendationEngine/.idea/
+/**/__pycache__
+.idea/

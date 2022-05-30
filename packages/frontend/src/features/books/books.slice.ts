@@ -12,7 +12,7 @@ export const fetchBooksThunk = createAsyncThunk<{ books: Book[] }>(
     'books/fetch',
     async (payload, thunkApi) => {
         try {
-            const books: Book[] = await BookService.getBooks();
+            const books = await BookService.getBooks();
             return {books};
         } catch (error: any) {
             return thunkApi.rejectWithValue(error.message);

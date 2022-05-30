@@ -17,6 +17,8 @@ export interface ChatRoom {
     subName: string;
     imageUrl: string;
     status?: ChatStatusEnum;
+    userRating?: number;
+    bookRating?: number;
 }
 
 const buildChatRoomsArray = (transactions: Transaction[],
@@ -46,6 +48,8 @@ const buildChatRoomObject = (transaction: Transaction,
             name: user.firstName + " " + user.lastName,
             subName: book.title,
             imageUrl: user.imageUrl,
+            userRating: isBorrower ? transaction.lentUserRating : transaction.borrowUserRating,
+            bookRating: transaction.bookRating,
             status: transactionStatusToChatStatusMap
                 .get(Array.from(transactionStatusToChatStatusMap.keys()).find((k) => k?.transactionStatus === transaction.status && k?.isBorrower === isBorrower))
         }

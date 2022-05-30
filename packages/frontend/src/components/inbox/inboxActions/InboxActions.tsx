@@ -5,7 +5,9 @@ import ChatStatusEnum from "../../../enums/ChatStatusEnum";
 import RoundedButton from "../../common/rounded-button";
 import {
     cancelTransactionChatThunk,
-    declineTransactionChatThunk
+    declineTransactionChatThunk,
+    lendBookThunk,
+    returnBookThunk
 } from "../../../features/transactions/transactions.slice";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
@@ -27,8 +29,22 @@ const InboxActions = (props: InboxActionsProps) => {
     const lendButton: InboxAction = {
         title: "Lend",
         color: "black",
-        callback: () => {
-            console.log("Lending");
+        callback: (transactionId: string) => {
+            dispatch(lendBookThunk({transactionId: transactionId})).unwrap()
+                .catch((errorMessage: string) => {
+                    toast.error(errorMessage);
+                });
+        }
+    }
+
+    const returnBookButton: InboxAction = {
+        title: "Return Book",
+        color: "black",
+        callback: (transactionId: string) => {
+            dispatch(returnBookThunk({transactionId: transactionId})).unwrap()
+                .catch((errorMessage: string) => {
+                    toast.error(errorMessage);
+                });
         }
     }
 
@@ -64,24 +80,20 @@ const InboxActions = (props: InboxActionsProps) => {
 
     const awaitLending: InboxAction[] = [lendButton, declineButton];
     const awaitBorrowing: InboxAction[] = [cancelButton, reportButton];
-    const lendInProgress: InboxAction[] = [];
-    const borrowInProgress: InboxAction[] = [];
-    const lendFinished: InboxAction[] = [];
-    const borrowFinished: InboxAction[] = [];
+    const lendInProgress: InboxAction[] = [reportButton];
+    const borrowInProgress: InboxAction[] = [returnBookButton, reportButton];
 
     const chatStatusToInboxActionsMap = new Map<ChatStatusEnum | undefined, InboxAction[]>([
         [ChatStatusEnum.AWAIT_BORROWING, awaitBorrowing],
         [ChatStatusEnum.AWAIT_LENDING, awaitLending],
         [ChatStatusEnum.BORROW_IN_PROGRESS, borrowInProgress],
         [ChatStatusEnum.LEND_IN_PROGRESS, lendInProgress],
-        [ChatStatusEnum.BORROW_FINISHED, borrowFinished],
-        [ChatStatusEnum.LEND_FINISHED, lendFinished],
     ]);
 
     return (
         <Stack spacing={1} direction="row" alignSelf="center">
             {chatStatusToInboxActionsMap.get(props.chatRoom?.status)?.map((inboxAction: InboxAction, index: number) => (
-                <RoundedButton key={index} onClick={() => inboxAction.callback}
+                <RoundedButton key={index} onClick={() => props.chatRoom && inboxAction.callback(props.chatRoom.id)}
                                style={{backgroundColor: inboxAction.color}}>
                     {inboxAction.title}
                 </RoundedButton>

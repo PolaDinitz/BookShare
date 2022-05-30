@@ -1,61 +1,65 @@
 import _ from "lodash";
 import { useState } from "react";
-import { Icon, Stack, Typography } from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
-
+import { Box, Stack, Typography } from "@mui/material";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import BookCustomPaper from "../../common/book-custom-paper";
 import BookDetails from "../BookDetails";
 import RoundedButton from "../../common/rounded-button";
 import { Book } from "../../../features/books/book.model";
 
 type BookPostProps = {
-  book: Book;
+    book: Book;
 };
 
 const BookPost = (props: BookPostProps) => {
-  const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
 
-  const { title, author, genres, imageUrl, bookRating } = props.book;
+    const {title, author, genres, imageUrl, bookRating, count} = props.book;
 
-  return (
-    <BookCustomPaper size="small" img={imageUrl}>
-      <Stack
-        spacing={1}
-        alignItems="start"
-        padding="5px"
-        sx={{ width: "100%" }}
-      >
-        {!_.isEmpty(genres) ? (
-          <Typography variant="subtitle1" mt={1} sx={{ color: "#808080" }}>
-            {genres[0]}
-          </Typography>
-        ) : (
-          <></>
-        )}
-        <Typography fontSize={18} fontWeight="bold">
-          {title}
-        </Typography>
-        <Typography variant="subtitle1" sx={{ color: "#808080" }}>
-          {`By ${author}`}
-        </Typography>
-        <Typography variant="subtitle1" sx={{ color: "#808080" }}>
-          <Icon sx={{ color: "#3164F4" }}>
-            <StarIcon />
-          </Icon>
-          {bookRating}
-        </Typography>
-        <RoundedButton onClick={handleClickOpen}>Browse</RoundedButton>
-        <BookDetails open={open} onClose={handleClose} book={props.book} />
-      </Stack>
-    </BookCustomPaper>
-  );
+    return (
+        <BookCustomPaper img={imageUrl}>
+            <Stack sx={{height: "100%"}} justifyContent="space-between">
+                <Stack spacing={1}>
+                    <Box>
+                        {!_.isEmpty(genres) ? (
+                            <Typography variant="caption" color="gray">
+                                {genres[0]}
+                            </Typography>
+                        ) : (
+                            <></>
+                        )}
+                        <Typography variant="body1" fontWeight={500}>
+                            {title}
+                        </Typography>
+                        <Typography variant="body1" fontSize={12} fontWeight={300}>
+                            {`By ${author}`}
+                        </Typography>
+                    </Box>
+                    <Box sx={{display: "flex", alignItems: "center"}}>
+                        <FavoriteIcon sx={{color: "#3164F4"}} fontSize="small"/>
+                        <Typography variant="subtitle2" color="#3164F4">
+                            {bookRating ? bookRating / count : 0}
+                        </Typography>
+                        <Typography sx={{alignSelf: "flex-end"}} variant="caption" fontWeight={300} fontSize={12}
+                                    color="gray">
+                            /10
+                        </Typography>
+                    </Box>
+                </Stack>
+                <Box sx={{justifySelf: "flex-end"}}>
+                    <RoundedButton onClick={handleClickOpen}>Browse</RoundedButton>
+                </Box>
+            </Stack>
+            <BookDetails open={open} onClose={handleClose} book={props.book}/>
+        </BookCustomPaper>
+    );
 };
 
 export default BookPost;

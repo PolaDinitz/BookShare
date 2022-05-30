@@ -11,6 +11,9 @@ import { ChatGateway } from "./chat.gateway";
 import { ChatModule } from "./modules/chat/chat.module";
 import { BookCategoryModule } from "./modules/book-category/book-category.module";
 import { TransactionModule } from "./modules/transaction/transaction.module";
+import {
+  BooksRecommendationEngineModule
+} from "./modules/books-recommendation-engine/books-recommendation-engine.module";
 
 
 @Module({
@@ -23,7 +26,8 @@ import { TransactionModule } from "./modules/transaction/transaction.module";
     UserBookModule,
     TransactionModule,
     BookCategoryModule,
-    ChatModule
+    ChatModule,
+    BooksRecommendationEngineModule
   ],
   providers: [ChatGateway],
   controllers: [AppController]

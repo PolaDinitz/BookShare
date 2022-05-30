@@ -1,37 +1,38 @@
 import axios, { Axios, AxiosResponse } from "axios";
 
-export const API_KEY = "AIzaSyCuLDHRexzdajcdHrIfMUX8DeduAir9nNo";
+export const API_KEY = "ApwEnuJCy3nOG4PpvcmOSx6Rhi2JojGumbu9mY5qDY-9FWD7SYS3yp80vDQvtg4O";
 
 export type Coordinates = {
   lon: number;
   lat: number;
 };
 
-export const getCoordinatesFromAdress = async (
+export const getCoordinatesFromAddress = async (
   address: string
 ): Promise<Coordinates> => {
 
   let response = await axios
     .get(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${address.replace(
-        " ",
-        "+"
-      )}&key=${API_KEY}`
+        `https://dev.virtualearth.net/REST/v1/Locations
+        ?countryRegion=IL
+        &q=${address.replace(" ", "+")}
+        &addressLine=${address.replace(" ", "+")}
+        &key=${API_KEY}`
     );
 
     return {
-        lon: response.data["results"][0]["geometry"]["location"]["lng"],
-        lat: response.data["results"][0]["geometry"]["location"]["lat"],
+        lat: response.data.resourceSets[0].resources[0].point.coordinates[0],
+        lon: response.data.resourceSets[0].resources[0].point.coordinates[1],
       };
 };
 
-export const calcDistanceFromAdress = async (
-  adress: string,
+export const calcDistanceFromAddress = async (
+  address: string,
   currLocation: Coordinates
 ): Promise<number> => {
-  let coordinatesFromAdress = await getCoordinatesFromAdress(adress);
+  let coordinatesFromAddress = await getCoordinatesFromAddress(address);
 
-  return getDistanceFromLatLonInKm(coordinatesFromAdress.lat, coordinatesFromAdress.lon, currLocation.lat, currLocation.lon);
+  return getDistanceFromLatLonInKm(coordinatesFromAddress.lat, coordinatesFromAddress.lon, currLocation.lat, currLocation.lon);
 };
 
 const getDistanceFromLatLonInKm = (
