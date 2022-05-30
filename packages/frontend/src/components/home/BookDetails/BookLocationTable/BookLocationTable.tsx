@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import RoundedButton from "../../../common/rounded-button";
 
-type BookLocationType = {
+export type BookLocationType = {
   fullname: string;
   city: string;
   distance: number;

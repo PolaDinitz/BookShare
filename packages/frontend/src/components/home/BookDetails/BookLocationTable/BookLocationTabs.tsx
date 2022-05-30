@@ -1,10 +1,13 @@
-import * as React from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import BookLocationTable from './BookLocationTable';
+import BookLocationTable, { BookLocationType } from './BookLocationTable';
 import BookLocationMap from './BookLocationMap';
+import userBookService from '../../../../services/user-book.service';
+import { UserBook } from '../../../../features/user-books/user-book.model';
+import { User } from '../../../../features/user/user.model';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,11 +61,27 @@ const rows = [
 ];
 
 const BookLocationTabs = (props: BookLocationTabsProps) => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [rows, setRows] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      return await userBookService.getAvailableUsersByBookId(props.bookId);
+    };
+    fetchUsers().then((userBooks: UserBook[]) => {
+      createRows(userBooks);
+    });
+  }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  const createRows = (userBooks: UserBook[]) => {
+    userBooks.map(userBook => {
+      return { fullName: `${userBook.user.firstName} ${userBook.user.lastName}`, city: userBook.user.address, distance: 0.2, rating: 2}
+    });
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
