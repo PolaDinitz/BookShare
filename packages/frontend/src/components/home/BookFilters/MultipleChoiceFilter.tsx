@@ -1,59 +1,54 @@
-import React, { useState } from "react";
-import {
-  Checkbox,
-  FormControl,
-  InputLabel,
-  ListItemText,
-  MenuItem,
-  OutlinedInput,
-  Select,
-} from "@mui/material";
+import React from "react";
+import { Checkbox, FormControl, InputLabel, ListItemText, MenuItem, Select, SelectProps, styled, } from "@mui/material";
 
 type MultipleChoiceFilterProps = {
-  label: string;
-  options: string[];
-  checked: string[];
-  onCheck: (event: any) => void;
+    label: string;
+    options: string[];
+    checked: string[];
+    onCheck: (event: any) => void;
 };
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
     },
-  },
 };
 
-const MultipleChoiceFilter = (props: MultipleChoiceFilterProps) => {
-  const { options, checked, label, onCheck } = props;
+const RoundedSelect = styled(Select)<SelectProps>(({theme}) => ({
+    borderRadius: "100px",
+}));
 
-  return (
-    <>
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel>{label}</InputLabel>
-        <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          multiple
-          value={checked}
-          onChange={onCheck}
-          input={<OutlinedInput label={label} />}
-          renderValue={(selected) => selected.join(", ")}
-          MenuProps={MenuProps}
-        >
-          {options.map((option) => (
-            <MenuItem key={option} value={option}>
-              <Checkbox checked={checked.indexOf(option) > -1} />
-              <ListItemText primary={option} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </>
-  );
+const MultipleChoiceFilter = (props: MultipleChoiceFilterProps) => {
+    const {options, checked, label, onCheck} = props;
+
+    return (
+        <>
+            <FormControl variant={"filled"} sx={{width: "100%"}}>
+                <InputLabel>{label}</InputLabel>
+                <RoundedSelect
+                    labelId="demo-multiple-checkbox-label"
+                    id="demo-multiple-checkbox"
+                    multiple
+                    value={checked}
+                    onChange={onCheck}
+                    renderValue={(selected: any) => selected.join(", ")}
+                    MenuProps={MenuProps}
+                >
+                    {options.map((option) => (
+                        <MenuItem key={option} value={option}>
+                            <Checkbox checked={checked.indexOf(option) > -1}/>
+                            <ListItemText primary={option}/>
+                        </MenuItem>
+                    ))}
+                </RoundedSelect>
+            </FormControl>
+        </>
+    );
 };
 
 export default MultipleChoiceFilter;

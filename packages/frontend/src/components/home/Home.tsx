@@ -120,7 +120,7 @@ const Home = () => {
     return (
         <Box sx={{marginLeft: "30px", marginRight: "30px"}}>
             <Box sx={{flexGrow: 10, margin: "30px 15px 15px 15px"}}>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} alignItems={"center"} justifyContent={"center"}>
                     <Grid item alignSelf="center" justifyContent="center" xs={1}>
                         <ToggleFilter
                             toggleValue={state.recommendEngineToggle}
