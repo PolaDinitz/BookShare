@@ -47,7 +47,7 @@ const rateTransactionUser = (id: string, rateValue: number) => {
 const updateTransaction = (transactionStatus: TransactionStatus, id: string) => {
     return axiosInstance.patch(`${config.apiUrl}/transaction/status/` + id, {status: transactionStatus})
         .then((response: AxiosResponse) => {
-            socket.emit("transactionChanged",  {transactionId: id});
+            socket.emit("transactionChanged", {transactionId: id});
             return response.data;
         }).catch((error: AxiosError) => {
             throw new Error(`Something went wrong while trying to update transaction, 
@@ -61,6 +61,10 @@ const approveTransactionChat = (id: string) => {
 
 const declineTransactionChat = (id: string) => {
     return updateTransaction(TransactionStatus.CHAT_DECLINED, id);
+}
+
+const declineTransactionLend = (id: string) => {
+    return updateTransaction(TransactionStatus.LEND_DECLINED, id);
 }
 
 const cancelTransactionChat = (id: string) => {
@@ -79,6 +83,18 @@ const returnBook = (id: string) => {
     return updateTransaction(TransactionStatus.WAITING_FOR_RETURN_APPROVAL, id);
 }
 
+const borrowerNotReceivingBookReport = (id: string) => {
+    return updateTransaction(TransactionStatus.BORROWER_DIDNT_RECEIVE_BOOK, id);
+}
+
+const bookWasntReturnedReport = (id: string) => {
+    return updateTransaction(TransactionStatus.BOOK_WASNT_RETURNED, id);
+}
+
+const lenderNotReceivingBookReport = (id: string) => {
+    return updateTransaction(TransactionStatus.LENDER_DIDNT_RECEIVE_BOOK, id);
+}
+
 const transactionService = {
     getTransactionsByUserId,
     approveTransactionChat,
@@ -89,7 +105,11 @@ const transactionService = {
     returnBook,
     getTransactionsById,
     rateTransactionBook,
-    rateTransactionUser
+    rateTransactionUser,
+    declineTransactionLend,
+    borrowerNotReceivingBookReport,
+    bookWasntReturnedReport,
+    lenderNotReceivingBookReport
 };
 
 export default transactionService;

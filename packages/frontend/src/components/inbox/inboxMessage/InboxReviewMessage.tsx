@@ -63,7 +63,7 @@ const InboxReviewMessage = (props: InboxReviewMessageProps) => {
                                 name="user-rating"
                                 precision={1}
                                 size={"large"}
-                                defaultValue={props.chatRoom.userRating}
+                                defaultValue={props.chatRoom.transactionUserRating}
                                 onChange={(event, newValue) => {
                                     rateUser(newValue);
                                 }}
@@ -89,7 +89,7 @@ const InboxReviewMessage = (props: InboxReviewMessageProps) => {
                                     size="large"
                                     icon={<FavoriteIcon fontSize="inherit"/>}
                                     emptyIcon={<FavoriteBorderIcon fontSize="inherit"/>}
-                                    defaultValue={props.chatRoom.bookRating}
+                                    defaultValue={props.chatRoom.transactionBookRating}
                                     onChange={(event, newValue) => {
                                         rateBook(newValue);
                                     }}
