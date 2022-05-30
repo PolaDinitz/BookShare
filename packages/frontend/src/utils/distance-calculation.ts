@@ -1,28 +1,19 @@
 import axios, { Axios, AxiosResponse } from "axios";
 
-export const API_KEY = "ApwEnuJCy3nOG4PpvcmOSx6Rhi2JojGumbu9mY5qDY-9FWD7SYS3yp80vDQvtg4O";
-
 export type Coordinates = {
-  lon: number;
   lat: number;
+  lon: number;
 };
 
 export const getCoordinatesFromAddress = async (
   address: string
 ): Promise<Coordinates> => {
 
-  let response = await axios
-    .get(
-        `https://dev.virtualearth.net/REST/v1/Locations
-        ?countryRegion=IL
-        &q=${address.replace(" ", "+")}
-        &addressLine=${address.replace(" ", "+")}
-        &key=${API_KEY}`
-    );
+    let response = await axios.get(`https://nominatim.openstreetmap.org/search.php`, {params: {q: address, polygon_geojson: '1', format: 'jsonv2'}});
 
     return {
-        lat: response.data.resourceSets[0].resources[0].point.coordinates[0],
-        lon: response.data.resourceSets[0].resources[0].point.coordinates[1],
+        lat: response.data[0].lat,
+        lon: response.data[0].lon,
       };
 };
 

@@ -11,8 +11,6 @@ import {
 } from "@mui/material";
 import RoundedButton from "../../../common/rounded-button";
 
-type BookLocationTableProps = {};
-
 type BookLocationType = {
   fullname: string;
   city: string;
@@ -20,24 +18,17 @@ type BookLocationType = {
   rating: number;
 };
 
-const rows = [
-  { fullname: "Pola Dinitz", city: "Tel-Aviv", distance: 0.2, rating: 2 },
-  { fullname: "Daniel Beilin", city: "Petah Tikva", distance: 1.4, rating: 3 },
-  { fullname: "Ran Biderman", city: "Bat-Yam", distance: 0.6, rating: 5 },
-  {
-    fullname: "Maayan Mordehai",
-    city: "Rishon Le-Zion  ",
-    distance: 2.5,
-    rating: 4,
-  },
-];
+type BookLocationTableProps = {
+  rows: BookLocationType[];
+};
 
 const BookLocationTable = (props: BookLocationTableProps) => {
+  
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} size="small" aria-label="simple table">
         <TableBody>
-          {rows.map((row) => (
+          {props.rows.map((row) => (
             <TableRow
               key={row.fullname}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

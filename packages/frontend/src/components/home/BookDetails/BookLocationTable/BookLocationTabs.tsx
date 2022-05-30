@@ -39,7 +39,25 @@ function a11yProps(index: number) {
   };
 }
 
-const BookLocationTab = () => {
+type BookLocationTabsProps = {
+  address: string;
+  bookId: string;
+  userId: string;
+};
+
+const rows = [
+  { fullname: "Pola Dinitz", city: "Tel-Aviv", distance: 0.2, rating: 2 },
+  { fullname: "Daniel Beilin", city: "Petah Tikva", distance: 1.4, rating: 3 },
+  { fullname: "Ran Biderman", city: "Bat-Yam", distance: 0.6, rating: 5 },
+  {
+    fullname: "Maayan Mordehai",
+    city: "Rishon Le-Zion  ",
+    distance: 2.5,
+    rating: 4,
+  },
+];
+
+const BookLocationTabs = (props: BookLocationTabsProps) => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -55,13 +73,13 @@ const BookLocationTab = () => {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <BookLocationTable/>
+        <BookLocationTable rows={rows}/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <BookLocationMap/>
+        <BookLocationMap address={props.address}/>
       </TabPanel>
     </Box>
   );
 }
 
-export default BookLocationTab;
+export default BookLocationTabs;

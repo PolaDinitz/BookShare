@@ -1,33 +1,23 @@
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
-import { useSelector } from "react-redux";
 
 import {
   getCoordinatesFromAddress,
   Coordinates,
 } from "../../../../utils/distance-calculation";
-import { User } from "../../../../features/user/user.model";
-import userService from "../../../../services/user.service";
-import { RootState } from "../../../../types/types";
 
-const BookLocationMap = () => {
-  const userId = useSelector((state: RootState) => state.auth.user!.id);
-  const [user, setUser] = useState({} as User);
+type BookLocationMapProps = {
+  address: string;
+};
+
+const BookLocationMap = (props: BookLocationMapProps) => {
+ 
   const [currCoordinates, setCurrCoordinates] = useState<null | Coordinates>(
     null
   );
 
   useEffect(() => {
-    const fetchUser = async () => {
-      return await userService.getUserById(userId);
-    };
-    fetchUser().then((user: User) => {
-      setUser(user);
-    });
-  }, []);
-
-  useEffect(() => {
-    getCoordinatesFromAddress(user.address).then((response: Coordinates) => {
+    getCoordinatesFromAddress(props.address).then((response: Coordinates) => {
       setCurrCoordinates(response);
     });
   }, []);
@@ -37,7 +27,7 @@ const BookLocationMap = () => {
       style={{ width: "500px", height: "300px" }}
       center={
         currCoordinates
-          ? [currCoordinates.lon, currCoordinates.lat]
+          ? [currCoordinates.lat, currCoordinates.lon]
           : [31.72, 35.079]
       }
       zoom={12}
