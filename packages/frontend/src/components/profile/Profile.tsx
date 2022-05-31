@@ -57,11 +57,11 @@ const Profile = (props: ProfileProps) => {
 
   const enterEditMode = () => {
     setIsEditMode(true);
-  }
+  };
 
   const exitEditMode = () => {
     setTempUser(user);
-    setIsEditMode(false)
+    setIsEditMode(false);
   };
 
   return (
@@ -135,16 +135,20 @@ const Profile = (props: ProfileProps) => {
             />
           </Grid>
           <Grid item>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-              label="Date of Birth"
-              value={dateOfBirth}
-              InputProps={{
-                readOnly: !isEditMode,
-              }}
-              onChange={(newValue) => setTempUser({ ...tempUser, ["dateOfBirth"]: newValue })}
-              renderInput={(params) => <TextField variant="filled" {...params} fullWidth />} 
-            />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Date of Birth"
+                value={dateOfBirth}
+                InputProps={{
+                  readOnly: !isEditMode,
+                }}
+                onChange={(newValue) =>
+                  setTempUser({ ...tempUser, ["dateOfBirth"]: newValue })
+                }
+                renderInput={(params) => (
+                  <TextField variant="filled" {...params} fullWidth />
+                )}
+              />
             </LocalizationProvider>
           </Grid>
           <Grid item>
@@ -293,7 +297,13 @@ const Profile = (props: ProfileProps) => {
             </Grid>
           </Grid>
           <Grid item>
-            <Rating name="Rating" value={3} readOnly size="large" />
+            {/* TODO: uncontrolled component error fix */}
+            <Rating
+              name="Rating"
+              value={user.rating}
+              readOnly
+              size="large"
+            />
           </Grid>
         </Grid>
       </Grid>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Button,
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import StarIcon from '@mui/icons-material/Star';
+import StarIcon from "@mui/icons-material/Star";
 
 import RoundedButton from "../../../common/rounded-button";
 import { config } from "../../../../config/config";
@@ -29,30 +29,49 @@ type BookLocationTableProps = {
 };
 
 const BookLocationTable = (props: BookLocationTableProps) => {
-  
+  const [isBorrowRequestSent, setIsBorrowRequestSent] = useState(false);
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} size="small" aria-label="simple table">
         <TableBody>
-          {props.rows ? props.rows.map((row) => (
-            <TableRow
-              key={row.fullname}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell align="left" component="th" scope="row">
-                <Avatar src={`${config.apiUrl}/${row.avatar}`} />
-              </TableCell>
-              <TableCell align="left" component="th" scope="row">
-                {row.fullname}
-                <Rating name="Rating" value={3} readOnly size="small" />
-              </TableCell>
-              <TableCell align="left">{row.city}</TableCell>
-              <TableCell align="left">{`${row.distance.toFixed(1)} Km`}</TableCell>
-              <TableCell align="right">
-                <RoundedButton>Borrow</RoundedButton>
-              </TableCell>
-            </TableRow>
-          )) : 'no books were found'}
+          {props.rows
+            ? props.rows.map((row) => (
+                <TableRow
+                  key={row.fullname}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell align="left" component="th" scope="row">
+                    <Avatar src={`${config.apiUrl}/${row.avatar}`} />
+                  </TableCell>
+                  <TableCell align="left" component="th" scope="row">
+                    {row.fullname}
+                    <Rating
+                      name="Rating"
+                      value={row.rating}
+                      readOnly
+                      size="small"
+                    />
+                  </TableCell>
+                  <TableCell align="left">{row.city}</TableCell>
+                  <TableCell align="left">{`${row.distance.toFixed(
+                    1
+                  )} Km`}</TableCell>
+                  <TableCell align="right">
+                    <RoundedButton
+                      style={{
+                        backgroundColor: isBorrowRequestSent
+                          ? "#808080"
+                          : undefined,
+                      }}
+                      onClick={() => setIsBorrowRequestSent(true)}
+                    >
+                      {isBorrowRequestSent ? "Request Sent" : "Borrow"}
+                    </RoundedButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            : "no books were found"}
         </TableBody>
       </Table>
     </TableContainer>

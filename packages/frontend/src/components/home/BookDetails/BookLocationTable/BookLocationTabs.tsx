@@ -94,7 +94,7 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
               userBook.user.address,
               userCoordinates
             ),
-            rating: 2,
+            rating: userBook.user.rating,
           };
         })
     )).sort((a,b) => a.distance - b.distance);

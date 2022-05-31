@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@mui/material";
 
 type RoundedButtonStyle = {
-    backgroundColor: string;
+    backgroundColor: string | undefined;
 };
 
 type RoundedButtonProps = {
