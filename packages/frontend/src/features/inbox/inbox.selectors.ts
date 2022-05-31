@@ -16,9 +16,10 @@ export interface ChatRoom {
     name: string;
     subName: string;
     imageUrl: string;
+    globalUserRating: number;
     status?: ChatStatusEnum;
-    userRating?: number;
-    bookRating?: number;
+    transactionUserRating?: number;
+    transactionBookRating?: number;
 }
 
 const buildChatRoomsArray = (transactions: Transaction[],
@@ -48,10 +49,11 @@ const buildChatRoomObject = (transaction: Transaction,
             name: user.firstName + " " + user.lastName,
             subName: book.title,
             imageUrl: user.imageUrl,
-            userRating: isBorrower ? transaction.lentUserRating : transaction.borrowUserRating,
-            bookRating: transaction.bookRating,
+            globalUserRating: user.rating,
+            transactionUserRating: isBorrower ? transaction.lentUserRating : transaction.borrowUserRating,
+            transactionBookRating: transaction.bookRating,
             status: transactionStatusToChatStatusMap
-                .get(Array.from(transactionStatusToChatStatusMap.keys()).find((k) => k?.transactionStatus === transaction.status && k?.isBorrower === isBorrower))
+                .get(Array.from(transactionStatusToChatStatusMap.keys()).find((k) => k?.transactionStatus.includes(transaction.status) && k?.isBorrower === isBorrower))
         }
     }
     return null;

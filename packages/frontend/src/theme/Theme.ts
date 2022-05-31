@@ -29,6 +29,9 @@ const mainTheme = createTheme({
         },
         secondary: {
             main: "#9d9d9d"
+        },
+        info: {
+            main: "#3164F4"
         }
     },
     components: {

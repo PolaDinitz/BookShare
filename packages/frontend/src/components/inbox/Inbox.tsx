@@ -7,6 +7,8 @@ import {
     List,
     ListProps,
     Paper,
+    Rating,
+    Stack,
     styled,
     TextField,
     Typography
@@ -32,7 +34,8 @@ import {
     approveTransactionChatThunk,
     cancelTransactionChatThunk,
     declineTransactionChatThunk,
-    finishTransactionChatThunk
+    finishTransactionChatThunk,
+    lenderNotReceivingBookThunk
 } from "../../features/transactions/transactions.slice";
 import { toast } from "react-toastify";
 import { socket } from "../../index";
@@ -58,7 +61,7 @@ const ListScrolledArea = styled(List)<ListProps>(({theme}) => ({
 
 const Inbox = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { id } = useParams();
+    const {id} = useParams();
     const loggedInUser = useSelector((state: RootState) => state.auth.user);
     const [selectedChatRoomId, setSelectedChatRoomId] = useState(id ? id : "");
     const [selectedChatRoom, setSelectedChatRoom] = useState({} as ChatRoom | undefined);
@@ -121,6 +124,13 @@ const Inbox = () => {
 
     const finishTransactionChat = (transactionId: string) => {
         dispatch(finishTransactionChatThunk({transactionId: transactionId})).unwrap()
+            .catch((errorMessage: string) => {
+                toast.error(errorMessage);
+            });
+    }
+
+    const lenderDidntReceiveBook = (transactionId: string) => {
+        dispatch(lenderNotReceivingBookThunk({transactionId: transactionId})).unwrap()
             .catch((errorMessage: string) => {
                 toast.error(errorMessage);
             });
@@ -195,19 +205,24 @@ const Inbox = () => {
                                 justifyContent: "space-between",
                                 padding: "5px"
                             }}>
-                                <Box sx={{display: "flex"}}>
-                                    <Avatar sx={{width: 70, height: 70, marginRight: 3}}
+                                <Stack direction={"row"} spacing={3}>
+                                    <Avatar sx={{width: 70, height: 70}}
                                             alt={selectedChatRoom?.name}
                                             src={`${config.apiUrl}/${selectedChatRoom?.imageUrl}`}/>
                                     <Box sx={{alignSelf: "center"}}>
-                                        <Typography variant="h6" fontWeight={500}>
-                                            {selectedChatRoom?.name}
-                                        </Typography>
+                                        <Stack direction={"row"} alignItems={"center"} spacing={2}>
+                                            <Typography variant="h6" fontWeight={500}>
+                                                {selectedChatRoom?.name}
+                                            </Typography>
+                                            <Rating size={"small"}
+                                                    value={selectedChatRoom ? selectedChatRoom.globalUserRating : 0}
+                                                    readOnly/>
+                                        </Stack>
                                         <Typography variant="subtitle2" fontWeight={300}>
                                             {selectedChatRoom?.subName}
                                         </Typography>
                                     </Box>
-                                </Box>
+                                </Stack>
                                 <InboxActions chatRoom={selectedChatRoom}/>
                             </Box>
                             <Divider/>
@@ -240,7 +255,7 @@ const Inbox = () => {
                                     lenderTitle={`${selectedChatRoom?.name}'s has returned the book`}
                                     approveCallback={() => finishTransactionChat(selectedChatRoomId)}
                                     approveButtonTitle={"I have the book"}
-                                    declineCallback={() => finishTransactionChat(selectedChatRoomId)}
+                                    declineCallback={() => lenderDidntReceiveBook(selectedChatRoomId)}
                                     declineButtonTitle={"I don't have the book"}
                                 />
                                 <InboxReviewMessage chatRoom={selectedChatRoom}/>

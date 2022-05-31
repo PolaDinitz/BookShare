@@ -87,6 +87,17 @@ export const declineTransactionChatThunk = createAsyncThunk<Transaction, { trans
     }
 );
 
+export const declineTransactionLendThunk = createAsyncThunk<Transaction, { transactionId: string }>(
+    'transactions/decline-lend',
+    async (payload: { transactionId: string }, thunkApi) => {
+        try {
+            return await TransactionService.declineTransactionLend(payload.transactionId);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
 export const cancelTransactionChatThunk = createAsyncThunk<Transaction, { transactionId: string }>(
     'transactions/cancel-chat',
     async (payload: { transactionId: string }, thunkApi) => {
@@ -131,6 +142,39 @@ export const returnBookThunk = createAsyncThunk<Transaction, { transactionId: st
     }
 );
 
+export const borrowerNotReceivingBookThunk = createAsyncThunk<Transaction, { transactionId: string }>(
+    'transactions/borrower-didnt-receive-book',
+    async (payload: { transactionId: string }, thunkApi) => {
+        try {
+            return await TransactionService.borrowerNotReceivingBookReport(payload.transactionId);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
+export const bookWasntReturnedThunk = createAsyncThunk<Transaction, { transactionId: string }>(
+    'transactions/book-wasnt-returned',
+    async (payload: { transactionId: string }, thunkApi) => {
+        try {
+            return await TransactionService.bookWasntReturnedReport(payload.transactionId);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
+export const lenderNotReceivingBookThunk = createAsyncThunk<Transaction, { transactionId: string }>(
+    'transactions/lender-didnt-receive-book',
+    async (payload: { transactionId: string }, thunkApi) => {
+        try {
+            return await TransactionService.lenderNotReceivingBookReport(payload.transactionId);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
 const transactionsSlice = createSlice({
     name: "transactions",
     initialState: transactionsAdapter.getInitialState(),
@@ -158,7 +202,11 @@ const transactionsSlice = createSlice({
                     cancelTransactionChatThunk.fulfilled,
                     finishTransactionChatThunk.fulfilled,
                     lendBookThunk.fulfilled,
-                    returnBookThunk.fulfilled
+                    returnBookThunk.fulfilled,
+                    declineTransactionLendThunk.fulfilled,
+                    borrowerNotReceivingBookThunk.fulfilled,
+                    bookWasntReturnedThunk.fulfilled,
+                    lenderNotReceivingBookThunk.fulfilled,
                 ), (state, action) => {
                     transactionsAdapter.updateOne(state, {
                         id: action.payload.id,
