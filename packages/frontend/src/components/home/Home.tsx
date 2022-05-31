@@ -2,7 +2,7 @@ import { AnyAction } from "@reduxjs/toolkit";
 import _ from "lodash";
 import React, { useEffect, useReducer, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { Box, Fab, Grid } from "@mui/material";
+import { Box, Fab, Grid, Stack } from "@mui/material";
 import BooksCollection from "./BooksCollection";
 import { MultipleChoiceFilter, SearchFilter, SliderFilter, } from "./BookFilters";
 import AddBook from "./AddBook";
@@ -13,6 +13,7 @@ import ToggleFilter from "./BookFilters/ToggleFilter";
 import RecommendIcon from "@mui/icons-material/Recommend";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import BooksRecommendEngineService from "../../services/books-recommend-engine.service";
+import Loader from "../common/loader/Loader";
 
 type State = {
     recommendEngineToggle: boolean;
@@ -70,6 +71,7 @@ const fabStyle = {
 const Home = () => {
     const [open, setOpen] = useState(false);
     const [recommendedBooksIds, SetRecommendedBooksIds] = useState([] as string[]);
+    const [loading, setLoading] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -85,11 +87,13 @@ const Home = () => {
     useEffect(() => {
         const getRecommendedBooksIds = async () => {
             if (state.recommendEngineToggle === true) {
+                setLoading(true);
                 return await BooksRecommendEngineService.getRecommendedBooks();
             }
         }
         getRecommendedBooksIds().then((booksIds: string[]) => {
             SetRecommendedBooksIds(booksIds);
+            setLoading(false);
         })
     }, [state.recommendEngineToggle]);
 
@@ -120,7 +124,7 @@ const Home = () => {
     return (
         <Box sx={{marginLeft: "30px", marginRight: "30px"}}>
             <Box sx={{flexGrow: 10, margin: "30px 15px 15px 15px"}}>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} alignItems={"center"} justifyContent={"center"}>
                     <Grid item alignSelf="center" justifyContent="center" xs={1}>
                         <ToggleFilter
                             toggleValue={state.recommendEngineToggle}
@@ -208,7 +212,17 @@ const Home = () => {
                     </Grid>
                 </Grid>
             </Box>
-            <BooksCollection books={filteredBooks}/>
+            {loading ?
+                <Stack justifyContent="center" alignItems="center" m={10} spacing={3}>
+                    <Loader
+                        size={100}
+                        mainText="It will take a few moments"
+                        subText="we want to find the best books for you!"
+                    />
+                </Stack>
+                :
+                <BooksCollection books={filteredBooks}/>
+            }
             <Fab
                 sx={fabStyle}
                 color="primary"

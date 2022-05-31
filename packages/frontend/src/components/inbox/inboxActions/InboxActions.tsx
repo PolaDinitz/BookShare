@@ -4,8 +4,10 @@ import { ChatRoom } from "../../../features/inbox/inbox.selectors";
 import ChatStatusEnum from "../../../enums/ChatStatusEnum";
 import RoundedButton from "../../common/rounded-button";
 import {
+    bookWasntReturnedThunk,
+    borrowerNotReceivingBookThunk,
     cancelTransactionChatThunk,
-    declineTransactionChatThunk,
+    declineTransactionLendThunk,
     lendBookThunk,
     returnBookThunk
 } from "../../../features/transactions/transactions.slice";
@@ -67,21 +69,43 @@ const InboxActions = (props: InboxActionsProps) => {
         }
     }
 
-    const declineButton: InboxAction = {
+    const declineLendButton: InboxAction = {
         title: "Decline",
         color: "#A4031F",
         callback: (transactionId: string) => {
-            dispatch(declineTransactionChatThunk({transactionId: transactionId})).unwrap()
+            dispatch(declineTransactionLendThunk({transactionId: transactionId})).unwrap()
                 .catch((errorMessage: string) => {
                     toast.error(errorMessage);
                 });
         }
     }
 
-    const awaitLending: InboxAction[] = [lendButton, declineButton];
-    const awaitBorrowing: InboxAction[] = [cancelButton, reportButton];
-    const lendInProgress: InboxAction[] = [reportButton];
-    const borrowInProgress: InboxAction[] = [returnBookButton, reportButton];
+    const didntReceiveBookButton: InboxAction = {
+        title: "Didn't Receive Book",
+        color: "#A4031F",
+        callback: (transactionId: string) => {
+            dispatch(borrowerNotReceivingBookThunk({transactionId: transactionId})).unwrap()
+                .catch((errorMessage: string) => {
+                    toast.error(errorMessage);
+                });
+        }
+    }
+
+    const bookWasntReturnedButton: InboxAction = {
+        title: "Book wasn't returned",
+        color: "#A4031F",
+        callback: (transactionId: string) => {
+            dispatch(bookWasntReturnedThunk({transactionId: transactionId})).unwrap()
+                .catch((errorMessage: string) => {
+                    toast.error(errorMessage);
+                });
+        }
+    }
+
+    const awaitLending: InboxAction[] = [lendButton, declineLendButton];
+    const awaitBorrowing: InboxAction[] = [cancelButton];
+    const lendInProgress: InboxAction[] = [bookWasntReturnedButton];
+    const borrowInProgress: InboxAction[] = [returnBookButton, didntReceiveBookButton];
 
     const chatStatusToInboxActionsMap = new Map<ChatStatusEnum | undefined, InboxAction[]>([
         [ChatStatusEnum.AWAIT_BORROWING, awaitBorrowing],
