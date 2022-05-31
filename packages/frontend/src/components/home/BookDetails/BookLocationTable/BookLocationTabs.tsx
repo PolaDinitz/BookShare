@@ -1,13 +1,17 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import BookLocationTable, { BookLocationType } from './BookLocationTable';
-import BookLocationMap from './BookLocationMap';
-import userBookService from '../../../../services/user-book.service';
-import { UserBook } from '../../../../features/user-books/user-book.model';
-import { User } from '../../../../features/user/user.model';
+import React, { ChangeEvent, useEffect, useState } from "react";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import BookLocationTable, { BookLocationType } from "./BookLocationTable";
+import BookLocationMap from "./BookLocationMap";
+import userBookService from "../../../../services/user-book.service";
+import { UserBook } from "../../../../features/user-books/user-book.model";
+import {
+  calcDistanceFromAddress,
+  Coordinates,
+  getCoordinatesFromAddress,
+} from "../../../../utils/distance-calculation";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -38,7 +42,7 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -48,57 +52,74 @@ type BookLocationTabsProps = {
   userId: string;
 };
 
-const rows = [
-  { fullname: "Pola Dinitz", city: "Tel-Aviv", distance: 0.2, rating: 2 },
-  { fullname: "Daniel Beilin", city: "Petah Tikva", distance: 1.4, rating: 3 },
-  { fullname: "Ran Biderman", city: "Bat-Yam", distance: 0.6, rating: 5 },
-  {
-    fullname: "Maayan Mordehai",
-    city: "Rishon Le-Zion  ",
-    distance: 2.5,
-    rating: 4,
-  },
-];
-
 const BookLocationTabs = (props: BookLocationTabsProps) => {
   const [value, setValue] = useState(0);
-  const [rows, setRows] = useState<User | null>(null);
+  const [rows, setRows] = useState<BookLocationType[] | null>(null);
+  const [currCoordinates, setCurrCoordinates] = useState<null | Coordinates>(
+    null
+  );
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      return await userBookService.getAvailableUsersByBookId(props.bookId);
+    const createTableData = async () => {
+      const userLocation = await getCoordinatesFromAddress(props.address);
+      // setCurrCoordinates(userLocation);
+
+      const usersWithBooks = await userBookService.getAvailableUsersByBookId(
+        props.bookId
+      );
+      const rows = await createRows(usersWithBooks, userLocation);
+      setRows(rows);
     };
-    fetchUsers().then((userBooks: UserBook[]) => {
-      createRows(userBooks);
-    });
+
+    createTableData().catch(console.error);
   }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const createRows = (userBooks: UserBook[]) => {
-    userBooks.map(userBook => {
-      return { fullName: `${userBook.user.firstName} ${userBook.user.lastName}`, city: userBook.user.address, distance: 0.2, rating: 2}
-    });
-  }
+  const createRows = async (
+    userBooks: UserBook[],
+    userCoordinates: Coordinates,
+  ): Promise<BookLocationType[]> => {
+    return (await Promise.all(
+      userBooks
+        .filter((userBook) => userBook.user.id != props.userId)
+        .map(async (userBook) => {
+          return {
+            avatar: userBook.user.imageUrl,
+            fullname: `${userBook.user.firstName} ${userBook.user.lastName}`,
+            city: userBook.user.address.split(',')[1],
+            distance: await calcDistanceFromAddress(
+              userBook.user.address,
+              userCoordinates
+            ),
+            rating: 2,
+          };
+        })
+    )).sort((a,b) => a.distance - b.distance);
+  };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+    <Box sx={{ width: "100%" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+        >
           <Tab label="Table" {...a11yProps(0)} />
           <Tab label="Map" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <BookLocationTable rows={rows}/>
+        <BookLocationTable rows={rows} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <BookLocationMap address={props.address}/>
+        <BookLocationMap address={props.address} location={currCoordinates} />
       </TabPanel>
     </Box>
   );
-}
+};
 
 export default BookLocationTabs;

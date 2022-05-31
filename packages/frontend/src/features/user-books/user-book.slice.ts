@@ -35,7 +35,7 @@ export const setUserBooksAvailabilityThunk = createAsyncThunk<{ userBook: UserBo
     }
 );
 
-export const getAvailableUsersByBookId = createAsyncThunk<{ userBooks: UserBook[] }, { bookId: string }>(
+export const getAvailableUsersByBookId = createAsyncThunk<{ usersWithBook: UserBook[] }, { bookId: string }>(
     'user-books/getUsersByBookId',
     async (payload, thunkApi) => {
         try {

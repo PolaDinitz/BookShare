@@ -1,33 +1,22 @@
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
-
-import {
-  getCoordinatesFromAddress,
-  Coordinates,
-} from "../../../../utils/distance-calculation";
+import { Coordinates } from "../../../../utils/distance-calculation";
 
 type BookLocationMapProps = {
   address: string;
+  location: Coordinates | null;
 };
 
 const BookLocationMap = (props: BookLocationMapProps) => {
  
-  const [currCoordinates, setCurrCoordinates] = useState<null | Coordinates>(
-    null
-  );
 
-  useEffect(() => {
-    getCoordinatesFromAddress(props.address).then((response: Coordinates) => {
-      setCurrCoordinates(response);
-    });
-  }, []);
 
   return (
     <MapContainer
       style={{ width: "500px", height: "300px" }}
       center={
-        currCoordinates
-          ? [currCoordinates.lat, currCoordinates.lon]
+        props.location
+          ? [props.location.lat, props.location.lon]
           : [31.72, 35.079]
       }
       zoom={12}
