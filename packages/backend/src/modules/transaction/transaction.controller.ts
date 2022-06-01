@@ -46,6 +46,20 @@ export class TransactionController {
     if (req.user.userId !== createTransactionDto.borrowUserId) {
       throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
     }
+    const userBook = await this.userBookService.getUserBookById(createTransactionDto.userBookId);
+    if (userBook.isLent) {
+      throw new HttpException("This user book is already lented", HttpStatus.BAD_REQUEST);
+    }
+    let alreadyExist = false;
+    const existingTransactions = await this.transactionService.getActiveTransactionsByUserBook(createTransactionDto.userBookId);
+    existingTransactions.map((transaction) => {
+      if (transaction.borrowUserId === req.user.userId) {
+        alreadyExist = true;
+      }
+    });
+    if (alreadyExist) {
+      throw new HttpException("Transaction already exists", HttpStatus.BAD_REQUEST);
+    }
     const createdTransaction = await this.transactionService.create(createTransactionDto);
     return await this.transactionService.getTransactionById(createdTransaction.id);
   }
@@ -121,11 +135,15 @@ export class TransactionController {
     const transaction = await this.transactionService.getTransactionById(id);
     if (transaction.borrowUserId === req.user.userId) {
       await this.transactionService.updateStatus(id, { status: TransactionStatus.FINISHED_TRANSACTION }, false);
-      await this.bookService.rateBook(transaction.userBook.userId, 0);
+      if (transaction.active) {
+        await this.userBookService.updateUserBookLent(transaction.userBookId, false);
+      }
       return await this.transactionService.updateLentUserRating(id, { userRating: 0 });
     } else if (transaction.userBook.userId === req.user.userId) {
       await this.transactionService.updateStatus(id, { status: TransactionStatus.FINISHED_TRANSACTION }, false);
-      await this.bookService.rateBook(transaction.borrowUserId, 0);
+      if (transaction.active) {
+        await this.userBookService.updateUserBookLent(transaction.userBookId, false);
+      }
       return await this.transactionService.updateBorrowUserRating(id, { userRating: 0 });
     } else {
       throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);

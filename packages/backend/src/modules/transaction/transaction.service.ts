@@ -117,12 +117,13 @@ export class TransactionService {
     });
   }
 
-  public async getTransactionsByUserBook(id: string) {
+  public async getActiveTransactionsByUserBook(id: string) {
     return this.transactionRepository.find({
       where: {
         userBook: {
           id: id
-        }
+        },
+        active: true
       },
       relations: ["userBook"]
     });
