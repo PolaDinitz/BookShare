@@ -14,11 +14,28 @@ import { TransactionModule } from "./modules/transaction/transaction.module";
 import {
   BooksRecommendationEngineModule
 } from "./modules/books-recommendation-engine/books-recommendation-engine.module";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+			inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+				return {
+					type: 'postgres' as 'postgres',
+					host: configService.get('DATABASE_HOST'),
+					port: configService.get<number>('DATABASE_PORT'),
+					username: configService.get('DATABASE_USER'),
+					password: configService.get('DATABASE_PASSWORD'),
+					database: String(configService.get('DATABASE_NAME')),
+					entities: ["dist/**/*.entity{.ts,.js}"],
+					synchronize: true,
+				};
+      }
+    }),
     AuthModule,
     UsersModule,
     BooksApiModule,
