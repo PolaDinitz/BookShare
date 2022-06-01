@@ -3,7 +3,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import BookLocationTable, { BookLocationType } from "./BookLocationTable";
+import BookLocationTable from "./BookLocationTable";
 import BookLocationMap from "./BookLocationMap";
 import userBookService from "../../../../services/user-book.service";
 import { UserBook } from "../../../../features/user-books/user-book.model";
@@ -12,6 +12,18 @@ import {
   Coordinates,
   getCoordinatesFromAddress,
 } from "../../../../utils/distance-calculation";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../types/types";
+
+export type BookLocationType = {
+  userBookId: string;
+  borrowerUserId: string;
+  avatar: string;
+  fullname: string;
+  city: string;
+  distance: number;
+  rating: number;
+};
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -53,6 +65,9 @@ type BookLocationTabsProps = {
 };
 
 const BookLocationTabs = (props: BookLocationTabsProps) => {
+  const loggedInUserId = useSelector(
+    (state: RootState) => state.auth.user!.id
+  );
   const [value, setValue] = useState(0);
   const [rows, setRows] = useState<BookLocationType[] | null>(null);
   const [currCoordinates, setCurrCoordinates] = useState<null | Coordinates>(
@@ -80,24 +95,28 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
 
   const createRows = async (
     userBooks: UserBook[],
-    userCoordinates: Coordinates,
+    userCoordinates: Coordinates
   ): Promise<BookLocationType[]> => {
-    return (await Promise.all(
-      userBooks
-        .filter((userBook) => userBook.user.id != props.userId)
-        .map(async (userBook) => {
-          return {
-            avatar: userBook.user.imageUrl,
-            fullname: `${userBook.user.firstName} ${userBook.user.lastName}`,
-            city: userBook.user.address.split(',')[1],
-            distance: await calcDistanceFromAddress(
-              userBook.user.address,
-              userCoordinates
-            ),
-            rating: userBook.user.rating,
-          };
-        })
-    )).sort((a,b) => a.distance - b.distance);
+    return (
+      await Promise.all(
+        userBooks
+          .filter((userBook) => userBook.user.id != props.userId)
+          .map(async (userBook) => {
+            return {
+              userBookId: userBook.id,
+              borrowerUserId: loggedInUserId,
+              avatar: userBook.user.imageUrl,
+              fullname: `${userBook.user.firstName} ${userBook.user.lastName}`,
+              city: userBook.user.address.split(",")[1],
+              distance: await calcDistanceFromAddress(
+                userBook.user.address,
+                userCoordinates
+              ),
+              rating: userBook.user.rating,
+            };
+          })
+      )
+    ).sort((a, b) => a.distance - b.distance);
   };
 
   return (

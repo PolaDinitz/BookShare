@@ -55,6 +55,17 @@ const updateTransaction = (transactionStatus: TransactionStatus, id: string) => 
         })
 }
 
+const createTransaction = (borrowUserId: string, userBookId: string) => {
+    return axiosInstance.post(`${config.apiUrl}/transaction`, {borrowUserId, userBookId})
+        .then((response: AxiosResponse) => {
+            socket.emit("newTransaction" , {transactionId: response.data.id});
+            return response.data;
+        }).catch((error: AxiosError) => {
+            throw new Error(`Something went wrong while trying to create new transaction, 
+                            ${(error.response ? error.response?.data?.message : error.message)}`);
+        })
+}
+
 const approveTransactionChat = (id: string) => {
     return updateTransaction(TransactionStatus.WAITING_FOR_LEND, id);
 }
@@ -109,7 +120,8 @@ const transactionService = {
     declineTransactionLend,
     borrowerNotReceivingBookReport,
     bookWasntReturnedReport,
-    lenderNotReceivingBookReport
+    lenderNotReceivingBookReport,
+    createTransaction,
 };
 
 export default transactionService;

@@ -4,6 +4,7 @@ import { RootState } from "../../types/types";
 import TransactionService from "../../services/transaction.service";
 import { Chat } from "../inbox/inbox.model";
 import Mapper from "../../utils/Mapper";
+import { transactionCreated } from "../inbox/inbox.slice";
 
 export const transactionsAdapter = createEntityAdapter<Transaction>();
 
@@ -34,6 +35,21 @@ export const fetchTransactionByIdThunk = createAsyncThunk<{ transaction: Transac
     async (payload: { transactionId: string }, thunkApi) => {
         try {
             const transactionFromResponse: any = await TransactionService.getTransactionsById(payload.transactionId);
+            return {
+                transaction: Mapper.singleTransactionResponseToTransactionModel(transactionFromResponse)
+            }
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
+export const createTransactionThunk = createAsyncThunk<{ transaction: Transaction }, { borrowUserId: string, userBookId: string }>(
+    'transactions/create-transaction',
+    async (payload:{ borrowUserId: string, userBookId: string }, thunkApi) => {
+        try {
+            const transactionFromResponse: any = await TransactionService.createTransaction(payload.borrowUserId, payload.userBookId);
+            thunkApi.dispatch(transactionCreated);
             return {
                 transaction: Mapper.singleTransactionResponseToTransactionModel(transactionFromResponse)
             }
