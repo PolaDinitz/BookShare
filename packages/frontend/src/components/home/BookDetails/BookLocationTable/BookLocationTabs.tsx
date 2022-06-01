@@ -93,7 +93,6 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
     setValue(newValue);
   };
 
-  //test
   const createRows = async (
     userBooks: UserBook[],
     userCoordinates: Coordinates
