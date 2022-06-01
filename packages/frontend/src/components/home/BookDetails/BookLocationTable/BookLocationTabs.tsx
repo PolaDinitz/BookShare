@@ -20,7 +20,7 @@ export type BookLocationType = {
   borrowerUserId: string;
   avatar: string;
   fullname: string;
-  city: string;
+  address: string;
   distance: number;
   rating: number;
 };
@@ -77,7 +77,7 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
   useEffect(() => {
     const createTableData = async () => {
       const userLocation = await getCoordinatesFromAddress(props.address);
-      // setCurrCoordinates(userLocation);
+      setCurrCoordinates(userLocation);
 
       const usersWithBooks = await userBookService.getAvailableUsersByBookId(
         props.bookId
@@ -107,7 +107,7 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
               borrowerUserId: loggedInUserId,
               avatar: userBook.user.imageUrl,
               fullname: `${userBook.user.firstName} ${userBook.user.lastName}`,
-              city: userBook.user.address.split(",")[1],
+              address: userBook.user.address,
               distance: await calcDistanceFromAddress(
                 userBook.user.address,
                 userCoordinates
@@ -135,7 +135,7 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
         <BookLocationTable rows={rows} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <BookLocationMap address={props.address} location={currCoordinates} />
+        <BookLocationMap location={currCoordinates} markersData={rows}/>
       </TabPanel>
     </Box>
   );

@@ -1,16 +1,34 @@
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
-import { Coordinates } from "../../../../utils/distance-calculation";
+import {
+  Coordinates,
+  getCoordinatesFromAddress,
+} from "../../../../utils/distance-calculation";
+import { BookLocationType } from "./BookLocationTabs";
 
 type BookLocationMapProps = {
-  address: string;
   location: Coordinates | null;
+  markersData: BookLocationType[] | null;
+};
+
+type MapMarkerType<BookLocationType> = Partial<BookLocationType> & {
+  coordinates: Coordinates;
+};
+
+const createMarkers = async (
+  markersData: BookLocationType[]
+): Promise<BookLocationType[]> => {
+  return await Promise.all(
+    markersData.map(async (marker) => {
+      return {
+        ...marker,
+        coordinates: await getCoordinatesFromAddress(marker.address),
+      };
+    })
+  );
 };
 
 const BookLocationMap = (props: BookLocationMapProps) => {
- 
-
-
   return (
     <MapContainer
       style={{ width: "500px", height: "300px" }}

@@ -31,7 +31,7 @@ const BookLocationSingleRow = (props: BookLocationSingleRowProps) => {
         toast.error(errorMessage);
       });
 
-  const { userBookId, fullname, avatar, city, distance, rating } = props.rowData;
+  const { userBookId, fullname, avatar, address, distance, rating } = props.rowData;
 
   return (
     <TableRow
@@ -45,7 +45,7 @@ const BookLocationSingleRow = (props: BookLocationSingleRowProps) => {
         {fullname}
         <Rating name="Rating" value={rating} readOnly size="small" />
       </TableCell>
-      <TableCell align="left">{city}</TableCell>
+      <TableCell align="left">{address.split(",")[1]}</TableCell>
       <TableCell align="left">{`${distance.toFixed(1)} Km`}</TableCell>
       <TableCell align="right">
         <RoundedButton
