@@ -3,6 +3,9 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { useSelector } from "react-redux";
+import _ from 'lodash';
+
 import BookLocationTable from "./BookLocationTable";
 import BookLocationMap from "./BookLocationMap";
 import userBookService from "../../../../services/user-book.service";
@@ -12,7 +15,6 @@ import {
   Coordinates,
   getCoordinatesFromAddress,
 } from "../../../../utils/distance-calculation";
-import { useSelector } from "react-redux";
 import { RootState } from "../../../../types/types";
 
 export type BookLocationType = {
@@ -128,14 +130,14 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
           aria-label="basic tabs example"
         >
           <Tab label="Table" {...a11yProps(0)} />
-          <Tab label="Map" {...a11yProps(1)} />
+          <Tab label="Map" {...a11yProps(1)} disabled={_.isEmpty(rows)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
         <BookLocationTable rows={rows} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <BookLocationMap location={currCoordinates} markersData={rows}/>
+        <BookLocationMap location={currCoordinates} bookLocationData={rows}/>
       </TabPanel>
     </Box>
   );

@@ -1,5 +1,14 @@
+import { Rating } from "@mui/material";
+import { marker } from "leaflet";
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  useMap,
+  Marker,
+  Popup,
+  MarkerProps,
+} from "react-leaflet";
 import {
   Coordinates,
   getCoordinatesFromAddress,
@@ -8,18 +17,18 @@ import { BookLocationType } from "./BookLocationTabs";
 
 type BookLocationMapProps = {
   location: Coordinates | null;
-  markersData: BookLocationType[] | null;
+  bookLocationData: BookLocationType[] | null;
 };
 
-type MapMarkerType<BookLocationType> = Partial<BookLocationType> & {
+type MapMarkerType<T> = Partial<T> & {
   coordinates: Coordinates;
 };
 
 const createMarkers = async (
-  markersData: BookLocationType[]
-): Promise<BookLocationType[]> => {
+  data: BookLocationType[] | null
+): Promise<MapMarkerType<BookLocationType>[]> => {
   return await Promise.all(
-    markersData.map(async (marker) => {
+    data!.map(async (marker) => {
       return {
         ...marker,
         coordinates: await getCoordinatesFromAddress(marker.address),
@@ -29,6 +38,21 @@ const createMarkers = async (
 };
 
 const BookLocationMap = (props: BookLocationMapProps) => {
+  const map = useMap();
+  
+  const [markers, setMarkers] = useState<
+    MapMarkerType<BookLocationType>[] | null
+  >(null);
+
+  useEffect(() => {
+    const createMarkersData = async () => {
+      const createdMarkers = await createMarkers(props.bookLocationData);
+      setMarkers(createdMarkers);
+    };
+
+    createMarkersData().catch(console.error);
+  }, []);
+
   return (
     <MapContainer
       style={{ width: "500px", height: "300px" }}
@@ -38,12 +62,26 @@ const BookLocationMap = (props: BookLocationMapProps) => {
           : [31.72, 35.079]
       }
       zoom={12}
-      scrollWheelZoom={false}
+      scrollWheelZoom={true}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       />
+      {markers?.map((marker) => {
+        <Marker
+          position={{
+            lat: marker.coordinates.lat,
+            lng: marker.coordinates.lon,
+          }}
+        >
+          <Popup>
+            {marker.fullname} <br />
+            {marker.distance} <br />
+            <Rating name="Rating" value={marker.rating} readOnly size="small" />
+          </Popup>
+        </Marker>;
+      })}
     </MapContainer>
   );
 };

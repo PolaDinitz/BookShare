@@ -11,6 +11,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import _ from 'lodash';
 
 import BookLocationSingleRow from "./BookLocationSingleRow";
 import { BookLocationType } from "./BookLocationTabs";
@@ -25,7 +26,7 @@ const BookLocationTable = (props: BookLocationTableProps) => {
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} size="small" aria-label="simple table">
         <TableBody>
-          {props.rows
+          {!_.isEmpty(props.rows) && props.rows
             ? props.rows.map((row) => (
                 <BookLocationSingleRow rowData={row} />
               ))

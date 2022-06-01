@@ -16,6 +16,7 @@ type BookLocationSingleRowProps = {
 const BookLocationSingleRow = (props: BookLocationSingleRowProps) => {
   const [isBorrowRequestSent, setIsBorrowRequestSent] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
+  
   const createTransaction = () =>
     dispatch(
       createTransactionThunk({
