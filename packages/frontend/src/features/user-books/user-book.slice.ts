@@ -5,6 +5,7 @@ import { UserBook } from "./user-book.model";
 import { Book } from "../books/book.model";
 import userBookService from "../../services/user-book.service";
 import { finishTransactionChatThunk, lendBookThunk } from "../transactions/transactions.slice";
+import { User } from "../user/user.model";
 
 export const userBooksAdapter = createEntityAdapter<UserBook>({
     selectId: (userBook: UserBook) => userBook.id,
@@ -28,6 +29,18 @@ export const setUserBooksAvailabilityThunk = createAsyncThunk<{ userBook: UserBo
         try {
             const userBook = await userBookService.updateUserBookAvailability(payload.isAvailable, payload.userBookId);
             return {userBook};
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.message);
+        }
+    }
+);
+
+export const getAvailableUsersByBookId = createAsyncThunk<{ usersWithBook: UserBook[] }, { bookId: string }>(
+    'user-books/getUsersByBookId',
+    async (payload, thunkApi) => {
+        try {
+            const usersWithBook: UserBook[] = await userBookService.getAvailableUsersByBookId(payload.bookId);
+            return {usersWithBook};
         } catch (error: any) {
             return thunkApi.rejectWithValue(error.message);
         }

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Dialog,
@@ -12,9 +12,13 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-import BookLocationTable from "./BookLocationTable";
+import BookLocationTabs from "./BookLocationTable/BookLocationTabs";
 import RoundedButton from "../../common/rounded-button";
 import { Book } from "../../../features/books/book.model";
+import userService from "../../../services/user.service";
+import { User } from "../../../features/user/user.model";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../types/types";
 
 type BookDetailsProps = {
   open: boolean;
@@ -23,8 +27,19 @@ type BookDetailsProps = {
 };
 
 const BookDetails = (props: BookDetailsProps) => {
+  const userId = useSelector((state: RootState) => state.auth.user!.id);
+  const [user, setUser] = useState({} as User);
   const { open, onClose } = props;
-  const { title, author, genres, description, imageUrl } = props.book;
+  const { id, title, author, genres, description, imageUrl } = props.book;
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user =  await userService.getUserById(userId);
+      setUser(user);
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
@@ -54,7 +69,7 @@ const BookDetails = (props: BookDetailsProps) => {
               {author}
             </Typography>
             <Typography mt={2}>{description}</Typography>
-            <BookLocationTable />
+            <BookLocationTabs address={user.address} bookId={id} userId={user.id}/>
             <DialogActions
               sx={{
                 flexDirection: "column",

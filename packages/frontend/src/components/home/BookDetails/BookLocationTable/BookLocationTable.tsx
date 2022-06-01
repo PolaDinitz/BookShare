@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import {
+  Avatar,
   Button,
   Paper,
+  Rating,
   Table,
   TableBody,
   TableCell,
@@ -9,48 +11,25 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import RoundedButton from "../../../common/rounded-button";
 
-type BookLocationTableProps = {};
+import BookLocationSingleRow from "./BookLocationSingleRow";
+import { BookLocationType } from "./BookLocationTabs";
 
-type BookLocationType = {
-  fullname: string;
-  city: string;
-  distance: number;
-  rating: number;
+type BookLocationTableProps = {
+  rows: BookLocationType[] | null;
 };
 
-const rows = [
-  { fullname: "Pola Dinitz", city: "Tel-Aviv", distance: 0.2, rating: 2 },
-  { fullname: "Daniel Beilin", city: "Petah Tikva", distance: 1.4, rating: 3 },
-  { fullname: "Ran Biderman", city: "Bat-Yam", distance: 0.6, rating: 5 },
-  {
-    fullname: "Maayan Mordehai",
-    city: "Rishon Le-Zion  ",
-    distance: 2.5,
-    rating: 4,
-  },
-];
-
 const BookLocationTable = (props: BookLocationTableProps) => {
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} size="small" aria-label="simple table">
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.fullname}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell align="left" component="th" scope="row">
-                {row.fullname}
-              </TableCell>
-              <TableCell align="left">{row.city}</TableCell>
-              <TableCell align="right">
-                <RoundedButton>Borrow</RoundedButton>
-              </TableCell>
-            </TableRow>
-          ))}
+          {props.rows
+            ? props.rows.map((row) => (
+                <BookLocationSingleRow rowData={row} />
+              ))
+            : "no books were found"}
         </TableBody>
       </Table>
     </TableContainer>
