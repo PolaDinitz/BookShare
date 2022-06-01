@@ -12,15 +12,17 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import EditIcon from "@mui/icons-material/Edit";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { config } from "../../config/config";
-import { RootState } from "../../types/types";
+import { AppDispatch, RootState } from "../../types/types";
 import CustomPaper from "../common/custom-paper";
 import RoundedButton from "../common/rounded-button";
 import userService from "../../services/user.service";
 import { User } from "../../features/user/user.model";
 import { Box } from "@mui/system";
+import { updateUserThunk } from "../../features/user/user.slice";
+import { toast } from "react-toastify";
 
 type ProfileProps = {};
 
@@ -30,6 +32,24 @@ const Profile = (props: ProfileProps) => {
   const [user, setUser] = useState({} as User);
   const [tempUser, setTempUser] = useState({} as User);
   const [isEditMode, setIsEditMode] = useState(false);
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const updateUser = () =>
+    dispatch(
+      updateUserThunk({
+        userId: userId,
+        userDetails: tempUser,
+      })
+    )
+      .unwrap()
+      .then((res: { user: User }) => {
+        setUser(res.user);
+        toast.success("user updated successfully");
+      })
+      .catch((errorMessage: string) => {
+        toast.error(errorMessage);
+      });
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -210,7 +230,7 @@ const Profile = (props: ProfileProps) => {
                 Cancel
               </RoundedButton>
               {/* TODO: save functionality - connect to redux */}
-              <RoundedButton>Save</RoundedButton>
+              <RoundedButton onClick={() => updateUser()}>Save</RoundedButton>
             </Grid>
           ) : (
             <></>
@@ -298,12 +318,7 @@ const Profile = (props: ProfileProps) => {
           </Grid>
           <Grid item>
             {/* TODO: uncontrolled component error fix */}
-            <Rating
-              name="Rating"
-              value={user.rating}
-              readOnly
-              size="large"
-            />
+            <Rating name="Rating" value={user.rating} readOnly size="large" />
           </Grid>
         </Grid>
       </Grid>

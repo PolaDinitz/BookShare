@@ -34,11 +34,11 @@ const BookDetails = (props: BookDetailsProps) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      return await userService.getUserById(userId);
-    };
-    fetchUser().then((user: User) => {
+      const user =  await userService.getUserById(userId);
       setUser(user);
-    });
+    };
+
+    fetchUser();
   }, []);
 
   return (
