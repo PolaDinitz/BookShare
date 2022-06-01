@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import {
-  ButtonBase,
   Grid,
   IconButton,
   Paper,
@@ -162,6 +161,7 @@ const Profile = (props: ProfileProps) => {
                 InputProps={{
                   readOnly: !isEditMode,
                 }}
+                readOnly={!isEditMode}
                 onChange={(newValue) =>
                   setTempUser({ ...tempUser, ["dateOfBirth"]: newValue })
                 }
