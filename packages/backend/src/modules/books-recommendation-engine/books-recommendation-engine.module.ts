@@ -9,10 +9,11 @@ import { BookService } from "../book/book.service";
 import { Book } from "../book/entities/book.entity";
 import { UserBookService } from "../user-book/user-book.service";
 import { UserBook } from "../user-book/entities/user-book.entity";
+import { ConfigService } from "@nestjs/config";
 
 @Module({
     imports: [HttpModule, TypeOrmModule.forFeature([Transaction, Book, UserBook])],
-    providers: [BooksRecommendationEngineService, TransactionService, BookService, UserBookService],
+    providers: [BooksRecommendationEngineService, TransactionService, BookService, UserBookService, ConfigService],
     controllers: [BooksRecommendationEngineController],
     exports: [BooksRecommendationEngineService]
 })
