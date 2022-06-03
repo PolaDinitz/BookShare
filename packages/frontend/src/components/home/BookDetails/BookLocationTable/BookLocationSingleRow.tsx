@@ -13,7 +13,9 @@ type BookLocationSingleRowProps = {
 };
 
 const BookLocationSingleRow = (props: BookLocationSingleRowProps) => {
-    const [isBorrowRequestSent, setIsBorrowRequestSent] = useState(false);
+    const {fullName, avatar, city, distance, rating, isRequestSent} = props.rowData;
+
+    const [isBorrowRequestSent, setIsBorrowRequestSent] = useState(isRequestSent);
     const dispatch = useDispatch<AppDispatch>();
     const createTransaction = () =>
         dispatch(
@@ -27,7 +29,6 @@ const BookLocationSingleRow = (props: BookLocationSingleRowProps) => {
             toast.error(errorMessage);
         });
 
-    const {fullName, avatar, city, distance, rating} = props.rowData;
 
     return (
         <TableRow
