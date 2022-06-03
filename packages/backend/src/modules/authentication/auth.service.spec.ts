@@ -1,11 +1,11 @@
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from './modules/user/user.service';
-import { AuthService } from './modules/authentication/auth.service'
-import { JwtStrategy } from './modules/authentication/jwt/jwt.strategy';
-import { LocalStrategy } from './modules/authentication/local/local.strategy';
-import { Role } from './enums/role.enum';
+import { UsersService } from '../user/user.service';
+import { AuthService } from './auth.service'
+import { JwtStrategy } from './jwt/jwt.strategy';
+import { LocalStrategy } from './local/local.strategy';
+import { Role } from '../../enums/role.enum';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 
 const moduleMocker = new ModuleMocker(global);
