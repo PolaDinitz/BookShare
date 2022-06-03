@@ -63,6 +63,7 @@ export class UsersController {
       if (profileImage) {
           imageName = profileImage.filename;
       }
+
       return this.usersService.updateUser(id, updateUserDto, imageName);
   }
 

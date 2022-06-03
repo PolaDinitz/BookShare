@@ -20,6 +20,7 @@ const RoundedButton = (props: RoundedButtonProps) => {
             variant="contained"
             onClick={onClick}
             sx={{
+                fontSize: "12px",
                 borderRadius: "50px",
                 fontWeight: "bold",
                 transition: "0.5s",

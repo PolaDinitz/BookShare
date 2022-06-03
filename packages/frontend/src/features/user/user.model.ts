@@ -7,6 +7,8 @@ export interface User {
     email: string;
     phoneNumber: string;
     address: string;
+    longitude: number;
+    latitude: number;
     imageUrl: string;
     rating: number;
 }
