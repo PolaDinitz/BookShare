@@ -6,25 +6,39 @@ import { JwtAuthGuard } from "../authentication/jwt/jwt-auth.guard";
 import { RolesGuard } from "../authorization/roles.guard";
 import { TransactionService } from "../transaction/transaction.service";
 import { Transaction } from "../transaction/entities/transaction.entity";
+import { BookService } from "../book/book.service";
+import { Book } from "../book/entities/book.entity";
+import { UserBook } from "../user-book/entities/user-book.entity";
+import { UserBookService } from "../user-book/user-book.service";
 
 @Controller("books-recommendation-engine")
 export class BooksRecommendationEngineController {
 
-  constructor(private booksRecommendationEngineService: BooksRecommendationEngineService,
-              private transactionService: TransactionService) {
-  }
+    constructor(private booksRecommendationEngineService: BooksRecommendationEngineService,
+                private transactionService: TransactionService,
+                private bookService: BookService,
+                ) {
+    }
 
-  @Get()
-  @Roles(Role.USER, Role.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  async getRecommendedBooks(@Request() req: any) {
-    const LastBooksLimit = 1;
-    const userId: string = req.user.userId;
-    let recommendedBooksIds: string[] = [];
-    const lastBorrowedBooksIds: string[] = (await this.transactionService.getLastTransactionsByBorrowUser(userId, LastBooksLimit)).map((transaction: Transaction) => transaction.userBook.bookId);
-    if (lastBorrowedBooksIds.length !== 0)
-      recommendedBooksIds = await this.booksRecommendationEngineService.getRecommendedBooks(lastBorrowedBooksIds);
-    return recommendedBooksIds;
-  }
+    @Get()
+    @Roles(Role.USER, Role.ADMIN)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    async getRecommendedBooks(@Request() req: any) {
+        const lastBooksLimit = 1;
+        const popularBooksLimit = 10;
+        const userId: string = req.user.userId;
+        const lastBorrowedBooksIds: string[] = (await this.transactionService.getLastTransactionsByBorrowUser(userId, lastBooksLimit)).map((transaction: Transaction) => transaction.userBook.bookId);
+        if (lastBorrowedBooksIds.length !== 0) {
+            this.booksRecommendationEngineService.getRecommendedBooks(lastBorrowedBooksIds)
+                .then(async (booksIds: string[]) => {
+                    if (booksIds.length > 0)
+                        return booksIds;
+                })
+                .catch((error) => {
+                    console.log("There was an error with the recommendation engine: " + error.message)
+                });
+        }
+        return (await this.bookService.getPopularBooks(popularBooksLimit)).map((book: Book) => book.id);
+    }
 
 }

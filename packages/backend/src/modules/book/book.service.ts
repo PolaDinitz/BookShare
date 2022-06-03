@@ -65,6 +65,15 @@ export class BookService {
         return {rating: (book.bookRating / book.count)};
     }
 
+    public async getPopularBooks(limit: number) {
+        return this.booksRepository.find({
+            order: {
+                bookRating: "DESC"
+            },
+            take: limit,
+        });
+    }
+
     public async create(bookApi: BookApi): Promise<Book> {
         const newBook = this.booksRepository.create({
             id: bookApi.id,
