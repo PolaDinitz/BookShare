@@ -50,14 +50,8 @@ export class TransactionController {
     if (userBook.isLent) {
       throw new HttpException("This user book is already lented", HttpStatus.BAD_REQUEST);
     }
-    let alreadyExist = false;
-    const existingTransactions = await this.transactionService.getActiveTransactionsByUserBook(createTransactionDto.userBookId);
-    existingTransactions.map((transaction) => {
-      if (transaction.borrowUserId === req.user.userId) {
-        alreadyExist = true;
-      }
-    });
-    if (alreadyExist) {
+    const existingTransaction = await this.transactionService.getTransactionByUserBookAndBorrowUser(createTransactionDto.userBookId, createTransactionDto.borrowUserId);
+    if (existingTransaction.length > 0) {
       throw new HttpException("Transaction already exists", HttpStatus.BAD_REQUEST);
     }
     const createdTransaction = await this.transactionService.create(createTransactionDto);

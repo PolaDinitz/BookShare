@@ -129,6 +129,18 @@ export class TransactionService {
     });
   }
 
+  public async getTransactionByUserBookAndBorrowUser(userBookId: string, borrowUserId: string) {
+    return await this.transactionRepository.find({
+      where: {
+        userBook: {
+          id: userBookId
+        },
+        active: true,
+        borrowUserId: borrowUserId
+      }
+    });
+  }
+
   public async deactivateOtherTransactionsByUserBook(userBookId: string, currentTransactionId: string) {
     return this.transactionRepository.createQueryBuilder()
       .update()
