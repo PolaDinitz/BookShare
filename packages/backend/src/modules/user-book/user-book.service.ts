@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CreateBookDto } from "src/modules/book/dto/create-book.dto";
+import { CreateBookDto } from "../book/dto/create-book.dto";
 import { Repository } from "typeorm";
 import { UpdateUserBookAvailabilityDto } from "./dto/update-user-book-availability.dto";
 import { UserBook } from "./entities/user-book.entity";

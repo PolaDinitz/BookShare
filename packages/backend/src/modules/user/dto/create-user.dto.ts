@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsDate, IsEmail, IsNotEmpty, IsPhoneNumber, IsEnum } from "class-validator";
-import { Gender } from "src/enums/gender.enum";
+import { Gender } from "../../../enums/gender.enum";
 
 export class CreateUserDto {
 

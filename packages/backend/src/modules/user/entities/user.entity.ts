@@ -1,11 +1,11 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { IsDate, IsEmail, IsPhoneNumber, Max, Min } from "class-validator";
-import { Gender } from "src/enums/gender.enum";
-import { Role } from "src/enums/role.enum";
+import { Gender } from "../../../enums/gender.enum";
+import { Role } from "../../../enums/role.enum";
 import { Type } from "class-transformer";
-import { DEFAULT_USER_IMAGE_FILE_NAME, IMAGES_USER_ASSETS_PATH } from "src/consts/images.consts";
-import { Transaction } from "src/modules/transaction/entities/transaction.entity";
-import { UserBook } from "src/modules/user-book/entities/user-book.entity";
+import { DEFAULT_USER_IMAGE_FILE_NAME, IMAGES_USER_ASSETS_PATH } from "../../../consts/images.consts";
+import { Transaction } from "../../../modules/transaction/entities/transaction.entity";
+import { UserBook } from "../../../modules/user-book/entities/user-book.entity";
 
 @Entity()
 export class User {
