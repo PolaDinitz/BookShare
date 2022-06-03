@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Like, MoreThanOrEqual, Repository } from "typeorm";
-import { BookCategory } from "../book-category/entities/book-category.entity";
+import { MoreThanOrEqual, Repository } from "typeorm";
 import { Book } from "./entities/book.entity";
 
 @Injectable()

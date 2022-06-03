@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
-import { TransactionStatus } from "src/enums/transaction-status.enum";
+import { TransactionStatus } from "../../enums/transaction-status.enum";
 import { UserBookService } from "../user-book/user-book.service";
 import { Transaction } from "./entities/transaction.entity";
 import { TransactionService } from "./transaction.service";

@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request, UnauthorizedException } from '@nestjs/common';
 import { UserBookService } from './user-book.service';
-import { Roles } from 'src/modules/authorization/roles.decorator';
-import { Role } from 'src/enums/role.enum';
-import { JwtAuthGuard } from 'src/modules/authentication/jwt/jwt-auth.guard';
-import { RolesGuard } from 'src/modules/authorization/roles.guard';
+import { Roles } from '../authorization/roles.decorator';
+import { Role } from '../../enums/role.enum';
+import { JwtAuthGuard } from '../authentication/jwt/jwt-auth.guard';
+import { RolesGuard } from '../authorization/roles.guard';
 import { UpdateUserBookAvailabilityDto } from './dto/update-user-book-availability.dto';
 
 @Controller('user-book')

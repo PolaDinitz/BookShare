@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Param, Post, Put, Query, Req, Request, UseGuards } from "@nestjs/common";
-import { JwtAuthGuard } from "src/modules/authentication/jwt/jwt-auth.guard";
-import { Roles } from "src/modules/authorization/roles.decorator";
-import { RolesGuard } from "src/modules/authorization/roles.guard";
-import { Role } from "src/enums/role.enum";
+import { JwtAuthGuard } from "../authentication/jwt/jwt-auth.guard";
+import { Roles } from "../authorization/roles.decorator";
+import { RolesGuard } from "../authorization/roles.guard";
+import { Role } from "../../enums/role.enum";
 import { BookService } from "./book.service";
-import { UserBookService } from "src/modules/user-book/user-book.service";
-import { BooksApiService } from "src/modules/books-api/books-api.service";
+import { UserBookService } from "../user-book/user-book.service";
+import { BooksApiService } from "../books-api/books-api.service";
 import { CreateBookDto } from "./dto/create-book.dto";
 import { BookCategoryService } from "../book-category/book-category.service";
 import { Book } from "./entities/book.entity";

@@ -1,22 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AuthModule } from './modules/authentication/auth.module';
+import { UsersModule } from './modules/user/user.module';
 
 describe('AppController', () => {
   let appController: AppController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
-      providers: [AppService],
+      imports: [AuthModule],
+      controllers: [AppController]
     }).compile();
 
     appController = app.get<AppController>(AppController);
   });
 
+
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
-    });
+    it('should fail to login', () => {
+      expect(appController.login({ email : "notreal@notexist.com", password: "notexist"})).toThrowError;
+    }) 
   });
 });

@@ -1,4 +1,4 @@
-import { Role } from "src/enums/role.enum";
+import { Role } from "../enums/role.enum";
 
 export interface ResponsePayload {
     refresh_token : string,
