@@ -9,7 +9,6 @@ type BookLocationTableProps = {
 };
 
 const BookLocationTable = (props: BookLocationTableProps) => {
-
     return (
         <>
             {props.rows && props.rows.length > 0 ?
