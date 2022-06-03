@@ -87,7 +87,8 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
                     })
                 }
             })
-            setRows(Array.from(rows.values()));
+            const rowsAsArray: BookLocationType[] = Array.from(rows.values()).sort((a, b) => a.distance - b.distance);
+            setRows(rowsAsArray);
         };
 
         createTableData().finally(() => setLoading(false));

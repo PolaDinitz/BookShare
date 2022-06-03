@@ -16,7 +16,7 @@ const BooksCollection = (props: BooksCollectionProps) => {
       <Grid container rowSpacing={3} columnSpacing={3}>
         {!_.isEmpty(books) ? (
           books.map((book) => (
-            <Grid key={book.id} item xs={3}>
+            <Grid key={book.id} item xs={2.4}>
               <BookPost key={book.id} book={book} />
             </Grid>
           ))
