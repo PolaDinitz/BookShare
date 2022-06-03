@@ -93,8 +93,7 @@ const Home = () => {
         }
         getRecommendedBooksIds().then((booksIds: string[]) => {
             SetRecommendedBooksIds(booksIds);
-            setLoading(false);
-        }).catch(() => {
+        }).finally(() => {
             setLoading(false);
         })
     }, [state.recommendEngineToggle]);

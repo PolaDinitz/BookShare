@@ -12,7 +12,7 @@ const BookLocationTable = (props: BookLocationTableProps) => {
 
     return (
         <>
-            {props.rows ?
+            {props.rows && props.rows.length > 0 ?
                 <TableContainer>
                     <Table sx={{minWidth: 500}} size="small" aria-label="simple table">
                         <TableBody>
@@ -23,7 +23,7 @@ const BookLocationTable = (props: BookLocationTableProps) => {
                     </Table>
                 </TableContainer>
                 :
-                <Typography>
+                <Typography m={3} align="center" fontWeight={300} variant="subtitle1">
                     No one currently is lending this book, try again later
                 </Typography>
             }

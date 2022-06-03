@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Avatar, Rating, TableCell, TableRow, Typography } from "@mui/material";
+import { Avatar, Rating, Stack, TableCell, TableRow, Typography } from "@mui/material";
 import RoundedButton from "../../../common/rounded-button";
 import { config } from "../../../../config/config";
 import { useDispatch } from "react-redux";
@@ -37,8 +37,10 @@ const BookLocationSingleRow = (props: BookLocationSingleRowProps) => {
                 <Avatar src={`${config.apiUrl}/${avatar}`}/>
             </TableCell>
             <TableCell align="left" component="th" scope="row">
-                {fullName}
-                <Rating name="Rating" value={rating} readOnly size="small"/>
+                <Stack>
+                    {fullName}
+                    <Rating name="Rating" value={rating} readOnly size="small"/>
+                </Stack>
             </TableCell>
             <TableCell align="left">{city}</TableCell>
             <TableCell align="left">{`${distance.toFixed(1)} Km`}</TableCell>

@@ -60,7 +60,7 @@ const BookDetails = (props: BookDetailsProps) => {
                             {author}
                         </Typography>
                         <Typography mt={2}>{description}</Typography>
-                        <BookLocationTabs address={user.address}/>
+                        <BookLocationTabs loggedInUser={user}/>
                         <DialogActions
                             sx={{
                                 flexDirection: "column",

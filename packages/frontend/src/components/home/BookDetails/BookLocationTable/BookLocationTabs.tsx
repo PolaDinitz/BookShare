@@ -6,15 +6,12 @@ import Box from "@mui/material/Box";
 import BookLocationTable from "./BookLocationTable";
 import BookLocationMap from "./BookLocationMap";
 import { UserBook } from "../../../../features/user-books/user-book.model";
-import {
-    calcDistanceFromAddress,
-    Coordinates,
-    getCoordinatesFromAddress,
-} from "../../../../utils/distance-calculation";
+import { calcDistanceFromAddress, Coordinates, } from "../../../../utils/distance-calculation";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../types/types";
 import { selectUserBooksAvailableForLend } from "../../../../features/user-books/user-book.selector";
 import Loader from "../../../common/loader/Loader";
+import { User } from "../../../../features/user/user.model";
 
 export type BookLocationType = {
     userBookId: string;
@@ -60,26 +57,27 @@ function a11yProps(index: number) {
 }
 
 type BookLocationTabsProps = {
-    address: string;
+    loggedInUser: User;
 };
 
 const BookLocationTabs = (props: BookLocationTabsProps) => {
     const loggedInUserId = useSelector((state: RootState) => state.auth.user!.id);
+    const availableUserBooksForLending: UserBook[] = useSelector(selectUserBooksAvailableForLend);
     const [loading, setLoading] = useState(true);
     const [value, setValue] = useState(0);
     const [rows, setRows] = useState<BookLocationType[] | null>(null);
-    const [currCoordinates, setCurrCoordinates] = useState<null | Coordinates>(null);
-    const availableUserBooksForLending: UserBook[] = useSelector(selectUserBooksAvailableForLend);
+    const loggedInUserCoordinates: Coordinates = {
+        lon: props.loggedInUser.longitude,
+        lat: props.loggedInUser.latitude
+    }
 
     useEffect(() => {
         const createTableData = async () => {
-            const userLocation = await getCoordinatesFromAddress(props.address);
-            const rows = await createRows(availableUserBooksForLending, userLocation);
-            setLoading(false);
+            const rows = await createRows(availableUserBooksForLending, loggedInUserCoordinates);
             setRows(rows);
         };
 
-        createTableData().catch(console.error);
+        createTableData().finally(() => setLoading(false));
     }, []);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -101,7 +99,7 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
                             fullName: `${userBook.user.firstName} ${userBook.user.lastName}`,
                             city: userBook.user.address.split(",")[1],
                             distance: await calcDistanceFromAddress(
-                                userBook.user.address,
+                                {lon: userBook.user.longitude, lat: userBook.user.latitude},
                                 userCoordinates
                             ),
                             rating: userBook.user.rating,
@@ -135,7 +133,7 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
                         <BookLocationTable rows={rows}/>
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        <BookLocationMap address={props.address} location={currCoordinates}/>
+                        <BookLocationMap address={props.loggedInUser.address} location={loggedInUserCoordinates}/>
                     </TabPanel>
                 </Box>
 
