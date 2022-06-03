@@ -6,22 +6,28 @@ import BookCustomPaper from "../../common/book-custom-paper";
 import BookDetails from "../BookDetails";
 import RoundedButton from "../../common/rounded-button";
 import { Book } from "../../../features/books/book.model";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../types/types";
+import { setSelectedBookId } from "../../../features/books/books.slice";
 
 type BookPostProps = {
     book: Book;
 };
 
 const BookPost = (props: BookPostProps) => {
+    const dispatch = useDispatch<AppDispatch>();
     const [open, setOpen] = useState(false);
+    const {id, title, author, genres, imageUrl, bookRating, count} = props.book;
 
     const handleClickOpen = () => {
+        dispatch(setSelectedBookId({bookId: id}))
         setOpen(true);
     };
     const handleClose = () => {
+        dispatch(setSelectedBookId({bookId: null}))
         setOpen(false);
     };
 
-    const {title, author, genres, imageUrl, bookRating, count} = props.book;
 
     return (
         <BookCustomPaper img={imageUrl}>
