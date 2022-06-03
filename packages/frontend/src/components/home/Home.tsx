@@ -94,6 +94,8 @@ const Home = () => {
         getRecommendedBooksIds().then((booksIds: string[]) => {
             SetRecommendedBooksIds(booksIds);
             setLoading(false);
+        }).catch(() => {
+            setLoading(false);
         })
     }, [state.recommendEngineToggle]);
 

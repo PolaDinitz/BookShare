@@ -9,6 +9,7 @@ import { Transaction } from "../transactions/transaction.model";
 import { transactionsSelectors } from "../transactions/transactions.slice";
 import { UserBook } from "./user-book.model";
 import { userBooksSelectors } from "./user-book.slice";
+import { selectSelectedBookId } from "../books/books.selector";
 
 export interface LibraryBook {
     userBookId: string
@@ -117,6 +118,17 @@ const getLibraryBorrowedBooks = (transactions: Transaction[],
     return libraryBorrowedBooks;
 }
 
+const getUserBooksAvailableForLend = (userBooks: UserBook[], selectedBookId: string | null, loggedInUserId: string | undefined) => {
+    if (selectedBookId !== null)
+        return userBooks.filter((userBook: UserBook) =>
+            userBook.bookId === selectedBookId &&
+            userBook.user.id !== loggedInUserId &&
+            userBook.isAvailable &&
+            !userBook.isLent
+        )
+    return [];
+}
+
 export const selectLibraryMyBooks: Selector<RootState, LibraryBook[]> = createSelector(
     [
         userBooksSelectors.selectAll,
@@ -145,3 +157,12 @@ export const selectLibraryBorrowedBooks: Selector<RootState, LibraryTransactionB
     ],
     getLibraryBorrowedBooks
 );
+
+export const selectUserBooksAvailableForLend: Selector<RootState, UserBook[]> = createSelector(
+    [
+        userBooksSelectors.selectAll,
+        selectSelectedBookId,
+        selectLoggedInUserId
+    ],
+    getUserBooksAvailableForLend
+)
