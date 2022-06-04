@@ -204,10 +204,10 @@ const Home = () => {
                     <Grid item xs={2}>
                         <SliderFilter
                             key={filterActionTypes.byDistance}
-                            label="Distance"
+                            label="Distance (km)"
                             value={state.distance}
                             maxRange={20}
-                            step={1}
+                            step={0.5}
                             onSlide={(event) =>
                                 dispatch({
                                     type: filterActionTypes.byDistance,
