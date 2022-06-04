@@ -1,11 +1,22 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { Grid, IconButton, Paper, Rating, TextField, Typography, } from "@mui/material";
+import {
+    FormControl,
+    Grid,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Rating,
+    Select,
+    SelectChangeEvent,
+    TextField,
+    Typography,
+} from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch, useSelector } from "react-redux";
-
 import { config } from "../../config/config";
 import { AppDispatch, RootState } from "../../types/types";
 import CustomPaper from "../common/custom-paper";
@@ -44,13 +55,20 @@ const Profile = (props: ProfileProps) => {
             });
 
     useEffect(() => {
+        let mounted = true;
         const fetchUser = async () => {
             return await userService.getUserById(userId);
         };
         fetchUser().then((user: User) => {
-            setUser(user);
-            setTempUser(user);
+            if (mounted) {
+                setUser(user);
+                setTempUser(user);
+            }
         });
+
+        return () => {
+            mounted = false;
+        }
     }, []);
 
     const {
@@ -63,9 +81,10 @@ const Profile = (props: ProfileProps) => {
         dateOfBirth,
     } = tempUser;
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
         setTempUser({...tempUser, [event.target.name]: event.target.value});
     };
+
 
     const enterEditMode = () => {
         setIsEditMode(true);
@@ -78,7 +97,7 @@ const Profile = (props: ProfileProps) => {
 
     return (
         <CustomPaper
-            img="/page-headers/library-header-image.jpg"
+            img={`${config.apiUrl}/${authUser?.imageUrl}`}
             contentWidth="75%"
             size="large"
             avatarImg={`${config.apiUrl}/${authUser?.imageUrl}`}
@@ -92,8 +111,9 @@ const Profile = (props: ProfileProps) => {
                 container
                 direction="row"
                 columnSpacing={5}
+                mt={5}
                 display="flex"
-                justifyContent="space-between"
+                justifyContent="center"
             >
                 <Grid container item direction="column" xs={6} rowSpacing={2}>
                     <Grid item alignSelf="end">
@@ -106,7 +126,7 @@ const Profile = (props: ProfileProps) => {
                             variant="filled"
                             id="first-name-textfield"
                             label="First Name"
-                            value={firstName}
+                            value={firstName || ''}
                             InputLabelProps={{shrink: true}}
                             InputProps={{
                                 readOnly: !isEditMode,
@@ -121,7 +141,7 @@ const Profile = (props: ProfileProps) => {
                             variant="filled"
                             id="last-name-textfield"
                             label="Last Name"
-                            value={lastName}
+                            value={lastName || ''}
                             InputLabelProps={{shrink: true}}
                             InputProps={{
                                 readOnly: !isEditMode,
@@ -132,25 +152,26 @@ const Profile = (props: ProfileProps) => {
                         />
                     </Grid>
                     <Grid item>
-                        <TextField
-                            variant="filled"
-                            id="geder-textfield"
-                            label="Gender"
-                            value={gender}
-                            InputLabelProps={{shrink: true}}
-                            InputProps={{
-                                readOnly: !isEditMode,
-                            }}
-                            onChange={handleChange}
-                            name="gender"
-                            fullWidth
-                        />
+                        <FormControl variant="filled" sx={{width: "100%"}}>
+                            <InputLabel>Gender</InputLabel>
+                            <Select readOnly={!isEditMode} name="gender" onChange={handleChange} value={gender || ""}>
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value="Male">Male</MenuItem>
+                                <MenuItem value="Female">Female</MenuItem>
+                                <MenuItem value="Other">Other</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
                     <Grid item>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
+                                openTo="year"
+                                views={['year', 'month', 'day']}
+                                inputFormat="dd/MM/yyyy"
                                 label="Date of Birth"
-                                value={dateOfBirth}
+                                value={dateOfBirth || null}
                                 InputProps={{
                                     readOnly: !isEditMode,
                                 }}
@@ -169,7 +190,7 @@ const Profile = (props: ProfileProps) => {
                             variant="filled"
                             id="email-textfield"
                             label="Email"
-                            value={email}
+                            value={email || ''}
                             InputLabelProps={{shrink: true}}
                             InputProps={{
                                 readOnly: !isEditMode,
@@ -184,7 +205,7 @@ const Profile = (props: ProfileProps) => {
                             variant="filled"
                             id="phone-textfield"
                             label="Phone Number"
-                            value={phoneNumber}
+                            value={phoneNumber || ''}
                             InputLabelProps={{shrink: true}}
                             InputProps={{
                                 readOnly: !isEditMode,
@@ -197,9 +218,9 @@ const Profile = (props: ProfileProps) => {
                     <Grid item>
                         <TextField
                             variant="filled"
-                            id="adress-textfield"
-                            label="Adress"
-                            value={address}
+                            id="address-textfield"
+                            label="Address"
+                            value={address || ''}
                             InputLabelProps={{shrink: true}}
                             InputProps={{
                                 readOnly: !isEditMode,
@@ -212,6 +233,7 @@ const Profile = (props: ProfileProps) => {
                     {isEditMode ? (
                         <Grid
                             item
+                            container
                             direction="row"
                             display="flex"
                             justifyContent="space-between"
@@ -222,7 +244,6 @@ const Profile = (props: ProfileProps) => {
                             >
                                 Cancel
                             </RoundedButton>
-                            {/* TODO: save functionality - connect to redux */}
                             <RoundedButton onClick={() => updateUser()}>Save</RoundedButton>
                         </Grid>
                     ) : (
@@ -234,9 +255,8 @@ const Profile = (props: ProfileProps) => {
                     item
                     direction="column"
                     xs={6}
-                    paddingTop="14%"
                     alignItems="center"
-                    rowSpacing={5}
+                    justifyContent="flex-start"
                 >
                     <Grid container direction="row" columnSpacing={2}>
                         <Grid item xs={4}>
@@ -244,7 +264,6 @@ const Profile = (props: ProfileProps) => {
                                 elevation={3}
                                 sx={{
                                     backgroundColor: "#2FAC90",
-                                    height: "100%",
                                     padding: "10px",
                                 }}
                             >
@@ -267,7 +286,6 @@ const Profile = (props: ProfileProps) => {
                                 elevation={3}
                                 sx={{
                                     backgroundColor: "#2FAC90",
-                                    height: "100%",
                                     padding: "10px",
                                 }}
                             >
@@ -290,7 +308,6 @@ const Profile = (props: ProfileProps) => {
                                 elevation={3}
                                 sx={{
                                     backgroundColor: "#2FAC90",
-                                    height: "100%",
                                     padding: "10px",
                                 }}
                             >
@@ -309,9 +326,13 @@ const Profile = (props: ProfileProps) => {
                             </Paper>
                         </Grid>
                     </Grid>
-                    <Grid item>
-                        {/* TODO: uncontrolled component error fix */}
-                        <Rating name="Rating" value={user.rating} readOnly size="large"/>
+                    <Grid container direction="row" columnSpacing={2}>
+                        <Grid item xs={12}>
+                            <Box m={5} sx={{display: "flex", justifyContent: "center"}}>
+                                {/* TODO: uncontrolled component error fix */}
+                                <Rating name="Rating" value={user.rating ? user.rating : 0} readOnly size="large"/>
+                            </Box>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>

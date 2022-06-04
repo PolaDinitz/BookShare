@@ -25,12 +25,17 @@ const BookDetails = (props: BookDetailsProps) => {
     const {title, author, genres, description, imageUrl} = props.book;
 
     useEffect(() => {
+        let mounted = true;
         const fetchUser = async () => {
             const user = await userService.getUserById(userId);
-            setUser(user);
+            if (mounted)
+                setUser(user);
         };
 
         fetchUser();
+        return () => {
+            mounted = false
+        };
     }, []);
 
     return (
