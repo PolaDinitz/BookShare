@@ -28,7 +28,7 @@ export const selectBooksPosts: Selector<RootState, BookPostType[]> = createSelec
         const booksPosts: Dictionary<BookPostType> = {};
         if (user) {
             Object.values(userBooks).forEach((userBook) => {
-                if (userBook && userBook.isAvailable && !userBook.isLent) {
+                if (userBook && userBook.user.id !== user.id && userBook.isAvailable && !userBook.isLent) {
                     const book: Book | undefined = books[userBook.bookId];
                     const bookPost: BookPostType | undefined = booksPosts[userBook.bookId];
                     const distance = calcDistanceFromAddress(

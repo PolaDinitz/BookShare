@@ -55,7 +55,7 @@ const Profile = () => {
     useEffect(() => {
         let mounted = true;
 
-        if (userProfile)
+        if (mounted && userProfile)
             setTempUser(userProfile);
 
         return () => {
