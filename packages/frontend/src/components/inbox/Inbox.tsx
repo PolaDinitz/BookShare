@@ -215,7 +215,7 @@ const Inbox = () => {
                                             <Typography variant="h6" fontWeight={500}>
                                                 {selectedChatRoom?.name}
                                             </Typography>
-                                            <Rating size={"small"}
+                                            <Rating size={"small"} precision={0.5}
                                                     value={selectedChatRoom ? selectedChatRoom.globalUserRating : 0}
                                                     readOnly/>
                                         </Stack>

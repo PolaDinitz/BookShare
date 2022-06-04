@@ -6,14 +6,13 @@ import { Box, Fab, Grid, Stack } from "@mui/material";
 import BooksCollection from "./BooksCollection";
 import { MultipleChoiceFilter, SearchFilter, SliderFilter, } from "./BookFilters";
 import AddBook from "./AddBook";
-import { Book } from "../../features/books/book.model";
-import { booksSelectors } from "../../features/books/books.slice";
 import { useSelector } from "react-redux";
 import ToggleFilter from "./BookFilters/ToggleFilter";
 import RecommendIcon from "@mui/icons-material/Recommend";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import BooksRecommendEngineService from "../../services/books-recommend-engine.service";
 import Loader from "../common/loader/Loader";
+import { BookPostType, selectBooksPosts } from "../../features/books/books.selectors";
 
 type State = {
     recommendEngineToggle: boolean;
@@ -82,7 +81,7 @@ const Home = () => {
 
     const [state, dispatch] = useReducer(filterReducer, initialState);
 
-    const allBooks = useSelector(booksSelectors.selectAll);
+    const bookPosts = useSelector(selectBooksPosts);
 
     useEffect(() => {
         const getRecommendedBooksIds = async () => {
@@ -98,26 +97,32 @@ const Home = () => {
         })
     }, [state.recommendEngineToggle]);
 
-    const filteredBooks = allBooks.filter((book: Book) => {
+    const filteredBooks = bookPosts.filter((bookPost: BookPostType) => {
         return (
             (
-                book.title
+                bookPost.book.title
                     .toLocaleLowerCase()
                     .includes(state.searchText.toLocaleLowerCase()) ||
-                book.author
+                bookPost.book.author
                     .toLocaleLowerCase()
                     .includes(state.searchText.toLocaleLowerCase())
             ) &&
             (
                 !_.isEmpty(state.genres)
-                    ? book.genres.some((item) => state.genres.includes(item))
+                    ? bookPost.book.genres.some((item) => state.genres.includes(item))
                     : true
             ) &&
             (
-                book.bookRating >= state.bookRating
+                bookPost.book.bookRating >= state.bookRating
             ) &&
             (
-                state.recommendEngineToggle ? recommendedBooksIds?.includes(book.id) : true
+                state.userRating <= bookPost.maxUserRating
+            ) &&
+            (
+                state.distance === 0 ? true : state.distance > bookPost.minDistance
+            ) &&
+            (
+                state.recommendEngineToggle ? recommendedBooksIds?.includes(bookPost.book.id) : true
             )
         );
     });
@@ -150,13 +155,13 @@ const Home = () => {
                                     payload: event.target.value,
                                 })
                             }
-                            suggestions={_.map(allBooks, "title")}
+                            suggestions={_.map(bookPosts, "book.title")}
                         />
                     </Grid>
                     <Grid item xs={2}>
                         <MultipleChoiceFilter
                             label="Choose Genres"
-                            options={_(allBooks).map("genres").flatten().uniq().value()}
+                            options={_(bookPosts).map("book.genres").flatten().uniq().value()}
                             checked={state.genres}
                             onCheck={(event) =>
                                 dispatch({
@@ -201,8 +206,8 @@ const Home = () => {
                             key={filterActionTypes.byDistance}
                             label="Distance"
                             value={state.distance}
-                            maxRange={1000}
-                            step={20}
+                            maxRange={20}
+                            step={1}
                             onSlide={(event) =>
                                 dispatch({
                                     type: filterActionTypes.byDistance,
@@ -222,7 +227,7 @@ const Home = () => {
                     />
                 </Stack>
                 :
-                <BooksCollection books={filteredBooks}/>
+                <BooksCollection bookPosts={filteredBooks}/>
             }
             <Fab
                 sx={fabStyle}

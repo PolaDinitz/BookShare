@@ -9,7 +9,7 @@ import { Transaction } from "../transactions/transaction.model";
 import { transactionsSelectors } from "../transactions/transactions.slice";
 import { UserBook } from "./user-book.model";
 import { userBooksSelectors } from "./user-book.slice";
-import { selectSelectedBookId } from "../books/books.selector";
+import { selectSelectedBookId } from "../books/books.selectors";
 
 export interface LibraryBook {
     userBookId: string

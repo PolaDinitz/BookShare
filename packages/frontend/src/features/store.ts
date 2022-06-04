@@ -9,7 +9,7 @@ import transactionsReducer from "./transactions/transactions.slice";
 const rootReducer = combineReducers({
     auth: authReducer,
     inbox: inboxReducer,
-    user: userReducer,
+    profile: userReducer,
     books: booksReducer,
     userBooks: userBooksReducer,
     transactions: transactionsReducer,

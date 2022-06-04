@@ -50,7 +50,7 @@ const buildChatRoomObject = (transaction: Transaction,
             name: user.firstName + " " + user.lastName,
             subName: book.title,
             imageUrl: user.imageUrl,
-            globalUserRating: user.rating,
+            globalUserRating: user.rating / user.count,
             transactionUserRating: isBorrower ? transaction.lentUserRating : transaction.borrowUserRating,
             transactionBookRating: transaction.bookRating,
             status: transactionStatusToChatStatusMap

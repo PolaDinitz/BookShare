@@ -329,8 +329,8 @@ const Profile = (props: ProfileProps) => {
                     <Grid container direction="row" columnSpacing={2}>
                         <Grid item xs={12}>
                             <Box m={5} sx={{display: "flex", justifyContent: "center"}}>
-                                {/* TODO: uncontrolled component error fix */}
-                                <Rating name="Rating" value={user.rating ? user.rating : 0} readOnly size="large"/>
+                                <Rating name="Rating" precision={0.5}
+                                        value={user.rating ? (user.rating / user.count) : 0} readOnly size="large"/>
                             </Box>
                         </Grid>
                     </Grid>

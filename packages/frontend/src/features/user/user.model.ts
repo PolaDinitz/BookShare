@@ -11,4 +11,9 @@ export interface User {
     latitude: number;
     imageUrl: string;
     rating: number;
+    count: number;
+}
+
+export interface UserState {
+    user: User | null;
 }
