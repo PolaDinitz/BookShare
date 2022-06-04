@@ -25,11 +25,11 @@ import { User } from "../../features/user/user.model";
 import { Box } from "@mui/system";
 import { updateUserThunk } from "../../features/user/user.slice";
 import { toast } from "react-toastify";
-import { selectLibraryBooksStats } from "../../features/user-books/user-book.selector";
+import { selectProfileBooksStats } from "../../features/user-books/user-book.selector";
 
 const Profile = () => {
     const userProfile: User | null = useSelector((state: RootState) => state.profile.user);
-    const booksStats: { myBooks: number, borrowedBooks: number, lentBooks: number } = useSelector(selectLibraryBooksStats);
+    const booksStats: { myBooks: number, borrowedBooks: number, lentBooks: number } = useSelector(selectProfileBooksStats);
     const [tempUser, setTempUser] = useState({} as User);
     const [isEditMode, setIsEditMode] = useState(false);
 

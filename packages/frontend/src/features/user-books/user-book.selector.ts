@@ -162,7 +162,7 @@ export const selectLibraryBorrowedBooks: Selector<RootState, LibraryTransactionB
     getLibraryBorrowedBooks
 );
 
-export const selectLibraryBooksStats: Selector<RootState, { myBooks: number, borrowedBooks: number, lentBooks: number }> = createSelector(
+export const selectProfileBooksStats: Selector<RootState, { myBooks: number, borrowedBooks: number, lentBooks: number }> = createSelector(
     [
         transactionsSelectors.selectAll,
         userBooksSelectors.selectAll,
