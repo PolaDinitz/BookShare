@@ -64,7 +64,7 @@ export class UsersController {
           imageName = profileImage.filename;
       }
 
-      return this.usersService.updateUser(id, updateUserDto, imageName);
+      return await this.usersService.updateUser(id, updateUserDto, imageName);
   }
 
   @Delete(':id')

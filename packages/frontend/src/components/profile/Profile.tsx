@@ -21,55 +21,47 @@ import { config } from "../../config/config";
 import { AppDispatch, RootState } from "../../types/types";
 import CustomPaper from "../common/custom-paper";
 import RoundedButton from "../common/rounded-button";
-import userService from "../../services/user.service";
 import { User } from "../../features/user/user.model";
 import { Box } from "@mui/system";
 import { updateUserThunk } from "../../features/user/user.slice";
 import { toast } from "react-toastify";
+import { selectLibraryBooksStats } from "../../features/user-books/user-book.selector";
 
-type ProfileProps = {};
-
-const Profile = (props: ProfileProps) => {
-    const userId = useSelector((state: RootState) => state.auth.user!.id);
-    const authUser = useSelector((state: RootState) => state.auth.user);
-    const [user, setUser] = useState({} as User);
+const Profile = () => {
+    const userProfile: User | null = useSelector((state: RootState) => state.profile.user);
+    const booksStats: { myBooks: number, borrowedBooks: number, lentBooks: number } = useSelector(selectLibraryBooksStats);
     const [tempUser, setTempUser] = useState({} as User);
     const [isEditMode, setIsEditMode] = useState(false);
 
     const dispatch = useDispatch<AppDispatch>();
 
-    const updateUser = () =>
+    const updateUser = () => {
         dispatch(
             updateUserThunk({
-                userId: userId,
+                userId: userProfile!.id,
                 userDetails: tempUser,
             })
         )
             .unwrap()
-            .then((res: { user: User }) => {
-                setUser(res.user);
+            .then(() => {
                 toast.success("user updated successfully");
+                setIsEditMode(false);
             })
             .catch((errorMessage: string) => {
                 toast.error(errorMessage);
             });
+    }
 
     useEffect(() => {
         let mounted = true;
-        const fetchUser = async () => {
-            return await userService.getUserById(userId);
-        };
-        fetchUser().then((user: User) => {
-            if (mounted) {
-                setUser(user);
-                setTempUser(user);
-            }
-        });
+
+        if (userProfile)
+            setTempUser(userProfile);
 
         return () => {
             mounted = false;
         }
-    }, []);
+    }, [userProfile]);
 
     const {
         firstName,
@@ -91,20 +83,20 @@ const Profile = (props: ProfileProps) => {
     };
 
     const exitEditMode = () => {
-        setTempUser(user);
+        setTempUser(userProfile!);
         setIsEditMode(false);
     };
 
     return (
         <CustomPaper
-            img={`${config.apiUrl}/${authUser?.imageUrl}`}
+            img={`${config.apiUrl}/${userProfile?.imageUrl}`}
             contentWidth="75%"
             size="large"
-            avatarImg={`${config.apiUrl}/${authUser?.imageUrl}`}
+            avatarImg={`${config.apiUrl}/${userProfile?.imageUrl}`}
         >
             <Box sx={{display: "flex", justifyContent: "center"}}>
                 <Typography variant="h4" mt={2} fontWeight={600}>
-                    {`${authUser?.firstName} ${authUser?.lastName}'s Profile`}
+                    {`${userProfile?.firstName} ${userProfile?.lastName}'s Profile`}
                 </Typography>
             </Box>
             <Grid
@@ -277,7 +269,7 @@ const Profile = (props: ProfileProps) => {
                                     }}
                                 >
                                     <Typography>Read Books</Typography>
-                                    <Typography>14</Typography>
+                                    <Typography>{booksStats.myBooks}</Typography>
                                 </Box>
                             </Paper>
                         </Grid>
@@ -299,7 +291,7 @@ const Profile = (props: ProfileProps) => {
                                     }}
                                 >
                                     <Typography>Borrowed Books</Typography>
-                                    <Typography>3</Typography>
+                                    <Typography>{booksStats.borrowedBooks}</Typography>
                                 </Box>
                             </Paper>
                         </Grid>
@@ -321,7 +313,7 @@ const Profile = (props: ProfileProps) => {
                                     }}
                                 >
                                     <Typography>Lent Books</Typography>
-                                    <Typography>5</Typography>
+                                    <Typography>{booksStats.lentBooks}</Typography>
                                 </Box>
                             </Paper>
                         </Grid>
@@ -330,7 +322,8 @@ const Profile = (props: ProfileProps) => {
                         <Grid item xs={12}>
                             <Box m={5} sx={{display: "flex", justifyContent: "center"}}>
                                 <Rating name="Rating" precision={0.5}
-                                        value={user.rating ? (user.rating / user.count) : 0} readOnly size="large"/>
+                                        value={(userProfile && userProfile.rating) ? (userProfile.rating / userProfile.count) : 0}
+                                        readOnly size="large"/>
                             </Box>
                         </Grid>
                     </Grid>

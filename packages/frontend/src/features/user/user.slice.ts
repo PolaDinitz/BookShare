@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, isAnyOf, } from "@reduxjs/toolkit";
 import userService from "../../services/user.service";
 import { User, UserState } from "./user.model";
 
@@ -14,8 +14,17 @@ export const fetchUserThunk = createAsyncThunk<{ user: User },
 
 export const updateUserThunk = createAsyncThunk<{ user: User },
     { userId: string, userDetails: User }>('user/updateUser', async (payload, thunkApi) => {
+    const userDetails: User = payload.userDetails;
     try {
-        const user = await userService.updateUser(payload.userId, payload.userDetails);
+        const user = await userService.updateUser(payload.userId, {
+            firstName: userDetails.firstName,
+            lastName: userDetails.lastName,
+            gender: userDetails.gender,
+            address: userDetails.address,
+            dateOfBirth: userDetails.dateOfBirth,
+            email: userDetails.email,
+            phoneNumber: userDetails.phoneNumber
+        });
         return {user};
     } catch (error: any) {
         return thunkApi.rejectWithValue(error.message);
@@ -32,12 +41,28 @@ const profileSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(updateUserThunk.fulfilled, (state, action) => {
-                state.user = action.payload.user;
-            })
-            .addCase(fetchUserThunk.fulfilled, (state, action) => {
-                state.user = action.payload.user;
-            });
+            .addMatcher(
+                isAnyOf(
+                    updateUserThunk.fulfilled,
+                    fetchUserThunk.fulfilled,
+                ), (state, action) => {
+                    state.user = {
+                        id: action.payload.user.id,
+                        address: action.payload.user.address,
+                        dateOfBirth: action.payload.user.dateOfBirth,
+                        imageUrl: action.payload.user.imageUrl,
+                        email: action.payload.user.email,
+                        gender: action.payload.user.gender,
+                        lastName: action.payload.user.lastName,
+                        count: action.payload.user.count,
+                        firstName: action.payload.user.firstName,
+                        latitude: action.payload.user.latitude,
+                        phoneNumber: action.payload.user.phoneNumber,
+                        longitude: action.payload.user.longitude,
+                        rating: action.payload.user.rating,
+                    };
+                }
+            )
     },
 });
 

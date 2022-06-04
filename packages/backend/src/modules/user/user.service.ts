@@ -74,10 +74,12 @@ export class UsersService {
             coordinates = await getCoordinatesFromAddress(address);
         }
 
-        return await this.usersRepository.update(id, {
+        return await this.usersRepository.save({
+            id: id,
             email: updateUserDto.email || oldUser.email,
             firstName: updateUserDto.firstName || oldUser.firstName,
             lastName: updateUserDto.lastName || oldUser.lastName,
+            gender: updateUserDto.gender || oldUser.gender,
             password,
             address,
             longitude: coordinates.lon,
@@ -85,7 +87,9 @@ export class UsersService {
             dateOfBirth: updateUserDto.dateOfBirth || oldUser.dateOfBirth,
             phoneNumber: updateUserDto.phoneNumber || oldUser.phoneNumber,
             role: oldUser.role,
-            imageUrl: imageName === null ? oldUser.imageUrl : `${IMAGES_USER_ASSETS_PATH}/${imageName.toString()}`
+            imageUrl: imageName === null ? oldUser.imageUrl : `${IMAGES_USER_ASSETS_PATH}/${imageName.toString()}`,
+            rating: oldUser.rating,
+            count: oldUser.count
         });
     }
 

@@ -158,6 +158,37 @@ export const selectLibraryBorrowedBooks: Selector<RootState, LibraryTransactionB
     getLibraryBorrowedBooks
 );
 
+export const selectLibraryBooksStats: Selector<RootState, { myBooks: number, borrowedBooks: number, lentBooks: number }> = createSelector(
+    [
+        transactionsSelectors.selectAll,
+        userBooksSelectors.selectAll,
+        booksSelectors.selectEntities,
+        selectLoggedInUserId
+    ],
+    (transactions: Transaction[],
+     userBooks: UserBook[],
+     booksDictionary: Dictionary<Book>,
+     loggedInUserId: string | undefined) => {
+        let userBooksStats: { myBooks: number, borrowedBooks: number, lentBooks: number } = {
+            myBooks: 0,
+            borrowedBooks: 0,
+            lentBooks: 0
+        }
+        transactions.forEach((transaction: Transaction) => {
+            if (transaction.borrowUser.id === loggedInUserId) {
+                userBooksStats.borrowedBooks++;
+            } else if (transaction.status === TransactionStatus.FINISHED_TRANSACTION) {
+                userBooksStats.lentBooks++;
+            }
+        });
+        userBooks.forEach((userBook) => {
+            if (userBook.user.id === loggedInUserId)
+                userBooksStats.myBooks++
+        });
+        return userBooksStats;
+    }
+);
+
 export const selectUserBooksAvailableForLend: Selector<RootState, UserBook[]> = createSelector(
     [
         userBooksSelectors.selectAll,
