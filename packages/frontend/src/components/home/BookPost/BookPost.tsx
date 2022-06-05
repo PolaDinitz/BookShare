@@ -51,7 +51,7 @@ const BookPost = (props: BookPostProps) => {
                     <Box sx={{display: "flex", alignItems: "center"}}>
                         <FavoriteIcon sx={{color: "#3164F4"}} fontSize="small"/>
                         <Typography variant="subtitle2" color="#3164F4">
-                            {bookRating ? bookRating / count : 0}
+                            {(bookRating ? bookRating / count : 0).toFixed(1)}
                         </Typography>
                         <Typography sx={{alignSelf: "flex-end"}} variant="caption" fontWeight={300} fontSize={12}
                                     color="gray">

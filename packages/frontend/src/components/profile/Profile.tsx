@@ -249,26 +249,26 @@ const Profile = () => {
                     xs={6}
                     rowSpacing={4}
                 >
-                    <Grid container item direction="row" columnSpacing={3}>
+                    <Grid container item direction="row" columnSpacing={1}>
                         <Grid item xs={4}>
                             <ColoredPaper backgroundColor="#2FAC90">
                                 <Typography color="white" fontSize={40}
                                             fontWeight={600}>{booksStats.myBooks}</Typography>
-                                <Typography color="black" fontSize={25} fontWeight={600}>Read Books</Typography>
+                                <Typography color="black" fontSize={20} fontWeight={600}>Read Books</Typography>
                             </ColoredPaper>
                         </Grid>
                         <Grid item xs={4}>
                             <ColoredPaper backgroundColor="#2FAC90">
                                 <Typography color="white" fontSize={40}
                                             fontWeight={600}>{booksStats.borrowedBooks}</Typography>
-                                <Typography color="black" fontSize={25} fontWeight={600}>Borrowed Books</Typography>
+                                <Typography color="black" fontSize={20} fontWeight={600}>Borrowed Books</Typography>
                             </ColoredPaper>
                         </Grid>
                         <Grid item xs={4}>
                             <ColoredPaper backgroundColor="#2FAC90">
                                 <Typography color="white" fontSize={40}
                                             fontWeight={600}>{booksStats.lentBooks}</Typography>
-                                <Typography color="black" fontSize={25} fontWeight={600}>Lent Books</Typography>
+                                <Typography color="black" fontSize={20} fontWeight={600}>Lent Books</Typography>
                             </ColoredPaper>
                         </Grid>
                     </Grid>
