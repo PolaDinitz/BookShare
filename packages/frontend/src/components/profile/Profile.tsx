@@ -5,7 +5,6 @@ import {
     IconButton,
     InputLabel,
     MenuItem,
-    Paper,
     Rating,
     Select,
     SelectChangeEvent,
@@ -26,6 +25,7 @@ import { Box } from "@mui/system";
 import { updateUserThunk } from "../../features/user/user.slice";
 import { toast } from "react-toastify";
 import { selectProfileBooksStats } from "../../features/user-books/user-book.selector";
+import ColoredPaper from "../common/coloredPaper/ColoredPaper";
 
 const Profile = () => {
     const userProfile: User | null = useSelector((state: RootState) => state.profile.user);
@@ -247,84 +247,43 @@ const Profile = () => {
                     item
                     direction="column"
                     xs={6}
-                    alignItems="center"
-                    justifyContent="flex-start"
+                    rowSpacing={4}
                 >
-                    <Grid container direction="row" columnSpacing={2}>
+                    <Grid container item direction="row" columnSpacing={3}>
                         <Grid item xs={4}>
-                            <Paper
-                                elevation={3}
-                                sx={{
-                                    backgroundColor: "#2FAC90",
-                                    padding: "10px",
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "center",
-                                        alignSelf: "center",
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    <Typography>Read Books</Typography>
-                                    <Typography>{booksStats.myBooks}</Typography>
-                                </Box>
-                            </Paper>
+                            <ColoredPaper backgroundColor="#2FAC90">
+                                <Typography color="white" fontSize={40}
+                                            fontWeight={600}>{booksStats.myBooks}</Typography>
+                                <Typography color="black" fontSize={25} fontWeight={600}>Read Books</Typography>
+                            </ColoredPaper>
                         </Grid>
                         <Grid item xs={4}>
-                            <Paper
-                                elevation={3}
-                                sx={{
-                                    backgroundColor: "#2FAC90",
-                                    padding: "10px",
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "center",
-                                        alignSelf: "center",
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    <Typography>Borrowed Books</Typography>
-                                    <Typography>{booksStats.borrowedBooks}</Typography>
-                                </Box>
-                            </Paper>
+                            <ColoredPaper backgroundColor="#2FAC90">
+                                <Typography color="white" fontSize={40}
+                                            fontWeight={600}>{booksStats.borrowedBooks}</Typography>
+                                <Typography color="black" fontSize={25} fontWeight={600}>Borrowed Books</Typography>
+                            </ColoredPaper>
                         </Grid>
                         <Grid item xs={4}>
-                            <Paper
-                                elevation={3}
-                                sx={{
-                                    backgroundColor: "#2FAC90",
-                                    padding: "10px",
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "center",
-                                        alignSelf: "center",
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    <Typography>Lent Books</Typography>
-                                    <Typography>{booksStats.lentBooks}</Typography>
-                                </Box>
-                            </Paper>
+                            <ColoredPaper backgroundColor="#2FAC90">
+                                <Typography color="white" fontSize={40}
+                                            fontWeight={600}>{booksStats.lentBooks}</Typography>
+                                <Typography color="black" fontSize={25} fontWeight={600}>Lent Books</Typography>
+                            </ColoredPaper>
                         </Grid>
                     </Grid>
-                    <Grid container direction="row" columnSpacing={2}>
+                    <Grid container item direction="row">
                         <Grid item xs={12}>
-                            <Box m={5} sx={{display: "flex", justifyContent: "center"}}>
-                                <Rating name="Rating" precision={0.5}
-                                        value={(userProfile && userProfile.rating) ? (userProfile.rating / userProfile.count) : 0}
-                                        readOnly size="large"/>
-                            </Box>
+                            <ColoredPaper backgroundColor="#E0DA66">
+                                <Typography align="left" color="#AAA42C" fontSize={40} fontWeight={600}>
+                                    RATING
+                                </Typography>
+                                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                    <Rating name="Rating" precision={0.5}
+                                            value={(userProfile && userProfile.rating) ? (userProfile.rating / userProfile.count) : 0}
+                                            readOnly size="large" sx={{ fontSize: "50pt", color: "white" }}/>
+                                </Box>
+                            </ColoredPaper>
                         </Grid>
                     </Grid>
                 </Grid>
