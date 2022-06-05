@@ -26,7 +26,7 @@ const InboxReviewMessage = (props: InboxReviewMessageProps) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const rateUser = (newValue: number | null) => {
-        if (newValue != null && newValue > 0 && props?.chatRoom?.id) {
+        if (!props.chatRoom?.transactionUserRating && newValue != null && newValue > 0 && props?.chatRoom?.id) {
             dispatch(rateUserTransactionThunk({
                 transactionId: props.chatRoom.id,
                 rateValue: newValue
@@ -38,8 +38,9 @@ const InboxReviewMessage = (props: InboxReviewMessageProps) => {
     }
 
     const rateBook = (newValue: number | null) => {
-        if (newValue != null && newValue > 0 && props?.chatRoom?.id) {
+        if (!props.chatRoom?.transactionBookRating && newValue != null && newValue > 0 && props?.chatRoom?.id) {
             dispatch(rateBookTransactionThunk({
+                bookId: props.chatRoom.bookId,
                 transactionId: props.chatRoom.id,
                 rateValue: newValue
             })).unwrap()
@@ -50,7 +51,7 @@ const InboxReviewMessage = (props: InboxReviewMessageProps) => {
     }
 
     return (
-        <Box>
+        <Box m={3}>
             {((props?.chatRoom?.status === ChatStatusEnum.BORROW_FINISHED) ||
                     (props?.chatRoom?.status === ChatStatusEnum.LEND_FINISHED)) &&
                 <Stack spacing={5}>
@@ -60,10 +61,12 @@ const InboxReviewMessage = (props: InboxReviewMessageProps) => {
                         </Typography>
                         <Box sx={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
                             <Rating
+                                disabled={!!props.chatRoom.transactionUserRating}
                                 name="user-rating"
-                                precision={0.5}
+                                precision={1}
                                 size={"large"}
-                                defaultValue={props.chatRoom.transactionUserRating}
+                                value={props.chatRoom.transactionUserRating}
+                                sx={{fontSize: "50pt"}}
                                 onChange={(event, newValue) => {
                                     rateUser(newValue);
                                 }}
@@ -82,14 +85,16 @@ const InboxReviewMessage = (props: InboxReviewMessageProps) => {
                             </Typography>
                             <Box sx={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
                                 <HeartsRating
+                                    disabled={!!props.chatRoom.transactionBookRating}
                                     name="book-rating"
                                     getLabelText={(value: number) => `${value} Heart${value !== 1 ? 's' : ''}`}
                                     precision={1}
                                     max={10}
                                     size="large"
+                                    sx={{fontSize: "50pt"}}
+                                    value={props.chatRoom.transactionBookRating}
                                     icon={<FavoriteIcon fontSize="inherit"/>}
                                     emptyIcon={<FavoriteBorderIcon fontSize="inherit"/>}
-                                    defaultValue={props.chatRoom.transactionBookRating}
                                     onChange={(event, newValue) => {
                                         rateBook(newValue);
                                     }}
