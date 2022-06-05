@@ -9,7 +9,8 @@ import { Transaction } from "../transactions/transaction.model";
 import { transactionsSelectors } from "../transactions/transactions.slice";
 import { UserBook } from "./user-book.model";
 import { userBooksSelectors } from "./user-book.slice";
-import { selectSelectedBookId } from "../books/books.selector";
+import { selectSelectedBookId } from "../books/books.selectors";
+import moment from "moment";
 
 export interface LibraryBook {
     userBookId: string
@@ -30,6 +31,7 @@ export interface LibraryTransactionBook {
     borrowedUserId: string
     lentUserId: string
     transactionId: string
+    creationTimestamp: Date;
     borrowedUserName?: string
     lentUserName?: string
     borrowUserRating?: number | null
@@ -80,12 +82,13 @@ const getLibraryLentBooks = (transactions: Transaction[],
                     borrowedUserId: transaction.borrowUser.id,
                     borrowedUserName: `${transaction.borrowUser.firstName}  ${transaction.borrowUser.lastName}`,
                     lentUserRating: transaction.lentUserRating,
-                    transactionId: transaction.id
+                    transactionId: transaction.id,
+                    creationTimestamp: transaction.startDate
                 });
             }
         }
     });
-    return libraryLentBooks;
+    return libraryLentBooks.sort((a, b) => moment(a.creationTimestamp).diff(moment(b.creationTimestamp)));;
 }
 
 const getLibraryBorrowedBooks = (transactions: Transaction[],
@@ -109,13 +112,14 @@ const getLibraryBorrowedBooks = (transactions: Transaction[],
                         borrowedUserId: loggedInUserId,
                         lentUserName: `${userBook.user.firstName} ${userBook.user.lastName}`,
                         borrowUserRating: transaction.borrowUserRating,
-                        transactionId: transaction.id
+                        transactionId: transaction.id,
+                        creationTimestamp: transaction.startDate
                     });
                 }
             }
         }
     });
-    return libraryBorrowedBooks;
+    return libraryBorrowedBooks.sort((a, b) => moment(a.creationTimestamp).diff(moment(b.creationTimestamp)));
 }
 
 const getUserBooksAvailableForLend = (userBooks: UserBook[], selectedBookId: string | null, loggedInUserId: string | undefined) => {
@@ -156,6 +160,37 @@ export const selectLibraryBorrowedBooks: Selector<RootState, LibraryTransactionB
         selectLoggedInUserId
     ],
     getLibraryBorrowedBooks
+);
+
+export const selectProfileBooksStats: Selector<RootState, { myBooks: number, borrowedBooks: number, lentBooks: number }> = createSelector(
+    [
+        transactionsSelectors.selectAll,
+        userBooksSelectors.selectAll,
+        booksSelectors.selectEntities,
+        selectLoggedInUserId
+    ],
+    (transactions: Transaction[],
+     userBooks: UserBook[],
+     booksDictionary: Dictionary<Book>,
+     loggedInUserId: string | undefined) => {
+        let userBooksStats: { myBooks: number, borrowedBooks: number, lentBooks: number } = {
+            myBooks: 0,
+            borrowedBooks: 0,
+            lentBooks: 0
+        }
+        transactions.forEach((transaction: Transaction) => {
+            if (transaction.borrowUser.id === loggedInUserId) {
+                userBooksStats.borrowedBooks++;
+            } else if (transaction.status === TransactionStatus.FINISHED_TRANSACTION) {
+                userBooksStats.lentBooks++;
+            }
+        });
+        userBooks.forEach((userBook) => {
+            if (userBook.user.id === loggedInUserId)
+                userBooksStats.myBooks++
+        });
+        return userBooksStats;
+    }
 );
 
 export const selectUserBooksAvailableForLend: Selector<RootState, UserBook[]> = createSelector(

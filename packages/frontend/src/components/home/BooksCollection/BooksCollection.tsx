@@ -1,22 +1,22 @@
 import { Grid } from "@mui/material";
 
 import BookPost from "../BookPost";
-import { Book } from "../../../features/books/book.model";
+import { BookPostType } from "../../../features/books/books.selectors";
 
 type BooksCollectionProps = {
-    books: Book[];
+    bookPosts: BookPostType[];
 };
 
 const BooksCollection = (props: BooksCollectionProps) => {
-    const {books} = props;
+    const {bookPosts} = props;
 
     return (
         <>
             <Grid container rowSpacing={3} columnSpacing={3}>
-                {books.length > 0 ? (
-                    books.map((book) => (
-                        <Grid key={book.id} item xs={3}>
-                            <BookPost book={book}/>
+                {bookPosts.length > 0 ? (
+                    bookPosts.map((bookPost) => (
+                        <Grid key={bookPost.book.id} item xs={3}>
+                            <BookPost book={bookPost.book}/>
                         </Grid>
                     ))
                 ) : (

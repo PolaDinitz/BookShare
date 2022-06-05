@@ -40,7 +40,7 @@ const BookLocationSingleRow = (props: BookLocationSingleRowProps) => {
             <TableCell align="left" component="th" scope="row">
                 <Stack>
                     {fullName}
-                    <Rating name="Rating" value={rating} readOnly size="small"/>
+                    <Rating name="Rating" precision={0.5} value={rating} readOnly size="small"/>
                 </Stack>
             </TableCell>
             <TableCell align="left">{city}</TableCell>

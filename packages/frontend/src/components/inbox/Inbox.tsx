@@ -41,6 +41,7 @@ import { toast } from "react-toastify";
 import { socket } from "../../index";
 import InboxReviewMessage from "./inboxMessage/InboxReviewMessage";
 import { useParams } from 'react-router-dom';
+import moment from "moment";
 
 const chatSection = {
     width: "100%",
@@ -90,7 +91,7 @@ const Inbox = () => {
                 .toLocaleLowerCase()
                 .includes(searchText.toLocaleLowerCase())
         );
-    });
+    }).sort((a, b) => moment(b.creationTimestamp).diff(moment(a.creationTimestamp)));
 
     const submitNewMessage = () => {
         const message: { transactionId: string, content: string } = {
@@ -214,7 +215,7 @@ const Inbox = () => {
                                             <Typography variant="h6" fontWeight={500}>
                                                 {selectedChatRoom?.name}
                                             </Typography>
-                                            <Rating size={"small"}
+                                            <Rating size={"small"} precision={0.5}
                                                     value={selectedChatRoom ? selectedChatRoom.globalUserRating : 0}
                                                     readOnly/>
                                         </Stack>

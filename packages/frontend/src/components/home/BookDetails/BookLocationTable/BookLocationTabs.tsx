@@ -114,7 +114,7 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
                                 {lon: userBook.user.longitude, lat: userBook.user.latitude},
                                 userCoordinates
                             ),
-                            rating: userBook.user.rating,
+                            rating: userBook.user.rating / userBook.user.count,
                             isRequestSent: false,
                         })
                 }

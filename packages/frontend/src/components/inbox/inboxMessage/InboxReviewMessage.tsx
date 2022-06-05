@@ -61,7 +61,7 @@ const InboxReviewMessage = (props: InboxReviewMessageProps) => {
                         <Box sx={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
                             <Rating
                                 name="user-rating"
-                                precision={1}
+                                precision={0.5}
                                 size={"large"}
                                 defaultValue={props.chatRoom.transactionUserRating}
                                 onChange={(event, newValue) => {
