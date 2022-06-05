@@ -1,8 +1,18 @@
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Typography, } from "@mui/material";
+import {
+    Box,
+    BoxProps,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    IconButton,
+    styled,
+    Typography,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-
 import BookLocationTabs from "./BookLocationTable/BookLocationTabs";
 import RoundedButton from "../../common/rounded-button";
 import { Book } from "../../../features/books/book.model";
@@ -11,6 +21,14 @@ import { User } from "../../../features/user/user.model";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../types/types";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+
+const DescriptionScrollArea = styled(Box)<BoxProps>(({theme}) => ({
+    maxHeight: '400px',
+    overflowY: "hidden" as "hidden",
+    '&:hover': {
+        overflowY: "auto" as "auto"
+    },
+}));
 
 type BookDetailsProps = {
     open: boolean;
@@ -71,7 +89,9 @@ const BookDetails = (props: BookDetailsProps) => {
                                 /10
                             </Typography>
                         </Box>
-                        <Typography mt={3} mb={3}>{description}</Typography>
+                        <DescriptionScrollArea mt={3} mb={3}>
+                            <Typography>{description}</Typography>
+                        </DescriptionScrollArea>
                         <BookLocationTabs loggedInUser={user}/>
                         <DialogActions sx={{display: "flex", justifyContent: "center"}}>
                             <RoundedButton
