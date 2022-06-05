@@ -20,13 +20,15 @@ def predict(ds, book_id):
 
 
 def get_recommendation(top, ds):
-    recommendation = pd.DataFrame(columns=['title', 'google_book_id'])
-    count = 0
+    # recommendation = pd.DataFrame(columns=['title', 'google_book_id'])
+    recommendation = list()
+    # count = 0
     for i in top:
-        recommendation.at[count, 'google_book_id'] = ds.iloc[i, 26]
-        recommendation.at[count, 'title'] = ds.iloc[i, 11]
-        count += 1
-    return recommendation['title'].tolist()
+        recommendation.append((ds.iloc[i, 26], ds.iloc[i, 11]))
+        # recommendation.at[count, 'google_book_id'] = ds.iloc[i, 26]
+        # recommendation.at[count, 'title'] = ds.iloc[i, 11]
+        # count += 1
+    return recommendation
 
 
 def recommend_books(book_id):

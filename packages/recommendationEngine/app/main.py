@@ -24,7 +24,8 @@ async def get_recommendation(book_id: str):
             else:
                 rcmd_dct[recommendation] = 1
     rcmd_dct = dict(sorted(rcmd_dct.items(), key=lambda item: item[1]))
-    res_dct = {'book_id': sample(list(rcmd_dct.keys()), 10)}
+    book_id, title = zip(*sample(list(rcmd_dct.keys()), 10))
+    res_dct = {'book_id': book_id, 'title': title}
     print("Time taken to build response: %s seconds" % (time.time() - start))
 
     return res_dct
