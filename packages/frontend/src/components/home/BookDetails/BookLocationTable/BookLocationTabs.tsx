@@ -3,11 +3,13 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { useSelector } from "react-redux";
+import _ from "lodash";
+
 import BookLocationTable from "./BookLocationTable";
 import BookLocationMap from "./BookLocationMap";
 import { UserBook } from "../../../../features/user-books/user-book.model";
 import { calcDistanceFromAddress, Coordinates, } from "../../../../utils/distance-calculation";
-import { useSelector } from "react-redux";
 import { RootState } from "../../../../types/types";
 import { selectUserBooksAvailableForLend } from "../../../../features/user-books/user-book.selector";
 import Loader from "../../../common/loader/Loader";
@@ -22,6 +24,7 @@ export type BookLocationType = {
     fullName: string;
     city: string;
     distance: number;
+    coordinates: Coordinates;
     rating: number;
     isRequestSent: boolean;
 };
@@ -114,6 +117,7 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
                                 {lon: userBook.user.longitude, lat: userBook.user.latitude},
                                 userCoordinates
                             ),
+                            coordinates: {lon: userBook.user.longitude, lat: userBook.user.latitude},
                             rating: userBook.user.rating / userBook.user.count,
                             isRequestSent: false,
                         })
@@ -146,7 +150,7 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
                         <BookLocationTable rows={rows}/>
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        <BookLocationMap address={props.loggedInUser.address} location={loggedInUserCoordinates}/>
+                        <BookLocationMap markers={rows} location={loggedInUserCoordinates}/>
                     </TabPanel>
                 </Box>
 
