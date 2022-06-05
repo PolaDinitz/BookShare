@@ -48,7 +48,7 @@ export const selectBooksPosts: Selector<RootState, BookPostType[]> = createSelec
             });
         }
 
-        return convertBookPostDicToArray(booksPosts);
+        return convertBookPostDicToArray(booksPosts).sort((a, b) => b.book.bookRating - a.book.bookRating);
     }
 );
 
