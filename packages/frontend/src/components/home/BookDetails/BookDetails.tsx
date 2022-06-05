@@ -82,7 +82,7 @@ const BookDetails = (props: BookDetailsProps) => {
                         <Box sx={{display: "flex", alignItems: "center"}} mt={1}>
                             <FavoriteIcon sx={{color: "#3164F4"}} fontSize="medium"/>
                             <Typography variant="body1" fontWeight={500} color="#3164F4">
-                                {props.book.bookRating ? props.book.bookRating / props.book.count : 0}
+                                {(props.book.bookRating ? props.book.bookRating / props.book.count : 0).toFixed(1)}
                             </Typography>
                             <Typography variant="caption" fontWeight={300} fontSize={12}
                                         color="gray">

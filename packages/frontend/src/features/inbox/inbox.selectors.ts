@@ -13,6 +13,7 @@ import ChatStatusEnum, { transactionStatusToChatStatusMap } from "../../enums/Ch
 
 export interface ChatRoom {
     id: string;
+    bookId: string;
     name: string;
     subName: string;
     imageUrl: string;
@@ -47,6 +48,7 @@ const buildChatRoomObject = (transaction: Transaction,
         const user: User = isBorrower ? userBook?.user : transaction.borrowUser;
         return {
             id: transaction.id,
+            bookId: book.id,
             name: user.firstName + " " + user.lastName,
             subName: book.title,
             imageUrl: user.imageUrl,
