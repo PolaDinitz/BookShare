@@ -3,6 +3,7 @@ import { Book } from "./book.model";
 import { RootState } from "../../types/types";
 import { addUserBookThunk } from "../user-books/user-book.slice";
 import BookService from "../../services/book.service";
+import { rateBookTransactionThunk } from "../transactions/transactions.slice";
 
 export const booksAdapter = createEntityAdapter<Book>({
     selectId: (book: Book) => book.id,
@@ -22,8 +23,17 @@ export const fetchBooksThunk = createAsyncThunk<{ books: Book[] }>(
 
 const booksSlice = createSlice({
     name: "books",
-    initialState: booksAdapter.getInitialState(),
-    reducers: {},
+    initialState: booksAdapter.getInitialState({
+        selectedBookId: null as string | null
+    }),
+    reducers: {
+        setSelectedBookId: (state, action) => {
+            return {
+                ...state,
+                selectedBookId: action.payload.bookId
+            }
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(addUserBookThunk.fulfilled, (state, action) => {
@@ -32,10 +42,20 @@ const booksSlice = createSlice({
             .addCase(fetchBooksThunk.fulfilled, (state, action) => {
                 booksAdapter.setAll(state, action.payload.books);
             })
+            .addCase(rateBookTransactionThunk.fulfilled, (state, action) => {
+                booksAdapter.updateOne(state, {
+                    id: action.payload.bookId,
+                    changes: {
+                        bookRating: state.entities[action.payload.bookId]!.bookRating + action.payload.transaction.bookRating,
+                        count: state.entities[action.payload.bookId]!.count++,
+                    }
+                })
+            })
     },
 });
 
 export const booksSelectors = booksAdapter.getSelectors((state: RootState) => state.books);
+export const {setSelectedBookId} = booksSlice.actions
 
 const {reducer} = booksSlice;
 export default reducer;

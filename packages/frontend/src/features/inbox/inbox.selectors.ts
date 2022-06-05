@@ -13,6 +13,7 @@ import ChatStatusEnum, { transactionStatusToChatStatusMap } from "../../enums/Ch
 
 export interface ChatRoom {
     id: string;
+    bookId: string;
     name: string;
     subName: string;
     imageUrl: string;
@@ -20,6 +21,7 @@ export interface ChatRoom {
     status?: ChatStatusEnum;
     transactionUserRating?: number;
     transactionBookRating?: number;
+    creationTimestamp: Date;
 }
 
 const buildChatRoomsArray = (transactions: Transaction[],
@@ -46,14 +48,16 @@ const buildChatRoomObject = (transaction: Transaction,
         const user: User = isBorrower ? userBook?.user : transaction.borrowUser;
         return {
             id: transaction.id,
+            bookId: book.id,
             name: user.firstName + " " + user.lastName,
             subName: book.title,
             imageUrl: user.imageUrl,
-            globalUserRating: user.rating,
+            globalUserRating: user.rating / user.count,
             transactionUserRating: isBorrower ? transaction.lentUserRating : transaction.borrowUserRating,
             transactionBookRating: transaction.bookRating,
             status: transactionStatusToChatStatusMap
-                .get(Array.from(transactionStatusToChatStatusMap.keys()).find((k) => k?.transactionStatus.includes(transaction.status) && k?.isBorrower === isBorrower))
+                .get(Array.from(transactionStatusToChatStatusMap.keys()).find((k) => k?.transactionStatus.includes(transaction.status) && k?.isBorrower === isBorrower)),
+            creationTimestamp: transaction.startDate
         }
     }
     return null;

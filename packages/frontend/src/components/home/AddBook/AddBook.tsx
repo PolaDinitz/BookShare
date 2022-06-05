@@ -110,6 +110,7 @@ const AddBook = (props: AddBookProps) => {
 
     return (
         <Dialog
+            PaperProps={{sx: {borderRadius: "16px"}}}
             open={open}
             onClose={closeAndReset}
             fullWidth

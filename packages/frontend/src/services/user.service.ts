@@ -3,7 +3,7 @@ import { config } from "../config/config";
 import { axiosInstance } from "../utils/AxiosInstance";
 import { User } from '../features/user/user.model';
 
-const updateUser = (userId: string, user: User) => {
+const updateUser = (userId: string, user: Partial<User>) => {
     return axiosInstance.put(`${config.apiUrl}/user/${userId}`, user)
         .then((response: AxiosResponse) => {
             return response.data;

@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request, UnauthorizedException, HttpException, HttpStatus, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Roles } from 'src/modules/authorization/roles.decorator';
-import { Role } from 'src/enums/role.enum';
-import { JwtAuthGuard } from 'src/modules/authentication/jwt/jwt-auth.guard';
-import { RolesGuard } from 'src/modules/authorization/roles.guard';
+import { Roles } from '../../modules/authorization/roles.decorator';
+import { Role } from '../../enums/role.enum';
+import { JwtAuthGuard } from '../../modules/authentication/jwt/jwt-auth.guard';
+import { RolesGuard } from '../../modules/authorization/roles.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -63,7 +63,8 @@ export class UsersController {
       if (profileImage) {
           imageName = profileImage.filename;
       }
-      return this.usersService.updateUser(id, updateUserDto, imageName);
+
+      return await this.usersService.updateUser(id, updateUserDto, imageName);
   }
 
   @Delete(':id')

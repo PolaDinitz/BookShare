@@ -10,6 +10,7 @@ import { fetchTransactionByIdThunk, fetchTransactionsThunk } from "./features/tr
 import { fetchBooksThunk } from "./features/books/books.slice";
 import { fetchUserBooksThunk } from "./features/user-books/user-book.slice";
 import { socket } from '.';
+import { fetchUserThunk } from "./features/user/user.slice";
 
 function App() {
     const dispatch = useDispatch<AppDispatch>()
@@ -65,9 +66,10 @@ function App() {
     }, [loggedInUserId]);
 
     useEffect(() => {
-        if (isLoggedIn) {
+        if (isLoggedIn && loggedInUserId) {
             dispatch(fetchBooksThunk());
             dispatch(fetchUserBooksThunk());
+            dispatch(fetchUserThunk({userId: loggedInUserId}));
         }
     }, [isLoggedIn]);
 

@@ -46,7 +46,7 @@ export const fetchTransactionByIdThunk = createAsyncThunk<{ transaction: Transac
 
 export const createTransactionThunk = createAsyncThunk<{ transaction: Transaction }, { borrowUserId: string, userBookId: string }>(
     'transactions/create-transaction',
-    async (payload:{ borrowUserId: string, userBookId: string }, thunkApi) => {
+    async (payload: { borrowUserId: string, userBookId: string }, thunkApi) => {
         try {
             const transactionFromResponse: any = await TransactionService.createTransaction(payload.borrowUserId, payload.userBookId);
             thunkApi.dispatch(transactionCreated);
@@ -59,11 +59,12 @@ export const createTransactionThunk = createAsyncThunk<{ transaction: Transactio
     }
 );
 
-export const rateBookTransactionThunk = createAsyncThunk<Transaction, { transactionId: string, rateValue: number }>(
+export const rateBookTransactionThunk = createAsyncThunk<{ transaction: Transaction, bookId: string }, { bookId: string, transactionId: string, rateValue: number }>(
     'transactions/rate-book',
-    async (payload: { transactionId: string, rateValue: number }, thunkApi) => {
+    async (payload: { bookId: string, transactionId: string, rateValue: number }, thunkApi) => {
         try {
-            return await TransactionService.rateTransactionBook(payload.transactionId, payload.rateValue);
+            const transaction = await TransactionService.rateTransactionBook(payload.transactionId, payload.rateValue);
+            return {bookId: payload.bookId, transaction}
         } catch (error: any) {
             return thunkApi.rejectWithValue(error.message);
         }
@@ -203,14 +204,23 @@ const transactionsSlice = createSlice({
             .addCase(fetchTransactionByIdThunk.fulfilled, (state, action) => {
                 transactionsAdapter.upsertOne(state, action.payload.transaction);
             })
-            .addMatcher(
-                isAnyOf(
-                    rateBookTransactionThunk.fulfilled,
-                    rateUserTransactionThunk.fulfilled
-                ), (state, action) => {
-                    transactionsAdapter.upsertOne(state, action.payload);
-                }
-            )
+            .addCase(rateBookTransactionThunk.fulfilled, (state, action) => {
+                transactionsAdapter.updateOne(state, {
+                    id: action.payload.transaction.id,
+                    changes: {
+                        bookRating: action.payload.transaction.bookRating
+                    }
+                });
+            })
+            .addCase(rateUserTransactionThunk.fulfilled, (state, action) => {
+                transactionsAdapter.updateOne(state, {
+                    id: action.payload.id,
+                    changes: {
+                        borrowUserRating: action.payload.borrowUserRating,
+                        lentUserRating: action.payload.lentUserRating
+                    }
+                });
+            })
             .addMatcher(
                 isAnyOf(
                     approveTransactionChatThunk.fulfilled,
