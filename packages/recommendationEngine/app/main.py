@@ -1,3 +1,6 @@
+import time
+from random import sample
+
 from fastapi import FastAPI
 from recommendationEngine import recommend_books
 
@@ -11,6 +14,7 @@ async def root():
 
 @app.get("/recommend/{book_id}")
 async def get_recommendation(book_id: str):
+    start = time.time()
     rcmd_dct = {}
     for book in book_id.split(','):
         recommendations = recommend_books(book)
@@ -20,6 +24,7 @@ async def get_recommendation(book_id: str):
             else:
                 rcmd_dct[recommendation] = 1
     rcmd_dct = dict(sorted(rcmd_dct.items(), key=lambda item: item[1]))
-    print(rcmd_dct.keys)
-    res_dct = {'book_id': list(rcmd_dct.keys())[:10]}
+    res_dct = {'book_id': sample(list(rcmd_dct.keys()), 10)}
+    print("Time taken to build response: %s seconds" % (time.time() - start))
+
     return res_dct
