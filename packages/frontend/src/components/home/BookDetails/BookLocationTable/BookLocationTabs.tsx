@@ -24,6 +24,7 @@ export type BookLocationType = {
     fullName: string;
     city: string;
     distance: number;
+    coordinates: Coordinates;
     rating: number;
     isRequestSent: boolean;
 };
@@ -116,6 +117,7 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
                                 {lon: userBook.user.longitude, lat: userBook.user.latitude},
                                 userCoordinates
                             ),
+                            coordinates: {lon: userBook.user.longitude, lat: userBook.user.latitude},
                             rating: userBook.user.rating / userBook.user.count,
                             isRequestSent: false,
                         })
@@ -148,7 +150,7 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
                         <BookLocationTable rows={rows}/>
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        <BookLocationMap address={props.loggedInUser.address} location={loggedInUserCoordinates}/>
+                        <BookLocationMap markers={rows} location={loggedInUserCoordinates}/>
                     </TabPanel>
                 </Box>
 
