@@ -1,4 +1,5 @@
 import axios, { Axios, AxiosResponse } from "axios";
+import { toast } from "react-toastify";
 
 export type Coordinates = {
   lat: number;
@@ -8,13 +9,15 @@ export type Coordinates = {
 export const getCoordinatesFromAddress = async (
   address: string
 ): Promise<Coordinates> => {
+  let response = await axios.get(
+    `https://nominatim.openstreetmap.org/search.php`,
+    { params: { q: address, polygon_geojson: "1", format: "jsonv2" } }
+  );
 
-    let response = await axios.get(`https://nominatim.openstreetmap.org/search.php`, {params: {q: address, polygon_geojson: '1', format: 'jsonv2'}});
-
-    return {
-        lat: response.data[0].lat,
-        lon: response.data[0].lon,
-      };
+  return {
+    lat: response.data[0].lat,
+    lon: response.data[0].lon,
+  };
 };
 
 export const calcDistanceFromAddress = async (
@@ -23,7 +26,12 @@ export const calcDistanceFromAddress = async (
 ): Promise<number> => {
   let coordinatesFromAddress = await getCoordinatesFromAddress(address);
 
-  return getDistanceFromLatLonInKm(coordinatesFromAddress.lat, coordinatesFromAddress.lon, currLocation.lat, currLocation.lon);
+  return getDistanceFromLatLonInKm(
+    coordinatesFromAddress.lat,
+    coordinatesFromAddress.lon,
+    currLocation.lat,
+    currLocation.lon
+  );
 };
 
 const getDistanceFromLatLonInKm = (

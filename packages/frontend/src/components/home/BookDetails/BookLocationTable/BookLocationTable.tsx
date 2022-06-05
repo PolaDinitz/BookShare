@@ -28,7 +28,7 @@ const BookLocationTable = (props: BookLocationTableProps) => {
         <TableBody>
           {!_.isEmpty(props.rows) && props.rows
             ? props.rows.map((row) => (
-                <BookLocationSingleRow rowData={row} />
+                <BookLocationSingleRow key={row.userBookId} rowData={row} />
               ))
             : "no books were found"}
         </TableBody>

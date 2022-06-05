@@ -1,10 +1,10 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useSelector } from "react-redux";
-import _ from 'lodash';
+import _ from "lodash";
 
 import BookLocationTable from "./BookLocationTable";
 import BookLocationMap from "./BookLocationMap";
@@ -16,6 +16,7 @@ import {
   getCoordinatesFromAddress,
 } from "../../../../utils/distance-calculation";
 import { RootState } from "../../../../types/types";
+import { toast } from "react-toastify";
 
 export type BookLocationType = {
   userBookId: string;
@@ -66,12 +67,28 @@ type BookLocationTabsProps = {
   userId: string;
 };
 
-const BookLocationTabs = (props: BookLocationTabsProps) => {
-  const loggedInUserId = useSelector(
-    (state: RootState) => state.auth.user!.id
+export type MapMarkerType = Partial<BookLocationType> & {
+  coordinates: Coordinates;
+};
+
+const createMarkers = async (
+  data: BookLocationType[] | null
+): Promise<MapMarkerType[]> => {
+  return await Promise.all(
+    data!.map(async (marker) => {
+      return {
+        ...marker,
+        coordinates: await getCoordinatesFromAddress(marker.address),
+      };
+    })
   );
+};
+
+const BookLocationTabs = (props: BookLocationTabsProps) => {
+  const loggedInUserId = useSelector((state: RootState) => state.auth.user!.id);
   const [value, setValue] = useState(0);
   const [rows, setRows] = useState<BookLocationType[] | null>(null);
+  const [markers, setMarkers] = useState<MapMarkerType[] | null>(null);
   const [currCoordinates, setCurrCoordinates] = useState<null | Coordinates>(
     null
   );
@@ -86,9 +103,12 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
       );
       const rows = await createRows(usersWithBooks, userLocation);
       setRows(rows);
+
+      const createdMarkers = await createMarkers(rows);
+      setMarkers(createdMarkers);
     };
 
-    createTableData().catch(console.error);
+    createTableData().catch((err: string) => toast.error(err));
   }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -133,11 +153,12 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
           <Tab label="Map" {...a11yProps(1)} disabled={_.isEmpty(rows)} />
         </Tabs>
       </Box>
+
       <TabPanel value={value} index={0}>
         <BookLocationTable rows={rows} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <BookLocationMap location={currCoordinates} bookLocationData={rows}/>
+        <BookLocationMap location={currCoordinates} markers={markers} />
       </TabPanel>
     </Box>
   );
