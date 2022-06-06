@@ -73,16 +73,6 @@ export class BookService {
       .getMany();
   }
 
-  public async getAvailableBooksIdsAndTitlesExcludingUser(ids: string[], titles: string[], userId: string) {
-    return await this.booksRepository.createQueryBuilder("book")
-      .leftJoinAndSelect("book.userBook", "userBook")
-      .where("userBook.userId != :userId", { userId: userId })
-      .andWhere("userBook.isAvailable = true")
-      .andWhere("userBook.isLent = false")
-      .andWhere("book.id IN (:...ids) OR book.title ILIKE ANY (:titles)", { ids: ids, titles: titles })
-      .orderBy("book.bookRating", "DESC")
-      .getMany()
-  }
 
   public async create(bookApi: BookApi): Promise<Book> {
     const newBook = this.booksRepository.create({
