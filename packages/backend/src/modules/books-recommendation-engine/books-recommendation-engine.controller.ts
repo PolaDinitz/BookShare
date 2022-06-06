@@ -22,19 +22,19 @@ export class BooksRecommendationEngineController {
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getRecommendedBooks(@Request() req: any) {
-    const lastBooksLimit = 1;
+    const lastBooksLimit = 2;
     const popularBooksLimit = 10;
     const userId: string = req.user.userId;
     const lastBorrowedBooksIds: string[] = (await this.transactionService.getLastTransactionsByBorrowUser(userId, lastBooksLimit)).map((transaction: Transaction) => transaction.userBook.bookId);
     if (lastBorrowedBooksIds.length !== 0) {
-      this.booksRecommendationEngineService.getRecommendedBooks(lastBorrowedBooksIds)
-        .then(async (booksIds: string[]) => {
-          if (booksIds.length > 0)
-            return booksIds;
-        })
-        .catch((error) => {
-          console.log("There was an error with the recommendation engine: " + error.message);
+      const booksIds = await this.booksRecommendationEngineService.getRecommendedBooks(lastBorrowedBooksIds, userId)
+        .catch(async (error) => {
+          console.log("There was an error with algorithm: " + error.message);
+          return (await this.bookService.getPopularBooksExcludingUser(popularBooksLimit, userId)).map((book: Book) => book.id);
         });
+      if (booksIds.length > 0) {
+        return booksIds;
+      }
     }
     return (await this.bookService.getPopularBooksExcludingUser(popularBooksLimit, userId)).map((book: Book) => book.id);
   }
