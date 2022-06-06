@@ -73,7 +73,6 @@ export class BookService {
       .getMany();
   }
 
-
   public async create(bookApi: BookApi): Promise<Book> {
     const newBook = this.booksRepository.create({
       id: bookApi.id,
