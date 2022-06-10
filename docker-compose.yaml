@@ -6,10 +6,9 @@ services:
       context: ./packages/recommendationEngine
       dockerfile: Dockerfile.production
     restart: always
+    network_mode: host
     ports: 
       - "8000:8000"
-    networks:
-      - bookshare
   backend:
     container_name: backend
     build:
@@ -17,10 +16,9 @@ services:
       dockerfile: Dockerfile.production
     restart: always
     env_file: ./packages/backend/.env
+    network_mode: host
     ports:
       - "3001:3001"
-    networks:
-      - bookshare
   frontend:
     container_name: frontend
     build:
@@ -28,10 +26,6 @@ services:
       dockerfile: Dockerfile.production
     restart: always
     env_file: ./packages/frontend/.env
+    network_mode: host
     ports:
       - "80:80"
-    networks:
-      - bookshare
-networks:
-  bookshare:
-    driver: bridge
