@@ -1,8 +1,18 @@
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Typography, } from "@mui/material";
+import {
+    Box,
+    BoxProps,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    IconButton,
+    styled,
+    Typography,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-
 import BookLocationTabs from "./BookLocationTable/BookLocationTabs";
 import RoundedButton from "../../common/rounded-button";
 import { Book } from "../../../features/books/book.model";
@@ -10,6 +20,15 @@ import userService from "../../../services/user.service";
 import { User } from "../../../features/user/user.model";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../types/types";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+
+const DescriptionScrollArea = styled(Box)<BoxProps>(({theme}) => ({
+    maxHeight: '400px',
+    overflowY: "hidden" as "hidden",
+    '&:hover': {
+        overflowY: "auto" as "auto"
+    },
+}));
 
 type BookDetailsProps = {
     open: boolean;
@@ -24,16 +43,21 @@ const BookDetails = (props: BookDetailsProps) => {
     const {title, author, genres, description, imageUrl} = props.book;
 
     useEffect(() => {
+        let mounted = true;
         const fetchUser = async () => {
             const user = await userService.getUserById(userId);
-            setUser(user);
+            if (mounted)
+                setUser(user);
         };
 
         fetchUser();
+        return () => {
+            mounted = false
+        };
     }, []);
 
     return (
-        <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+        <Dialog PaperProps={{sx: {borderRadius: "16px"}}} open={open} onClose={onClose} fullWidth maxWidth="lg">
             <DialogTitle>
                 <Box display="flex" alignItems="center" justifyContent="flex-end">
                     <Box>
@@ -44,28 +68,32 @@ const BookDetails = (props: BookDetailsProps) => {
                 </Box>
             </DialogTitle>
             <DialogContent>
-                <Grid container spacing={1} direction="row">
+                <Grid container spacing={5} direction="row">
                     <Grid item xs={6}>
-                        {!_.isEmpty(genres) ? (
-                            <Typography variant="h6" mt={2}>
-                                {genres[0]}
-                            </Typography>
-                        ) : (
-                            <></>
-                        )}
-                        <Typography variant="h6" mt={2} fontWeight="bold">
+                        <Typography variant="body1" fontWeight={300} fontSize="14px" color="gray" mb={1}>
+                            {!_.isEmpty(genres) ? genres[0] : "No Genres Specified"}
+                        </Typography>
+                        <Typography variant="h6" fontWeight={500}>
                             {title}
                         </Typography>
-                        <Typography variant="h6" mt={2}>
-                            {author}
+                        <Typography variant="body1" fontWeight={300} fontSize="12px">
+                            By {author}
                         </Typography>
-                        <Typography mt={2}>{description}</Typography>
+                        <Box sx={{display: "flex", alignItems: "center"}} mt={1}>
+                            <FavoriteIcon sx={{color: "#3164F4"}} fontSize="medium"/>
+                            <Typography variant="body1" fontWeight={500} color="#3164F4">
+                                {(props.book.bookRating ? props.book.bookRating / props.book.count : 0).toFixed(1)}
+                            </Typography>
+                            <Typography variant="caption" fontWeight={300} fontSize={12}
+                                        color="gray">
+                                /10
+                            </Typography>
+                        </Box>
+                        <DescriptionScrollArea mt={3} mb={3}>
+                            <Typography>{description}</Typography>
+                        </DescriptionScrollArea>
                         <BookLocationTabs loggedInUser={user}/>
-                        <DialogActions
-                            sx={{
-                                flexDirection: "column",
-                            }}
-                        >
+                        <DialogActions sx={{display: "flex", justifyContent: "center"}}>
                             <RoundedButton
                                 style={{backgroundColor: "#313131"}}
                                 onClick={onClose}
@@ -80,6 +108,7 @@ const BookDetails = (props: BookDetailsProps) => {
                                 width: "100%",
                                 height: "100%",
                                 objectFit: "cover",
+                                borderRadius: "16px"
                             }}
                             src={imageUrl}
                             alt={imageUrl}

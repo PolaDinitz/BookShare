@@ -3,10 +3,10 @@ export type Coordinates = {
     lon: number;
 };
 
-export const calcDistanceFromAddress = async (
+export const calcDistanceFromAddress = (
     otherLocation: Coordinates,
     currLocation: Coordinates
-): Promise<number> => {
+): number => {
     return getDistanceFromLatLonInKm(otherLocation.lat, otherLocation.lon, currLocation.lat, currLocation.lon);
 };
 

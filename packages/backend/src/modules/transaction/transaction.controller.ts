@@ -173,11 +173,11 @@ export class TransactionController {
     if (transaction.status !== TransactionStatus.FINISHED_TRANSACTION)
       throw new HttpException("Can't rate The User if Transaction hasn't finished successfully", HttpStatus.BAD_REQUEST);
 
-    await this.userService.rateUser(transaction.userBook.userId, updateUserRatingDto.userRating);
-
     if (transaction.borrowUserId === req.user.userId) {
+      await this.userService.rateUser(transaction.userBook.userId, updateUserRatingDto.userRating);
       return await this.transactionService.updateLentUserRating(id, updateUserRatingDto);
     } else if (transaction.userBook.userId === req.user.userId) {
+      await this.userService.rateUser(transaction.borrowUserId, updateUserRatingDto.userRating);
       return await this.transactionService.updateBorrowUserRating(id, updateUserRatingDto);
     }
 

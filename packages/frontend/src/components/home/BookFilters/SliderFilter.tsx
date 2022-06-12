@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Slider, Typography } from "@mui/material";
 
 type SliderFilterProps = {
@@ -25,7 +25,6 @@ const SliderFilter = (props: SliderFilterProps) => {
         defaultValue={3}
         getAriaValueText={valuetext}
         step={step}
-        marks
         min={0}
         max={maxRange}
         valueLabelDisplay="auto"
@@ -37,11 +36,3 @@ const SliderFilter = (props: SliderFilterProps) => {
 };
 
 export default SliderFilter;
-
-// location - current location
-
-// user rating - bar + number
-
-// book rating - bar + number
-
-// ditance - bar + number

@@ -3,15 +3,19 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { useSelector } from "react-redux";
+import _ from "lodash";
+
 import BookLocationTable from "./BookLocationTable";
 import BookLocationMap from "./BookLocationMap";
 import { UserBook } from "../../../../features/user-books/user-book.model";
 import { calcDistanceFromAddress, Coordinates, } from "../../../../utils/distance-calculation";
-import { useSelector } from "react-redux";
 import { RootState } from "../../../../types/types";
 import { selectUserBooksAvailableForLend } from "../../../../features/user-books/user-book.selector";
 import Loader from "../../../common/loader/Loader";
 import { User } from "../../../../features/user/user.model";
+import { Transaction } from "../../../../features/transactions/transaction.model";
+import { selectInProgressTransactions } from "../../../../features/transactions/transactions.selectors";
 
 export type BookLocationType = {
     userBookId: string;
@@ -20,7 +24,9 @@ export type BookLocationType = {
     fullName: string;
     city: string;
     distance: number;
+    coordinates: Coordinates;
     rating: number;
+    isRequestSent: boolean;
 };
 
 interface TabPanelProps {
@@ -62,6 +68,7 @@ type BookLocationTabsProps = {
 
 const BookLocationTabs = (props: BookLocationTabsProps) => {
     const loggedInUserId = useSelector((state: RootState) => state.auth.user!.id);
+    const loggedInUserInProgressTransactions: Transaction[] = useSelector(selectInProgressTransactions);
     const availableUserBooksForLending: UserBook[] = useSelector(selectUserBooksAvailableForLend);
     const [loading, setLoading] = useState(true);
     const [value, setValue] = useState(0);
@@ -73,8 +80,18 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
 
     useEffect(() => {
         const createTableData = async () => {
-            const rows = await createRows(availableUserBooksForLending, loggedInUserCoordinates);
-            setRows(rows);
+            const rows: Map<string, BookLocationType> = createRows(availableUserBooksForLending, loggedInUserCoordinates);
+            loggedInUserInProgressTransactions.forEach((transaction: Transaction) => {
+                const rowData: BookLocationType | undefined = rows.get(transaction.userBookId);
+                if (rowData !== undefined) {
+                    rows.set(transaction.userBookId, {
+                        ...rowData,
+                        isRequestSent: true
+                    })
+                }
+            })
+            const rowsAsArray: BookLocationType[] = Array.from(rows.values()).sort((a, b) => a.distance - b.distance);
+            setRows(rowsAsArray);
         };
 
         createTableData().finally(() => setLoading(false));
@@ -84,29 +101,29 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
         setValue(newValue);
     };
 
-    const createRows = async (
-        userBooks: UserBook[],
-        userCoordinates: Coordinates
-    ): Promise<BookLocationType[]> => {
-        return (
-            await Promise.all(
-                userBooks
-                    .map(async (userBook) => {
-                        return {
+    const createRows = (userBooks: UserBook[], userCoordinates: Coordinates): Map<string, BookLocationType> => {
+        const bookLocationMap = new Map<string, BookLocationType>();
+        userBooks
+            .forEach((userBook: UserBook) => {
+                    bookLocationMap.set(
+                        userBook.id,
+                        {
                             userBookId: userBook.id,
                             borrowerUserId: loggedInUserId,
                             avatar: userBook.user.imageUrl,
                             fullName: `${userBook.user.firstName} ${userBook.user.lastName}`,
                             city: userBook.user.address.split(",")[1],
-                            distance: await calcDistanceFromAddress(
+                            distance: calcDistanceFromAddress(
                                 {lon: userBook.user.longitude, lat: userBook.user.latitude},
                                 userCoordinates
                             ),
-                            rating: userBook.user.rating,
-                        };
-                    })
-            )
-        ).sort((a, b) => a.distance - b.distance);
+                            coordinates: {lon: userBook.user.longitude, lat: userBook.user.latitude},
+                            rating: userBook.user.rating / userBook.user.count,
+                            isRequestSent: false,
+                        })
+                }
+            );
+        return bookLocationMap;
     };
 
     return (
@@ -133,7 +150,7 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
                         <BookLocationTable rows={rows}/>
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        <BookLocationMap address={props.loggedInUser.address} location={loggedInUserCoordinates}/>
+                        <BookLocationMap markers={rows} location={loggedInUserCoordinates}/>
                     </TabPanel>
                 </Box>
 

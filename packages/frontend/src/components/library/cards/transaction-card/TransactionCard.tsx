@@ -5,12 +5,8 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import LibraryBook from '../library-book/LibraryBook';
 import { useNavigate } from 'react-router-dom';
-import { Rating, Stack } from '@mui/material';
+import { Rating } from '@mui/material';
 import RoundedButton from "../../../common/rounded-button";
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../../../types/types';
-import { returnBookThunk } from '../../../../features/transactions/transactions.slice';
-import { toast } from 'react-toastify';
 
 interface ITransactionCard {
     category: string
@@ -42,7 +38,6 @@ const TransactionCard = (props: ITransactionCard) => {
            transactionId
         } = props;
     const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
     const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
     if (Object.keys(currentUser).length === 0) {
