@@ -45,11 +45,11 @@ export class AuthService {
         return {
             refresh_token: this.jwtService.sign(payload, {
                 secret: "needToMakeThisEnvVarRefresh",
-                expiresIn: "7d"
+                expiresIn: "14d"
             }),
             access_token: this.jwtService.sign(payload, {
                 secret: "needToMakeThisEnvVar",
-                expiresIn: "15m"
+                expiresIn: "1d"
             })
         }
     }

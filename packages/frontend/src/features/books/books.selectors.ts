@@ -36,7 +36,8 @@ export const selectBooksPosts: Selector<RootState, BookPostType[]> = createSelec
                         {lat: user.latitude, lon: user.longitude}
                     )
                     const minDistance = bookPost ? (distance < bookPost.minDistance ? distance : bookPost.minDistance) : distance
-                    const maxUserRating = bookPost ? (userBook.user.rating > bookPost.maxUserRating ? (userBook.user.rating / userBook.user.count) : bookPost.maxUserRating) : (userBook.user.rating / userBook.user.count)
+                    const userRating = userBook.user.rating ? (userBook.user.rating / userBook.user.count) : 0;
+                    const maxUserRating = bookPost ? (userBook.user.rating > bookPost.maxUserRating ? (userBook.user.rating / userBook.user.count) : bookPost.maxUserRating) : userRating
                     if (book) {
                         booksPosts[userBook.bookId] = {
                             book,
@@ -48,7 +49,7 @@ export const selectBooksPosts: Selector<RootState, BookPostType[]> = createSelec
             });
         }
 
-        return convertBookPostDicToArray(booksPosts).sort((a, b) => b.book.bookRating - a.book.bookRating);
+        return convertBookPostDicToArray(booksPosts).sort((a, b) => a.minDistance - b.minDistance);
     }
 );
 

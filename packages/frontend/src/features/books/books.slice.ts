@@ -47,7 +47,7 @@ const booksSlice = createSlice({
                     id: action.payload.bookId,
                     changes: {
                         bookRating: state.entities[action.payload.bookId]!.bookRating + action.payload.transaction.bookRating,
-                        count: state.entities[action.payload.bookId]!.count++,
+                        count: state.entities[action.payload.bookId]!.count + 1,
                     }
                 })
             })

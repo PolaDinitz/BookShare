@@ -34,7 +34,7 @@ const Login = () => {
         <>
             {!isLoggedIn ?
                 <CustomPaper size="small" img="/page-headers/login-header-image.jpg"
-                             avatarImg={`${config.apiUrl}/${config.defaultUserImageName}`} contentWidth="50%">
+                             avatarImg={`${config.apiUrl}/${config.defaultUserImageName}`} contentWidth="70%">
                     <Stack
                         spacing={3}
                         alignItems="center"

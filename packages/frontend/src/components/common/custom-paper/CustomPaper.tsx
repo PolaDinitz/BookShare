@@ -22,7 +22,7 @@ const customPaperStyleMap = new Map<Size, CustomPaperStyle>([
     ["small",
         {
             paper: {
-                width: "30%"
+                width: "40%"
             },
             banner: {
                 height: "120px"
