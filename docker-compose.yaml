@@ -26,6 +26,5 @@ services:
       dockerfile: Dockerfile.production
     restart: always
     env_file: ./packages/frontend/.env
-    network_mode: host
     ports:
-      - "3000:3000"
+      - "80:3000"
