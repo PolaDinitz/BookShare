@@ -28,6 +28,7 @@ import { AppDispatch, RootState } from "../../../types/types";
 import { toast } from "react-toastify";
 import { addUserBookThunk } from "../../../features/user-books/user-book.slice";
 import { Book } from "../../../features/books/book.model";
+import { config } from "../../../config/config";
 
 type AddBookProps = {
     open: boolean;
@@ -200,7 +201,7 @@ const AddBook = (props: AddBookProps) => {
                                 width: "100%",
                                 objectFit: "cover"
                             }}
-                            src={coverImage ? coverImage : "/Placeholder-Portrait.png"}
+                            src={coverImage ? coverImage : `${config.apiUrl}/books/SecondPlaceHolder.png`}
                             alt="Book Cover"
                         />
                     </Grid>

@@ -1,4 +1,4 @@
 export const config = {
-    apiUrl: "http://localhost:3001",
+    apiUrl: `${process.env.REACT_APP_API_URI}`,
     defaultUserImageName: "users/Profile_avatar_placeholder_large.png"
 };
