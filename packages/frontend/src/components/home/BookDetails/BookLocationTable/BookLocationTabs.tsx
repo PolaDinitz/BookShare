@@ -4,7 +4,6 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useSelector } from "react-redux";
-import _ from "lodash";
 
 import BookLocationTable from "./BookLocationTable";
 import BookLocationMap from "./BookLocationMap";
@@ -12,7 +11,6 @@ import { UserBook } from "../../../../features/user-books/user-book.model";
 import { calcDistanceFromAddress, Coordinates, } from "../../../../utils/distance-calculation";
 import { RootState } from "../../../../types/types";
 import { selectUserBooksAvailableForLend } from "../../../../features/user-books/user-book.selector";
-import Loader from "../../../common/loader/Loader";
 import { User } from "../../../../features/user/user.model";
 import { Transaction } from "../../../../features/transactions/transaction.model";
 import { selectInProgressTransactions } from "../../../../features/transactions/transactions.selectors";
@@ -70,7 +68,6 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
     const loggedInUserId = useSelector((state: RootState) => state.auth.user!.id);
     const loggedInUserInProgressTransactions: Transaction[] = useSelector(selectInProgressTransactions);
     const availableUserBooksForLending: UserBook[] = useSelector(selectUserBooksAvailableForLend);
-    const [loading, setLoading] = useState(true);
     const [value, setValue] = useState(0);
     const [rows, setRows] = useState<BookLocationType[] | null>(null);
     const loggedInUserCoordinates: Coordinates = {
@@ -79,23 +76,22 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
     }
 
     useEffect(() => {
-        const createTableData = async () => {
-            const rows: Map<string, BookLocationType> = createRows(availableUserBooksForLending, loggedInUserCoordinates);
-            loggedInUserInProgressTransactions.forEach((transaction: Transaction) => {
-                const rowData: BookLocationType | undefined = rows.get(transaction.userBookId);
-                if (rowData !== undefined) {
-                    rows.set(transaction.userBookId, {
-                        ...rowData,
-                        isRequestSent: true
-                    })
-                }
-            })
-            const rowsAsArray: BookLocationType[] = Array.from(rows.values()).sort((a, b) => a.distance - b.distance);
-            setRows(rowsAsArray);
-        };
-
-        createTableData().finally(() => setLoading(false));
-    }, []);
+        const rows: Map<string, BookLocationType> = createRows(availableUserBooksForLending, {
+            lon: props.loggedInUser.longitude,
+            lat: props.loggedInUser.latitude
+        });
+        loggedInUserInProgressTransactions.forEach((transaction: Transaction) => {
+            const rowData: BookLocationType | undefined = rows.get(transaction.userBookId);
+            if (rowData !== undefined) {
+                rows.set(transaction.userBookId, {
+                    ...rowData,
+                    isRequestSent: true
+                })
+            }
+        })
+        const rowsAsArray: BookLocationType[] = Array.from(rows.values()).sort((a, b) => a.distance - b.distance);
+        setRows(rowsAsArray);
+    }, [props.loggedInUser]);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -128,33 +124,24 @@ const BookLocationTabs = (props: BookLocationTabsProps) => {
 
     return (
         <>
-            {loading ?
-                <Box m={5} sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                    <Loader
-                        size={20}
-                    />
+            <Box sx={{width: "100%"}}>
+                <Box sx={{borderBottom: 1, borderColor: "divider"}}>
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        aria-label="basic tabs example"
+                    >
+                        <Tab label="Table" {...a11yProps(0)} />
+                        <Tab label="Map" {...a11yProps(1)} />
+                    </Tabs>
                 </Box>
-                :
-                <Box sx={{width: "100%"}}>
-                    <Box sx={{borderBottom: 1, borderColor: "divider"}}>
-                        <Tabs
-                            value={value}
-                            onChange={handleChange}
-                            aria-label="basic tabs example"
-                        >
-                            <Tab label="Table" {...a11yProps(0)} />
-                            <Tab label="Map" {...a11yProps(1)} />
-                        </Tabs>
-                    </Box>
-                    <TabPanel value={value} index={0}>
-                        <BookLocationTable rows={rows}/>
-                    </TabPanel>
-                    <TabPanel value={value} index={1}>
-                        <BookLocationMap markers={rows} location={loggedInUserCoordinates}/>
-                    </TabPanel>
-                </Box>
-
-            }
+                <TabPanel value={value} index={0}>
+                    <BookLocationTable rows={rows}/>
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                    <BookLocationMap markers={rows} location={loggedInUserCoordinates}/>
+                </TabPanel>
+            </Box>
         </>
     );
 };

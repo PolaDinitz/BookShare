@@ -62,7 +62,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         client.join(message.transactionId);
         this.webSocketServer.emit("newTransaction", {
           ...message,
-          userId: userId === transaction.borrowUserId ? transaction.borrowUserId : transaction.userBook.userId
+          userId: userId === transaction.borrowUserId ? transaction.userBook.userId : transaction.borrowUserId
         });
       })
   }

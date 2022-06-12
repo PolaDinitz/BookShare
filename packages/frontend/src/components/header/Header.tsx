@@ -58,7 +58,7 @@ const Header = () => {
             <Grid item xs={4}>
                 <Box sx={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
                     <Link to='/'>
-                        <img src="/BookShareLogoV2.png" alt="BookShare"/>
+                        <img src="/BookShareLogoV2.png" alt="BookShare" width={"250px"} height={"auto"}/>
                     </Link>
                 </Box>
             </Grid>

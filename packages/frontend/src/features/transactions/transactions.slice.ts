@@ -49,7 +49,10 @@ export const createTransactionThunk = createAsyncThunk<{ transaction: Transactio
     async (payload: { borrowUserId: string, userBookId: string }, thunkApi) => {
         try {
             const transactionFromResponse: any = await TransactionService.createTransaction(payload.borrowUserId, payload.userBookId);
-            thunkApi.dispatch(transactionCreated);
+            thunkApi.dispatch(transactionCreated({
+                transactionId: transactionFromResponse.id,
+                messages: []
+            }));
             return {
                 transaction: Mapper.singleTransactionResponseToTransactionModel(transactionFromResponse)
             }
@@ -220,6 +223,9 @@ const transactionsSlice = createSlice({
                         lentUserRating: action.payload.lentUserRating
                     }
                 });
+            })
+            .addCase(createTransactionThunk.fulfilled, (state, action) => {
+                transactionsAdapter.addOne(state, action.payload.transaction);
             })
             .addMatcher(
                 isAnyOf(
