@@ -32,7 +32,7 @@ export class BooksApiService {
         id: bookItem.id,
         title: bookItem.volumeInfo.title,
         categories: bookItem.volumeInfo.categories ? bookItem.volumeInfo.categories : [],
-        description: bookItem.volumeInfo.description,
+        description: bookItem.volumeInfo.description?.replace(/<(.*?)>/g, ""),
         author: (bookItem.volumeInfo.authors) ? bookItem.volumeInfo.authors[0] : null
       }
       if (bookItem.volumeInfo.imageLinks) {

@@ -87,7 +87,7 @@ const AddBook = (props: AddBookProps) => {
             setSearchedBookName(value.title);
             setAuthorName(value.author || "No Author Provided");
             setGenres(value.genres || ["No Genres Provided"]);
-            setDescription(value.description || "No Description Provided");
+            setDescription(value.description?.replace(/<(.*?)>/g, "") || "No Description Provided");
             setCoverImage(value?.imageUrl);
         } else {
             resetForm();
