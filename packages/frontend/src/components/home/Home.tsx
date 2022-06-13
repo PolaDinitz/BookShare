@@ -113,7 +113,7 @@ const Home = () => {
                     : true
             ) &&
             (
-                bookPost.book.bookRating >= state.bookRating
+                bookPost.book.bookRating ? bookPost.book.bookRating / bookPost.book.count >= state.bookRating : 0 >= state.bookRating
             ) &&
             (
                 state.userRating <= bookPost.maxUserRating
