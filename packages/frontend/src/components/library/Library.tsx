@@ -10,7 +10,14 @@ import BookCard from "./cards/books-card/BookCard";
 import LibraryTab from "./library-tab/LibraryTab";
 import TransactionCard from "./cards/transaction-card/TransactionCard";
 import AddBook from "../home/AddBook";
-import { LibraryBook, LibraryTransactionBook, selectLibraryBorrowedBooks, selectLibraryLentBooks, selectLibraryMyBooks } from "../../features/user-books/user-book.selector";
+import {
+    LibraryBook,
+    LibraryTransactionBook,
+    selectLibraryBorrowedBooks,
+    selectLibraryLentBooks,
+    selectLibraryMyBooks
+} from "../../features/user-books/user-book.selector";
+import moment from "moment";
 
 enum LibraryTabs {
     MY_BOOKS = "My Books",
@@ -101,7 +108,7 @@ const Library = () => {
                     </ListItem>
                 </List>
                 {buttonSelected === LibraryTabs.MY_BOOKS && (
-                    myBooks.map((libraryBook : LibraryBook) =>
+                    myBooks.map((libraryBook: LibraryBook) =>
                         <BookCard
                             key={libraryBook.userBookId}
                             userBookId={libraryBook.userBookId}
@@ -115,7 +122,7 @@ const Library = () => {
                     )
                 )}
                 {buttonSelected === LibraryTabs.BORROWED_BOOKS && (
-                    borrowedBooks.map((libraryBook : LibraryTransactionBook, index) =>
+                    borrowedBooks.sort((a, b) => moment(b.creationTimestamp).diff(moment(a.creationTimestamp))).map((libraryBook: LibraryTransactionBook, index) =>
                         <TransactionCard
                             key={index}
                             imageUrl={libraryBook.imageUrl}
@@ -132,7 +139,7 @@ const Library = () => {
                     )
                 )}
                 {buttonSelected === LibraryTabs.LENT_BOOKS && (
-                    lentBooks.map((libraryBook : LibraryTransactionBook, index) =>
+                    lentBooks.sort((a, b) => moment(b.creationTimestamp).diff(moment(a.creationTimestamp))).map((libraryBook: LibraryTransactionBook, index) =>
                         <TransactionCard
                             key={index}
                             imageUrl={libraryBook.imageUrl}

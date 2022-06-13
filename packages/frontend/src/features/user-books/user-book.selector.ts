@@ -88,7 +88,7 @@ const getLibraryLentBooks = (transactions: Transaction[],
             }
         }
     });
-    return libraryLentBooks.sort((a, b) => moment(a.creationTimestamp).diff(moment(b.creationTimestamp)));;
+    return libraryLentBooks;
 }
 
 const getLibraryBorrowedBooks = (transactions: Transaction[],
@@ -119,7 +119,7 @@ const getLibraryBorrowedBooks = (transactions: Transaction[],
             }
         }
     });
-    return libraryBorrowedBooks.sort((a, b) => moment(a.creationTimestamp).diff(moment(b.creationTimestamp)));
+    return libraryBorrowedBooks;
 }
 
 const getUserBooksAvailableForLend = (userBooks: UserBook[], selectedBookId: string | null, loggedInUserId: string | undefined) => {
