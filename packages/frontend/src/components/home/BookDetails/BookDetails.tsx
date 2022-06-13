@@ -71,7 +71,7 @@ const BookDetails = (props: BookDetailsProps) => {
                             </Typography>
                         </Box>
                         <DescriptionScrollArea mt={3} mb={3}>
-                            <Typography>{description}</Typography>
+                            <Typography>{description || "No Description Provided"}</Typography>
                         </DescriptionScrollArea>
                         <BookLocationTabs/>
                         <DialogActions sx={{display: "flex", justifyContent: "center"}}>
