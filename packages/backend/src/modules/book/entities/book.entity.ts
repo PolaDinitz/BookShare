@@ -1,7 +1,6 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 import { UserBook } from "../../../modules/user-book/entities/user-book.entity";
 import { BookCategory } from "../../book-category/entities/book-category.entity";
-import { DEFAULT_BOOK_IMAGE } from "../../../consts/images.consts";
 
 @Entity()
 export class Book {
@@ -17,7 +16,7 @@ export class Book {
   @Column({ nullable: true })
   description: string;
 
-  @Column({ default: DEFAULT_BOOK_IMAGE })
+  @Column({ nullable: true })
   imageUrl: string;
 
   @Column()

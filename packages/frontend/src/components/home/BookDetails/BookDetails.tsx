@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
     Box,
     BoxProps,
@@ -16,11 +16,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import BookLocationTabs from "./BookLocationTable/BookLocationTabs";
 import RoundedButton from "../../common/rounded-button";
 import { Book } from "../../../features/books/book.model";
-import userService from "../../../services/user.service";
-import { User } from "../../../features/user/user.model";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../types/types";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { config } from "../../../config/config";
 
 const DescriptionScrollArea = styled(Box)<BoxProps>(({theme}) => ({
     maxHeight: '400px',
@@ -37,24 +34,8 @@ type BookDetailsProps = {
 };
 
 const BookDetails = (props: BookDetailsProps) => {
-    const userId = useSelector((state: RootState) => state.auth.user!.id);
-    const [user, setUser] = useState({} as User);
     const {open, onClose} = props;
     const {title, author, genres, description, imageUrl} = props.book;
-
-    useEffect(() => {
-        let mounted = true;
-        const fetchUser = async () => {
-            const user = await userService.getUserById(userId);
-            if (mounted)
-                setUser(user);
-        };
-
-        fetchUser();
-        return () => {
-            mounted = false
-        };
-    }, []);
 
     return (
         <Dialog PaperProps={{sx: {borderRadius: "16px"}}} open={open} onClose={onClose} fullWidth maxWidth="lg">
@@ -92,7 +73,7 @@ const BookDetails = (props: BookDetailsProps) => {
                         <DescriptionScrollArea mt={3} mb={3}>
                             <Typography>{description}</Typography>
                         </DescriptionScrollArea>
-                        <BookLocationTabs loggedInUser={user}/>
+                        <BookLocationTabs/>
                         <DialogActions sx={{display: "flex", justifyContent: "center"}}>
                             <RoundedButton
                                 style={{backgroundColor: "#313131"}}
@@ -110,8 +91,8 @@ const BookDetails = (props: BookDetailsProps) => {
                                 objectFit: "cover",
                                 borderRadius: "16px"
                             }}
-                            src={imageUrl}
-                            alt={imageUrl}
+                            src={imageUrl ? imageUrl : `${config.apiUrl}/${config.defaultBookImage}`}
+                            alt={imageUrl ? imageUrl : `${config.apiUrl}/${config.defaultBookImage}`}
                         />
                     </Grid>
                 </Grid>
