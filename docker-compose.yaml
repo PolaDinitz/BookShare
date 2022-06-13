@@ -6,7 +6,6 @@ services:
       context: ./packages/recommendationEngine
       dockerfile: Dockerfile.production
     restart: always
-    network_mode: host
     ports: 
       - "8000:8000"
   backend:
@@ -16,7 +15,6 @@ services:
       dockerfile: Dockerfile.production
     restart: always
     env_file: ./packages/backend/.env
-    network_mode: host
     ports:
       - "3001:3001"
   frontend:
