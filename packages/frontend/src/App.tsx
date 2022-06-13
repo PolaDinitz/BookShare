@@ -5,7 +5,7 @@ import './App.css';
 import Routing from './Routing';
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./types/types";
-import { newMessageThunk } from "./features/inbox/inbox.slice";
+import { newMessageThunk, transactionCreated } from "./features/inbox/inbox.slice";
 import { fetchTransactionByIdThunk, fetchTransactionsThunk } from "./features/transactions/transactions.slice";
 import { fetchBooksThunk } from "./features/books/books.slice";
 import { fetchUserBooksThunk } from "./features/user-books/user-book.slice";
@@ -59,6 +59,10 @@ function App() {
                     socket.emit("joinTransaction", {transactionId: message.transactionId})
                     dispatch(fetchTransactionByIdThunk({
                         transactionId: message.transactionId,
+                    }));
+                    dispatch(transactionCreated({
+                        transactionId: message.transactionId,
+                        messages: []
                     }));
                 }
             });
