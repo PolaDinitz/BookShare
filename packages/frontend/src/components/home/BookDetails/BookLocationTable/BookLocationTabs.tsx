@@ -11,7 +11,6 @@ import { UserBook } from "../../../../features/user-books/user-book.model";
 import { calcDistanceFromAddress, Coordinates, } from "../../../../utils/distance-calculation";
 import { RootState } from "../../../../types/types";
 import { selectUserBooksAvailableForLend } from "../../../../features/user-books/user-book.selector";
-import { User } from "../../../../features/user/user.model";
 import { Transaction } from "../../../../features/transactions/transaction.model";
 import { selectInProgressTransactions } from "../../../../features/transactions/transactions.selectors";
 
@@ -60,38 +59,39 @@ function a11yProps(index: number) {
     };
 }
 
-type BookLocationTabsProps = {
-    loggedInUser: User;
-};
+type BookLocationTabsProps = {};
 
 const BookLocationTabs = (props: BookLocationTabsProps) => {
     const loggedInUserId = useSelector((state: RootState) => state.auth.user!.id);
+    const loggedInUserProfile = useSelector((state: RootState) => state.profile.user);
     const loggedInUserInProgressTransactions: Transaction[] = useSelector(selectInProgressTransactions);
     const availableUserBooksForLending: UserBook[] = useSelector(selectUserBooksAvailableForLend);
     const [value, setValue] = useState(0);
     const [rows, setRows] = useState<BookLocationType[] | null>(null);
     const loggedInUserCoordinates: Coordinates = {
-        lon: props.loggedInUser.longitude,
-        lat: props.loggedInUser.latitude
+        lon: loggedInUserProfile!.longitude,
+        lat: loggedInUserProfile!.latitude
     }
 
     useEffect(() => {
-        const rows: Map<string, BookLocationType> = createRows(availableUserBooksForLending, {
-            lon: props.loggedInUser.longitude,
-            lat: props.loggedInUser.latitude
-        });
-        loggedInUserInProgressTransactions.forEach((transaction: Transaction) => {
-            const rowData: BookLocationType | undefined = rows.get(transaction.userBookId);
-            if (rowData !== undefined) {
-                rows.set(transaction.userBookId, {
-                    ...rowData,
-                    isRequestSent: true
-                })
-            }
-        })
-        const rowsAsArray: BookLocationType[] = Array.from(rows.values()).sort((a, b) => a.distance - b.distance);
-        setRows(rowsAsArray);
-    }, [props.loggedInUser]);
+        if (loggedInUserProfile) {
+            const rows: Map<string, BookLocationType> = createRows(availableUserBooksForLending, {
+                lon: loggedInUserProfile.longitude,
+                lat: loggedInUserProfile.latitude
+            });
+            loggedInUserInProgressTransactions.forEach((transaction: Transaction) => {
+                const rowData: BookLocationType | undefined = rows.get(transaction.userBookId);
+                if (rowData !== undefined) {
+                    rows.set(transaction.userBookId, {
+                        ...rowData,
+                        isRequestSent: true
+                    })
+                }
+            })
+            const rowsAsArray: BookLocationType[] = Array.from(rows.values()).sort((a, b) => a.distance - b.distance);
+            setRows(rowsAsArray);
+        }
+    }, [loggedInUserProfile]);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);

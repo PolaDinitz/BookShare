@@ -28,7 +28,6 @@ const BookPost = (props: BookPostProps) => {
         setOpen(false);
     };
 
-
     return (
         <BookCustomPaper img={imageUrl}>
             <Stack sx={{height: "100%"}} justifyContent="space-between">
