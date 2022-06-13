@@ -22,7 +22,7 @@ export class BooksRecommendationEngineController {
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getRecommendedBooks(@Request() req: any) {
-    const lastBooksLimit = 2;
+    const lastBooksLimit = 1;
     const popularBooksLimit = 10;
     const userId: string = req.user.userId;
     const lastBorrowedBooksIds: string[] = (await this.transactionService.getLastTransactionsByBorrowUser(userId, lastBooksLimit)).map((transaction: Transaction) => transaction.userBook.bookId);
