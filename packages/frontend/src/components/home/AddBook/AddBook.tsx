@@ -45,7 +45,7 @@ const AddBook = (props: AddBookProps) => {
     const [authorName, setAuthorName] = useState("");
     const [genres, setGenres] = useState([] as string[]);
     const [description, setDescription] = useState("");
-    const [coverImage, setCoverImage] = useState("");
+    const [coverImage, setCoverImage] = useState("" as string | null);
     const [isAvailable, setIsAvailable] = React.useState(true);
     const [scroll, setScroll] = React.useState<DialogProps["scroll"]>("paper");
     const [searchedBookName, setSearchedBookName] = useState("");

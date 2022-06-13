@@ -26,7 +26,7 @@ export interface LibraryTransactionBook {
     book: string
     author: string
     genres: string[]
-    imageUrl: string
+    imageUrl: string | null
     isActive: boolean
     borrowedUserId: string
     lentUserId: string

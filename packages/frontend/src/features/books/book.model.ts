@@ -3,7 +3,7 @@ export interface Book {
     title: string;
     author: string;
     description: string;
-    imageUrl: string;
+    imageUrl: string | null;
     genres: string[];
     bookRating: number;
     count: number;

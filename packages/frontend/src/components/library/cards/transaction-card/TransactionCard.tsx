@@ -7,6 +7,7 @@ import LibraryBook from '../library-book/LibraryBook';
 import { useNavigate } from 'react-router-dom';
 import { Rating } from '@mui/material';
 import RoundedButton from "../../../common/rounded-button";
+import { config } from "../../../../config/config";
 
 interface ITransactionCard {
     category: string
@@ -15,7 +16,7 @@ interface ITransactionCard {
     borrowedUserId: string
     lentUserId: string
     active: boolean
-    imageUrl: string
+    imageUrl: string | null
     transactionId: string
     borrowedUserName?: string
     lentUserName?: string
@@ -57,7 +58,7 @@ const TransactionCard = (props: ITransactionCard) => {
             }}>
                 <Box sx={{display: 'flex'}}>
                     <Box sx={{display: 'flex', flex: 4}}>
-                        <LibraryBook imageUrl={imageUrl} author={author} name={name} category={category}/>
+                        <LibraryBook imageUrl={imageUrl ? imageUrl : `${config.apiUrl}/${config.defaultBookImage}`} author={author} name={name} category={category}/>
                     </Box>
                     <Box sx={{display: 'flex', flex: 2}}>
                         {currentUser.id === borrowedUserId &&

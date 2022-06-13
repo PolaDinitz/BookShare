@@ -17,6 +17,7 @@ import BookLocationTabs from "./BookLocationTable/BookLocationTabs";
 import RoundedButton from "../../common/rounded-button";
 import { Book } from "../../../features/books/book.model";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { config } from "../../../config/config";
 
 const DescriptionScrollArea = styled(Box)<BoxProps>(({theme}) => ({
     maxHeight: '400px',
@@ -90,8 +91,8 @@ const BookDetails = (props: BookDetailsProps) => {
                                 objectFit: "cover",
                                 borderRadius: "16px"
                             }}
-                            src={imageUrl}
-                            alt={imageUrl}
+                            src={imageUrl ? imageUrl : `${config.apiUrl}/${config.defaultBookImage}`}
+                            alt={imageUrl ? imageUrl : `${config.apiUrl}/${config.defaultBookImage}`}
                         />
                     </Grid>
                 </Grid>

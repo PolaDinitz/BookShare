@@ -1,9 +1,10 @@
 import React from "react";
 import { Box, Grid, Paper } from "@mui/material";
+import { config } from "../../../config/config";
 
 type BookCustomPaperProps = {
     children?: React.ReactNode;
-    img?: string;
+    img?: string | null;
     contentWidth?: string;
 };
 
@@ -38,8 +39,8 @@ const BookCustomPaper = (props: BookCustomPaperProps) => {
                                 height: "100%",
                                 objectFit: "cover",
                             }}
-                            src={props.img}
-                            alt={props.img}
+                            src={props.img ? props.img : `${config.apiUrl}/${config.defaultBookImage}`}
+                            alt={props.img ? props.img : `${config.apiUrl}/${config.defaultBookImage}`}
                         />
                     </Box>
                 </Grid>

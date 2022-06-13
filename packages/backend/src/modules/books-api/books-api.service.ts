@@ -31,7 +31,7 @@ export class BooksApiService {
       let book = {
         id: bookItem.id,
         title: bookItem.volumeInfo.title,
-        categories: bookItem.volumeInfo.categories,
+        categories: bookItem.volumeInfo.categories ? bookItem.volumeInfo.categories : [],
         description: bookItem.volumeInfo.description,
         author: (bookItem.volumeInfo.authors) ? bookItem.volumeInfo.authors[0] : null
       }
